@@ -82,8 +82,8 @@
 			"properties": {
 				"povray.povrayExecution": {
 					"type": "string",
-					"default": "pvengine /EXIT /RENDER",
-					"description": "The command to run POV-Ray in the terminal"
+					"default": "",
+					"description": "Override the command to run POV-Ray in the terminal"
 				},
 				"povray.outputPath": {
 					"type": "string",

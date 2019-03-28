@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const os = require("os");
 const path = require("path");
 const vscode = require("vscode");
-// Extension Activation
+// POV-Ray Extension Activation
 function activate(context) {
     registerTasks();
     registerCommands(context);
@@ -89,7 +89,7 @@ function registerTasks() {
 }
 function registerCommands(context) {
     const renderCommand = 'povray.render';
-    // Create a command handler for 
+    // Create a command handler for running the POV-Ray Render Build Task
     const renderCommandHandler = (uri) => {
         // Fetch all of the povray tasks
         vscode.tasks.fetchTasks({ type: "povray" }).then((tasks) => {
