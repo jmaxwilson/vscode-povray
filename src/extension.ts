@@ -2,7 +2,7 @@ import * as os from 'os';
 import * as path from "path";
 import * as vscode from 'vscode';
 
-// Extension Activation
+// POV-Ray Extension Activation
 export function activate(context: vscode.ExtensionContext) {
 
     registerTasks();
@@ -122,7 +122,7 @@ function registerCommands(context: vscode.ExtensionContext) {
 
     const renderCommand = 'povray.render';
     
-    // Create a command handler for 
+    // Create a command handler for running the POV-Ray Render Build Task
     const renderCommandHandler = (uri:vscode.Uri) => {
 
         // Fetch all of the povray tasks
