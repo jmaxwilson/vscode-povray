@@ -1,0 +1,106 @@
+{
+    "name": "povray",
+    "scopeName": "source.povray",
+    "patterns": [
+    {
+      "include": "#comment_block"
+    },
+    {
+      "include": "#comment_line"
+    },
+    {
+      "include": "#string_single"
+    },
+    {
+      "include": "#string_double"
+    },
+    {
+      "include": "#angle_bracket"
+    },
+    {
+      "include": "#number"
+    },
+    {
+      "include": "#operator"
+    },
+    {
+      "name": "keyword.povray",
+      "match": "#|\\b(array|ascii|camera|charset|debug|declare|default|error|fclose|fog|fopen|function|global_settings|include|internal|irid|light_source|local|macro|object|open|pattern|photons|radiosity|render|statistics|sys|t|u|undef|utf8|v|version|warning|x|y|z)\\b"
+    },
+    {      
+      "name": "keyword.control.povray",
+      "match": "\\b(break|case|else|elseif|end|for|if|ifdef|iff|ifndef|range|switch|while)\\b"
+    },
+    {
+      "name": "variable.parameter.povray",
+      "match": "\\b(aa_level|aa_threshold|absorption|accuracy|adaptive|adc_bailout|agate_turb|albedo|all|all_intersections|alpha|altitude|always_sample|ambient|ambient_light|angle|aperture|append|arc_angle|area_illumination|area_light|assumed_gamma|autostop|b_spline|bezier_spline|black_hole|blur_samples|brick_size|brightness|brilliance|bump_size|caustics|circular|collect|component|composite|confidence|conic_sweep|conserve_energy|control0|control1|coords|count|crand|cubic_spline|cubic_wave|cutaway_textures|density_file|deprecated|df3|diffuse|direction|dispersion|dispersion_samples|dist_exp|distance|double_illuminate|eccentricity|emission|error_bound|evaluate|expand_thresholds|exponent|exterior|extinction|fade_color|fade_colour|fade_distance|fade_power|falloff|falloff_angle|filter|fisheye|flatness|flip|focal_point|fog_alt|fog_offset|fog_type|form|frequency|fresnel|gamma|gather|global_lights|gray_threshold|hf_gray_16|hierarchy|hollow|hypercomplex|importance|inside_vector|interpolate|intervals|inverse|ior|irid_wavelength|jitter|lambda|linear_spline|linear_sweep|load_file|location|look_at|low_error_factor|major_radius|map_type|maximum_reuse|max_gradient|max_intersections|max_iteration|max_sample|max_trace|max_trace_level|media_attenuation|media_interaction|metallic|method|metric|minimum_reuse|mm_per_unit|mortar|natural_spline|nearest_count|no_bump_scale|no_image|no_radiosity|no_reflection|no_shadow|noise_generator|number_of_waves|octaves|offset|omega|omnimax|once|orient|orientation|orthographic|panoramic|parallel|pass_through|perspective|phase|phong|phong_size|point_at|poly_wave|precision|precompute|premultiplied|pretrace_end|pretrace_start|quadratic_spline|quaternion|quick_color|quick_colour|radius|ramp_wave|ratio|read|recursion_limit|reflection|reflection_exponent|refraction|repeat|right|roughness|samples|save_file|scale|scallop_wave|shadowless|sine_wave|size|sky|slice|smooth|solid|spacing|specular|split_union|spotlight|strength|sturm|target|thickness|threshold|tightness|tile2|tiles|tolerance|translucency|transmit|triangle_wave|ttf|turb_depth|turbulence|type|u_steps|ultra_wide_angle|up|use_alpha|use_color|use_colour|use_index|uv_mapping|v_steps|variance|water_level|width|write)\\b"
+    },
+    {
+      "name": "entity.name.class.object.povray",
+      "match": "\\b(bicubic_patch|blob|box|cone|cubic|cylinder|disc|gradient|granite|height_field|isosurface|julia_fractal|lathe|ovus|parametric|plane|poly|polygon|polynomial|prism|quadric|quartic|rainbow|sky_sphere|smooth_triangle|sor|sphere|sphere_sweep|spline|superellipsoid|text|torus|triangle)\\b"
+    },
+    {
+      "name": "entity.name.class.pattern.povray",
+      "match": "\\b(agate|aoi|average|background|boxed|bozo|brick|bumps|cells|checker|crackle|cylindrical|dents|facets|hexagon|julia|leopard|magnet|mandel|marble|onion|pavement|planar|quilted|radial|ripples|slope|square|spherical|spiral1|spiral2|spotted|tiling|toroidal|triangular|waves|wood|wrinkles)\\b"
+    },
+    {
+      "name": "entity.name.function.povray",
+      "match": "\\b(bounded_by|bump_map|clipped_by|color_map|colour_map|contained_by|density|density_map|difference|face_indices|finish|image_map|image_pattern|interior|interior_texture|intersection|light_group|looks_like|material|material_map|media|merge|mesh|mesh2|normal|normal_indices|normal_map|normal_vectors|pigment|pigment_map|pigment_pattern|projected_through|scattering|slope_map|subsurface|texture|texture_list|texture_map|transform|union|uv_indices|uv_vectors|vertex_vectors|warp| )\\b"
+    },
+    {
+      "name": "support.function.povray",
+      "match": "\\b(abs|acos|acosh|asc|asin|asinh|atan|atanh|atan2|atand|bitwise_and|bitwise_or|bitwise_xor|bokeh|ceil|chr|concat|cos|cosh|color|colour|cube|datetime|defined|degrees|dimensions|dimension_size|div|exp|file_exists|floor|inside|int|ln|log|matrix|max|max_extent|min|min_extent|mod|pow|prod|pwr|radians|rand|reciprocal|rgb|rgbf|rgbft|rgbt|rotate|seed|select|sin|sinh|sqr|sqrt|srgb|srgbf|srgbft|srgbt|str|strcmp|strlen|strlwr|strupr|substr|sum|tan|tanh|trace|translate|val|vaxis_rotate|vcross|vdot|vlength|vnormalize|vrotate|vstr|vturbulence)\\b"
+    },
+    {
+      "name": "storage.povray",
+      "match": "\\b(clock|clock_delta|clock_on|blue|false|final_clock|final_frame|frame_number|gif|gray|green|image_height|image_width|initial_clock|initial_frame|input_file_name|jpeg|no|now|off|on|pgm|pi|png|pot|ppm|red|sint8|sint16be|sint16le|sint32be|sint32le|tga|tiff|true|uint8|uint16be|uint16le|yes)\\b"
+    }
+  ],
+  "repository": {
+    "comment_block": {
+      "name": "comment.block.povray",
+      "begin": "/\\*",
+      "end": "\\*/"
+    },
+    "comment_line": {
+      "name": "comment.line.double-slash.povray",
+      "match": "(?<!\\$)(//).*$\\n?"
+    },
+    "number": {
+      "name": "constant.numeric.povray",
+      "match": "(?ix)(\\b\\d+\\.?\\d*|\\.\\d+)(?:[eE][+-]?\\d+)?"
+    },
+    "string_double": {
+      "name": "string.quoted.double.povray",
+      "begin": "\"",
+      "end": "\""
+    },
+    "string_single": {
+      "name": "string.quoted.single.povray",
+      "begin": "\"",
+      "end": "\""
+    },
+    "operator": {
+      "name": "keyword.operator.povray",
+      "match": "\\+|-|\\*|/|="
+    },
+    "angle_bracket": {
+      "match": "(<)([^<>]+)(>)",
+      "captures": {
+        "1": {
+          "name": "punctuation.definition.array.povray"
+        },
+        "2": {
+          "patterns": [
+            {
+              "include": "$base"
+            }
+          ]
+        },
+        "3": {
+          "name": "punctuation.definition.array.povray"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,120 @@
+{
+	"name": "vscode-povray",
+	"displayName": "POV-Ray",
+	"description": "Persistence of Vision Ray Tracer (POV-Ray) Extension for Visual Studio Code",
+	"icon": "icons/povray-extension-logo.png",
+	"version": "0.0.1",
+	"publisher": "jmaxwilson",
+	"license": "MIT",
+	"repository": {
+        "type": "git",
+        "url": "https://github.com/jmaxwilson/vscode-povray"
+    },
+	"engines": {
+		"vscode": "^1.32.0"
+	},
+	"categories": [
+		"Programming Languages"
+	],
+	"activationEvents": [
+		"workspaceContains:*.pov",
+		"onCommand:povray.render"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"languages": [{
+            "id": "povray",
+            "aliases": ["povray", "pov-ray", "POVRay", "POV-Ray", "POVRAY", "POV-RAY"],
+            "extensions": [".pov",".inc", ".ini"]
+        }],
+        "grammars": [{
+            "language": "povray",
+            "scopeName": "source.povray",
+            "path": "./syntaxes/povray.tmLanguage.json"
+		}],
+        "taskDefinitions": [
+            {
+				"type": "povray"
+            }
+        ],
+        "problemMatchers": [
+            {
+				"name": "povray",
+                "owner": "povray",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": [
+                    {
+                        "regexp": "^.*\\s\\'(.*\\.pov|inc).*line\\s+(\\d+):.*(.*[Ee]rror.*):\\s(.*$)",
+                        "file": 1,
+                        "line": 2,
+                        "severity": 3,
+                        "message": 4
+                    },
+                    {
+                        "regexp": "^([\\s]\\w.*)",
+                        "message": 1
+					}
+                ]
+            }
+		],
+		"commands": [
+			{
+			  "command": "povray.render",
+			  "title": "POV-Ray: Render Scene",
+			  "icon": "icons/povray-render-icon.png"
+			}
+		],
+		"menus": {
+			"commandPalette": [{
+				"when": "resourceLangId == povray && resourceExtname != .inc",
+				"command": "povray.render",
+				"group": "navigation"
+			}],
+			"editor/title": [{
+				"when": "resourceLangId == povray && resourceExtname != .inc",
+				"command": "povray.render",
+				"group": "navigation"
+			}]
+		},
+		"configuration": {
+			"type": "object",
+			"title": "POV-Ray Configuration",
+			"properties": {
+				"povray.povrayExecution": {
+					"type": "string",
+					"default": "pvengine /EXIT /RENDER",
+					"description": "The command to run POV-Ray in the terminal"
+				},
+				"povray.outputPath": {
+					"type": "string",
+					"default": "",
+					"description": "An optional output path where rendered images should be created"
+				},
+				"povray.defaultRenderWidth": {
+					"type": "integer",
+					"default": "1024",
+					"description": "The default width in pixels of the rendered scene images"
+				},
+				"povray.defaultRenderHeight": {
+					"type": "integer",
+					"default": "768",
+					"description": "The default height in pixels of the rendered scene images"
+				}
+			}
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "yarn run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"test": "yarn run compile && node ./node_modules/vscode/bin/test"
+	},
+	"devDependencies": {
+		"typescript": "^3.3.1",
+		"vscode": "^1.1.28",
+		"tslint": "^5.12.1",
+		"@types/node": "^10.12.21",
+		"@types/mocha": "^2.2.42"
+	}
+}
