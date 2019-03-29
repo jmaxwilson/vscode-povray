@@ -62,6 +62,11 @@
 			  "command": "povray.render",
 			  "title": "POV-Ray: Render Scene",
 			  "icon": "icons/povray-render-icon.png"
+			},
+			{
+			  "command": "povray.preview",
+			  "title": "POV-Ray: Render Preview",
+			  "icon": "icons/povray-preview-icon.png"
 			}
 		],
 		"menus": {
@@ -69,10 +74,20 @@
 				"when": "resourceLangId == povray && resourceExtname != .inc",
 				"command": "povray.render",
 				"group": "navigation"
-			}],
+			},
+			{
+				"when": "resourceLangId == povray && resourceExtname != .inc",
+				"command": "povray.preview",
+				"group": "navigation"
+			} ],
 			"editor/title": [{
 				"when": "resourceLangId == povray && resourceExtname != .inc",
 				"command": "povray.render",
+				"group": "navigation"
+			},
+			{
+				"when": "resourceLangId == povray && resourceExtname != .inc",
+				"command": "povray.preview",
 				"group": "navigation"
 			}]
 		},
@@ -104,6 +119,16 @@
 					"type":"string",
 					"default": "",
 					"description": "The Library Path where POV-Ray can find all of the standard include files"
+				},
+				"povray.previewRenderWidth": {
+					"type": "integer",
+					"default": "160",
+					"description": "The width in pixels to use when rendering previews"
+				},
+				"povray.previewRenderHeight": {
+					"type": "integer",
+					"default": "120",
+					"description": "The height in pixels to use when rendering previews"
 				}
 			}
 		}
