@@ -20,23 +20,36 @@ This extension does not install POV-Ray. You will need to install it yourself an
 
 ### Install POV-Ray
 
-#### Ubuntu
+#### Ubuntu Linux
 
     sudo apt install povray
 
-#### Windows
+#### Windows 10 with WSL
 
-Download and run the POV-Ray installer for Windows
+For the best experience on Windows, install the [Windows Subsystem for Linux (WSL)](https://msdn.microsoft.com/en-us/commandline/wsl/install_guide) and **Ubuntu for Windows**. [Configure](https://code.visualstudio.com/docs/editor/integrated-terminal#_configuration) VS Code to use `C:\\Windows\\System32\\bash.exe` as the integrated shell. Then install the povray package for Ubuntu exactly the same as above.
+
+#### Windows 
+Download and run the POV-Ray installer for Windows:
 
 http://www.povray.org/download/
 
-Make sure the path to pvengine.exe is added to your PATH Environment Variable so that it can be run from Powershell or the Windows command line.
+Make sure the full path to `pvengine.exe` is added to your `PATH` Environment Variable so that it can be run from Powershell or the Windows command line.
 
-#### Mac (Experimental)
+#### Mac
 
-Download and run the POV-Ray installer for Windows
+Download the unofficial **Command line POV-Ray 3.7.0 final** for Mac:
 
-http://megapov.inetart.net/povrayunofficial_mac/
+http://megapov.inetart.net/povrayunofficial_mac/finalpov.html
+
+Using the terminal, unzip the downloaded file and move the extracted files into `~/povray` :
+
+    unzip PovrayCommandLineMacV2.zip && mv PovrayCommandLineMacV2 ~/povray
+
+Create a `povray` symlink in `/usr/local/bin` to run `Povray37UnofficialMacCmd` :
+
+    ln -s ~/povray/Povray37UnofficialMacCmd /usr/local/bin/povray
+
+Modify the POV-Ray Extension Settings in VS Code to set the Library Path to `~/povray/include`
 
 ## Links
 

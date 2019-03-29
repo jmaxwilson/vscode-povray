@@ -99,6 +99,11 @@
 					"type": "integer",
 					"default": "768",
 					"description": "The default height in pixels of the rendered scene images"
+				},
+				"povray.libraryPath": {
+					"type":"string",
+					"default": "",
+					"description": "The Library Path where POV-Ray can find all of the standard include files"
 				}
 			}
 		}
