@@ -26,7 +26,7 @@ This extension does not install POV-Ray. You will need to install it yourself an
 
 #### Windows 10 with WSL
 
-For the best experience on Windows, install the [Windows Subsystem for Linux (WSL)](https://msdn.microsoft.com/en-us/commandline/wsl/install_guide) and **Ubuntu for Windows**. [Configure](https://code.visualstudio.com/docs/editor/integrated-terminal#_configuration) VS Code to use `C:\\Windows\\System32\\bash.exe` as the integrated shell. Then install the povray package for Ubuntu exactly the same as above.
+For the best experience on Windows, install the [Windows Subsystem for Linux (WSL)](https://msdn.microsoft.com/en-us/commandline/wsl/install_guide) and **Ubuntu for Windows**. Then [configure VS Code](https://code.visualstudio.com/docs/editor/integrated-terminal#_configuration) to use `C:\\Windows\\System32\\bash.exe` as the integrated shell. Once you have WSL and Ubuntu working, you can install the povray package for Ubuntu exactly the same as above.
 
 #### Windows 
 Download and run the POV-Ray installer for Windows:
