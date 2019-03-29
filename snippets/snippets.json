@@ -1,0 +1,58 @@
+{
+	"Sphere": {
+        "prefix": "sphere",
+        "description": "Insert a sphere",
+        "body": [
+            "sphere",
+            "{", 
+            "\t<0,0,0>, 0.5", 
+            "\ttexture",
+            "\t{", 
+            "\t\tpigment",
+            "\t\t{",
+            "\t\t\tcolor rgb <1.00, 0.55, 0.00>",
+            "\t\t}",
+            "\t\tfinish",
+            "\t\t{", 
+            "\t\t\tphong 1.0",
+            "\t\t\treflection 0.00",
+            "\t\t}",
+            "\t} // end texture",
+            "",
+            "\tscale <1,1,1>",
+            "\trotate <0,0,0>",
+            "\ttranslate <0,0.5,0>",
+            "}  // end sphere"
+            ]
+    },
+    "Ovus": {
+        "prefix": "ovus",
+        "description": "Insert an ovus",
+        "body": [
+            "ovus",
+            "{",
+            "\t1.00, 0.65 // base_radius, top_radius (top_radius < base_radius)",
+            "\ttexture",
+            "\t{",
+            "\t\tpigment",
+            "\t\t{",
+            "\t\t\tcolor rgb < 1.0, 0.9, 0.8>*0.9",
+            "\t\t}",  
+            "\t\t// normal { bumps 0.75 scale 0.02 }",
+            "\t\tfinish",
+            "\t\t{",
+            "\t\t\tphong 0.3",
+            "\t\t\treflection",
+            "\t\t\t{",
+            "\t\t\t\t0.00 metallic 0.00",
+            "\t\t\t}",
+            "\t\t}",
+            "\t} // end texture",
+            "",
+            "\tscale 0.5",
+            "\trotate <0,0,0>",
+            "\ttranslate <0,0.5,0>",
+            "} // end ovus"
+        ]
+    }
+}

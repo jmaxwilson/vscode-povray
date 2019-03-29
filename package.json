@@ -101,7 +101,13 @@
 					"description": "The default height in pixels of the rendered scene images"
 				}
 			}
-		}
+		},
+		"snippets": [
+			{
+				"language": "povray",
+				"path": "./snippets/snippets.json"
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "yarn run compile",
