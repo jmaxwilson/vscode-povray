@@ -29,12 +29,18 @@ function registerTasks() {
             let outputPath = settings.get("outputPath").trim();
             const renderWidth = settings.get("defaultRenderWidth");
             const renderHeight = settings.get("defaultRenderHeight");
+            let libraryPath = settings.get("libraryPath").trim();
             // Default to running an executable called povray (Linux, Mac, WSL Ubuntu Bash, Git Bash)
             let cmd = "povray";
             // Make sure that if the user has specified an output path that it ends wth a slash
-            // because POV-Ray won't think it is a folder unless it ends with a slash
+            // because POV-Ray on Windows wont recognize it is a folder unless it ends with a slash
             if (outputPath.length > 0 && !outputPath.endsWith('/') && !outputPath.endsWith('\\')) {
                 outputPath += "/";
+            }
+            // Make sure that if the user has specified a library path that it ends wth a slash
+            // because POV-Ray on Windows wont recognize it is a folder unless it ends with a slash
+            if (libraryPath.length > 0 && !libraryPath.endsWith('/') && !libraryPath.endsWith('\\')) {
+                libraryPath += "/";
             }
             // If we are running on Windows
             if (os.platform() === 'win32') {
@@ -48,6 +54,10 @@ function registerTasks() {
                     // Normalize the outpath to make sure that it works for Windows
                     if (outputPath.length > 0) {
                         outputPath = path.normalize(outputPath);
+                    }
+                    // Normalize the library path to make sure that it works for Windows
+                    if (libraryPath.length > 0) {
+                        libraryPath = path.normalize(libraryPath);
                     }
                 }
             }
@@ -63,6 +73,11 @@ function registerTasks() {
             // add the output path as a commandline argument
             if (outputPath.length > 0) {
                 renderCmd += " Output_File_Name=" + outputPath;
+            }
+            // If the user has set library path, 
+            // add the library path as a commandline argument
+            if (libraryPath.length > 0) {
+                renderCmd += " Library_Path=" + libraryPath;
             }
             // For the build task, execute povray as a shell command
             const execution = new vscode.ShellExecution(renderCmd);
