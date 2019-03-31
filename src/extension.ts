@@ -190,8 +190,8 @@ function registerTasks() {
                         column = vscode.ViewColumn.Beside;
                     }
                     
-                    // Open the rendered image
-                    vscode.commands.executeCommand('vscode.open', vscode.Uri.file(taskDefinition.outFilePath), column);
+                    // Open the rendered image, but preserve the focus of the current document
+                    vscode.commands.executeCommand('vscode.open', vscode.Uri.file(taskDefinition.outFilePath), {viewColumn: column, preserveFocus: true});
                 }
                 
             }
