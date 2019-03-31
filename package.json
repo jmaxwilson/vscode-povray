@@ -38,15 +38,15 @@
 				"properties": {
 					"task": {
 						"type": "string",
-						"description": "The Rake task to customize"
+						"description": "The type of task"
 					},
 					"filePath": {
 						"type": "string",
-						"description": ""
+						"description": "The full path to the source file"
 					},
 					"outFilePath": {
 						"type": "string",
-						"description": ""
+						"description": "The full path to the output file"
 					}
 				}
             }
