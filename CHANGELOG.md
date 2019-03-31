@@ -3,8 +3,6 @@
 All notable changes to this project will be documented in this file.
   
 ## [0.0.3] - 2019-03-30
-
-New Features, code refactors, and improvements to stability
  
 ### Added
 - Feature: Open Image After Render
