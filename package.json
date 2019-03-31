@@ -3,7 +3,7 @@
 	"displayName": "POV-Ray",
 	"description": "Persistence of Vision Ray Tracer (POV-Ray) Extension for Visual Studio Code",
 	"icon": "icons/povray-extension-logo.png",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"publisher": "jmaxwilson",
 	"license": "MIT",
 	"repository": {
@@ -34,7 +34,21 @@
 		}],
         "taskDefinitions": [
             {
-				"type": "povray"
+				"type": "povray",
+				"properties": {
+					"task": {
+						"type": "string",
+						"description": "The type of task"
+					},
+					"filePath": {
+						"type": "string",
+						"description": "The full path to the source file"
+					},
+					"outFilePath": {
+						"type": "string",
+						"description": "The full path to the output file"
+            }
+				}
             }
         ],
         "problemMatchers": [
@@ -103,7 +117,7 @@
 				"povray.outputPath": {
 					"type": "string",
 					"default": "",
-					"description": "An optional output path where rendered images should be created"
+					"description": "A path to a folder where the rendered images will be saved. (Note: you will need to create the folder before rendering)"
 				},
 				"povray.defaultRenderWidth": {
 					"type": "integer",
@@ -119,6 +133,16 @@
 					"type":"string",
 					"default": "",
 					"description": "The Library Path where POV-Ray can find all of the standard include files"
+				},
+				"povray.openImageAfterRender": {
+					"type":"boolean",
+					"default": true,
+					"description": "Automatically open the rendered image when rendering finishes?"
+				},
+				"povray.openImageAfterRenderInNewColumn": {
+					"type":"boolean",
+					"default": true,
+					"description": "When the rendered image is automatically opened, open it in a new column beside the current editor"
 				},
 				"povray.previewRenderWidth": {
 					"type": "integer",

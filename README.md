@@ -14,6 +14,10 @@ This extension allows you to use Visual Studio Code to edit POV-Ray Scene Descri
 
 * Configuration Settings to control the output folder and image dimensions.
 
+* Settings to toggle automatically opening the image when rendering is complete
+
+[View the Change Log](./CHANGELOG.md)
+
 ## Requirements
 
 This extension does not install POV-Ray. You will need to install it yourself and make sure that it is accessible from your terminal.
