@@ -88,6 +88,11 @@ function registerTasks() {
                     renderCmd += " Library_Path=$(wslpath '" + settings.libraryPath + "')";
                 }
             }
+            // If the integrated terminal is Powershell running on Windows, we need to pipe the pvengine.exe through Out-Null
+            // to make powershell wait for the rendering to complete and POv-Ray to close before continuing
+            if (isWindowsPowershell()) {
+                renderCmd += " | Out-Null";
+            }
             // For the build task, execute povray as a shell command
             const execution = new vscode.ShellExecution(renderCmd);
             // Use the $povray problem matcher defined in the package.json problemMatchers
@@ -199,11 +204,25 @@ function isWindowsBash() {
         // Find out which shell VS Code is using for Windows
         const terminalSettings = vscode.workspace.getConfiguration("terminal");
         const shell = terminalSettings.get("integrated.shell.windows");
-        // If the windows shell is not set to use WSL Bash or Git Bash
+        // If the windows shell is set to use WSL Bash or Git Bash
         if (shell !== undefined && shell.indexOf("bash") !== -1) {
             isWindowsBash = true;
         }
     }
     return isWindowsBash;
+}
+// Helper function for determining if the integrated terminal is Powershell on Windows
+function isWindowsPowershell() {
+    let isWindowsPowershell = false;
+    if (os.platform() === 'win32') {
+        // Find out which shell VS Code is using for Windows
+        const terminalSettings = vscode.workspace.getConfiguration("terminal");
+        const shell = terminalSettings.get("integrated.shell.windows");
+        // If the windows shell is set to use powershell
+        if (shell !== undefined && shell.indexOf("powershell") !== -1) {
+            isWindowsPowershell = true;
+        }
+    }
+    return isWindowsPowershell;
 }
 //# sourceMappingURL=extension.js.map
