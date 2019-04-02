@@ -20,9 +20,19 @@ This extension allows you to use Visual Studio Code to edit POV-Ray Scene Descri
 
 ## Requirements
 
-This extension does not install POV-Ray. You will need to install it yourself and make sure that it is accessible from your terminal.
+This extension does not install POV-Ray. You can either install it yourself or run it using Docker.
 
-### Install POV-Ray
+## Running POV-Ray using Docker
+
+If you have [Docker](https://www.docker.com/products/docker-desktop) installed, you can easily run POV-Ray on any platform by selecting the **Docker** > **Enable Docker** option in the VS Code POV-Ray settings.
+
+By default, the **jmaxwilson/povray:latest** docker image will be used. Additional [povray docker images](https://cloud.docker.com/repository/docker/jmaxwilson/povray) are available and you can set the image you want to use in the settings.
+
+Note: if you are using WSL Bash as your integrated terminal on Windows, you will need some [addtional setup](https://github.com/jmaxwilson/wsl-docker-git-setup) to make Docker for Windows work with WSL Bash.
+
+## Installing POV-Ray
+
+If you are not using Docker, you will need to install POV-Ray for your specific OS and you will need to make sure that it can be run via the commandline from your terminal.
 
 #### Ubuntu Linux
 
