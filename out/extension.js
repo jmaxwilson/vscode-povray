@@ -50,12 +50,34 @@ function registerTasks() {
             }
             // Normalize the outFileName to make sure that it works for Windows
             outFilePath = path.normalize(outFilePath);
+            // Get the output directory 
+            let outFileDir = path.dirname(outFilePath);
+            outFileDir = path.normalize(outFileDir);
             // Default to running an executable called povray (Linux, Mac, WSL Ubuntu Bash, Git Bash)
             let cmd = "povray";
             // If we are running on Windows but not Bash
             if (os.platform() === 'win32' && !isWindowsBash()) {
                 // Change the povray executable to the windows pvengine instead
                 cmd = "pvengine /EXIT /RENDER";
+            }
+            // If we are running povray via Docker
+            if (settings.useDockerToRunPovray === true) {
+                cmd = "docker";
+                // Get the source and output directories to mount into the docker image
+                let dockerSource = path.normalize(fileDir);
+                let dockerOutput = path.normalize(outFileDir);
+                // If the integrated terminal is WSL Bash
+                if (isWindowsBash()) {
+                    // Running Windows Docker from WSL Bash requires some extra setup
+                    // We have to tell the docker client to connect to Windows Docker over TCP
+                    cmd += " --host tcp://127.0.0.1:2375";
+                    // For the paths to be understod by both WSL Bash AND Docker for Windows,
+                    // you have to have a symlink called /c that points to /mnt/c
+                    dockerSource = dockerSource.replace("c:", "/c").replace(/\\/g, "/");
+                    dockerOutput = dockerOutput.replace("c:", "/c").replace(/\\/g, "/");
+                }
+                // mount the source and output directories
+                cmd += " run -v " + dockerSource + ":/source -v " + dockerOutput + ":/output " + settings.useDockerImage;
             }
             // Start building the render command that will be run in the shell
             let renderCmd = cmd + " ${fileBasename} -D";
@@ -68,29 +90,42 @@ function registerTasks() {
             // If the user has set an output path for rendered files, 
             // add the output path as a commandline argument
             if (settings.outputPath.length > 0) {
-                if (!isWindowsBash()) {
-                    renderCmd += " Output_File_Name=" + outFilePath;
+                // if we are running povray using Docker
+                if (settings.useDockerToRunPovray) {
+                    // We have already mounted the output directory
+                    // so we always output within the docker container to /output
+                    renderCmd += " Output_File_Name=/output/";
                 }
-                else {
-                    // If the shell is WSL Bash then we need to make sure that the output path is translated into the correct WSL path
-                    renderCmd += " Output_File_Name=$(wslpath \'" + outFilePath + "\')";
+                else { // We aren't running povray using Docker
+                    // If we are running povray in WSL Bash
+                    if (isWindowsBash()) {
+                        // If the shell is WSL Bash then we need to make sure that
+                        // the output path is translated into the correct WSL path
+                        renderCmd += " Output_File_Name=$(wslpath \'" + outFilePath + "\')";
+                    }
+                    else {
+                        // Otherwise the output directory is straight forward
+                        renderCmd += " Output_File_Name=" + outFilePath;
+                    }
                 }
             }
             // If the user has set library path, 
             // add the library path as a commandline argument
-            if (settings.libraryPath.length > 0) {
+            // We ignore the Library Path if we are using docker
+            if (settings.libraryPath.length > 0 && !settings.useDockerToRunPovray) {
                 settings.libraryPath = path.normalize(settings.libraryPath);
-                if (!isWindowsBash()) {
-                    renderCmd += " Library_Path=" + settings.libraryPath;
+                if (isWindowsBash()) {
+                    // If the shell is WSL Bash then we need to make sure that
+                    // the library path is translated into the correct WSL path
+                    renderCmd += " Library_Path=$(wslpath '" + settings.libraryPath + "')";
                 }
                 else {
-                    // If the shell is WSL Bash then we need to make sure that the library path is translated into the correct WSL path
-                    renderCmd += " Library_Path=$(wslpath '" + settings.libraryPath + "')";
+                    renderCmd += " Library_Path=" + settings.libraryPath;
                 }
             }
             // If the integrated terminal is Powershell running on Windows, we need to pipe the pvengine.exe through Out-Null
             // to make powershell wait for the rendering to complete and POv-Ray to close before continuing
-            if (isWindowsPowershell()) {
+            if (isWindowsPowershell() && !settings.useDockerToRunPovray) {
                 renderCmd += " | Out-Null";
             }
             // For the build task, execute povray as a shell command
@@ -179,7 +214,9 @@ function getPOVSettings() {
         defaultRenderHeight: configuration.get("defaultRenderHeight"),
         libraryPath: configuration.get("libraryPath").trim(),
         openImageAfterRender: configuration.get("openImageAfterRender"),
-        openImageAfterRenderInNewColumn: configuration.get("openImageAfterRenderInNewColumn")
+        openImageAfterRenderInNewColumn: configuration.get("openImageAfterRenderInNewColumn"),
+        useDockerToRunPovray: configuration.get("docker.useDockerToRunPovray"),
+        useDockerImage: configuration.get("docker.useDockerImage")
     };
     // Make sure that if the user has specified an outputPath it ends wth a slash
     // because POV-Ray on Windows wont recognize it is a folder unless it ends with a slash
