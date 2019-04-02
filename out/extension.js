@@ -32,7 +32,7 @@ function registerTasks() {
             // Build the povray executable to run in the shell
             let povrayExe = buildShellPOVExe(settings, fileInfo, outFilePath, context);
             // Build the commandline render options to pass to the executable in the shell
-            let renderOptions = buildRenderOptions(settings, fileInfo, outFilePath);
+            let renderOptions = buildRenderOptions(settings, fileInfo, outFilePath, context);
             // Create the Shell Execution that runs the povray executable with the render options
             const execution = new vscode.ShellExecution(povrayExe + renderOptions);
             // Use the $povray problem matcher defined in the package.json problemMatchers
@@ -114,7 +114,7 @@ function registerCommands(context) {
 exports.registerCommands = registerCommands;
 function getContext() {
     let context = {
-        platform: os.platform,
+        platform: os.platform(),
         isWindowsBash: isWindowsBash(),
         isWindowsPowershell: isWindowsPowershell()
     };
@@ -195,7 +195,7 @@ function buildShellPOVExe(settings, fileInfo, outFilePath, context) {
     return exe;
 }
 exports.buildShellPOVExe = buildShellPOVExe;
-function buildRenderOptions(settings, fileInfo, outFilePath) {
+function buildRenderOptions(settings, fileInfo, outFilePath, context) {
     // Start building the render command that will be run in the shell
     let renderOptions = " ${fileBasename} -D";
     // if this is a .pov file, pass the default render width and height from the settings
@@ -215,7 +215,7 @@ function buildRenderOptions(settings, fileInfo, outFilePath) {
         }
         else { // We aren't running povray using Docker
             // If we are running povray in WSL Bash
-            if (isWindowsBash()) {
+            if (context.isWindowsBash) {
                 // If the shell is WSL Bash then we need to make sure that
                 // the output path is translated into the correct WSL path
                 renderOptions += " Output_File_Name=$(wslpath \'" + outFilePath + "\')";
@@ -231,7 +231,7 @@ function buildRenderOptions(settings, fileInfo, outFilePath) {
     // We ignore the Library Path if we are using docker
     if (settings.libraryPath.length > 0 && !settings.useDockerToRunPovray) {
         settings.libraryPath = path.normalize(settings.libraryPath);
-        if (isWindowsBash()) {
+        if (context.isWindowsBash) {
             // If the shell is WSL Bash then we need to make sure that
             // the library path is translated into the correct WSL path
             renderOptions += " Library_Path=$(wslpath '" + settings.libraryPath + "')";
@@ -242,8 +242,11 @@ function buildRenderOptions(settings, fileInfo, outFilePath) {
     }
     // If the integrated terminal is Powershell running on Windows, we need to pipe the pvengine.exe through Out-Null
     // to make powershell wait for the rendering to complete and POv-Ray to close before continuing
-    if (isWindowsPowershell() && !settings.useDockerToRunPovray) {
+    if (context.isWindowsPowershell && !settings.useDockerToRunPovray) {
         renderOptions += " | Out-Null";
+    }
+    if (context.platform !== "win32") {
+        renderOptions = renderOptions.replace(/\\/g, "/");
     }
     return renderOptions;
 }

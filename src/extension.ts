@@ -52,7 +52,7 @@ export function registerTasks() {
             let povrayExe = buildShellPOVExe(settings, fileInfo, outFilePath, context);
 
             // Build the commandline render options to pass to the executable in the shell
-            let renderOptions = buildRenderOptions(settings, fileInfo, outFilePath);
+            let renderOptions = buildRenderOptions(settings, fileInfo, outFilePath, context);
             
             // Create the Shell Execution that runs the povray executable with the render options
             const execution = new vscode.ShellExecution(povrayExe + renderOptions);
@@ -164,10 +164,9 @@ export function registerCommands(context: vscode.ExtensionContext) {
     
 }
 
-export function getContext()
-{
+export function getContext() {
     let context = {
-        platform: os.platform,
+        platform: os.platform(),
         isWindowsBash: isWindowsBash(),
         isWindowsPowershell: isWindowsPowershell()
     };
@@ -175,8 +174,7 @@ export function getContext()
     return context;
 }
 
-export function getFileInfo()
-{
+export function getFileInfo() {
     // Get inormation about currently open file path 
     let fileInfo = {
         filePath: "",
@@ -196,8 +194,7 @@ export function getFileInfo()
     return fileInfo;
 }
 
-export function buildOutFilePath(settings: any, fileInfo: any, context: any)
-{
+export function buildOutFilePath(settings: any, fileInfo: any, context: any) {
     // Build the output file path
     // Default to the exact same path as the source file, except with an image extension
     let outFilePath = fileInfo.fileDir + fileInfo.fileName.replace(".pov",".png");
@@ -223,8 +220,7 @@ export function buildOutFilePath(settings: any, fileInfo: any, context: any)
     return outFilePath;
 }
 
-export function buildShellPOVExe(settings: any, fileInfo: any, outFilePath: any, context: any)
-{
+export function buildShellPOVExe(settings: any, fileInfo: any, outFilePath: any, context: any) {
     // Default to running an executable called povray (Linux, Mac, WSL Ubuntu Bash, Git Bash)
     let exe = "povray";
 
@@ -268,8 +264,7 @@ export function buildShellPOVExe(settings: any, fileInfo: any, outFilePath: any,
     return exe;
 }
 
-export function buildRenderOptions(settings: any, fileInfo: any, outFilePath: string)
-{
+export function buildRenderOptions(settings: any, fileInfo: any, outFilePath: string, context: any) {
     // Start building the render command that will be run in the shell
     let renderOptions = " ${fileBasename} -D";
     
@@ -294,7 +289,7 @@ export function buildRenderOptions(settings: any, fileInfo: any, outFilePath: st
         } else { // We aren't running povray using Docker
             
             // If we are running povray in WSL Bash
-            if (isWindowsBash())
+            if (context.isWindowsBash)
             {
                 // If the shell is WSL Bash then we need to make sure that
                 // the output path is translated into the correct WSL path
@@ -314,8 +309,7 @@ export function buildRenderOptions(settings: any, fileInfo: any, outFilePath: st
 
         settings.libraryPath = path.normalize(settings.libraryPath);
 
-        if (isWindowsBash())
-        {
+        if (context.isWindowsBash) {
             // If the shell is WSL Bash then we need to make sure that
             // the library path is translated into the correct WSL path
             renderOptions += " Library_Path=$(wslpath '"+settings.libraryPath+"')";
@@ -328,16 +322,19 @@ export function buildRenderOptions(settings: any, fileInfo: any, outFilePath: st
 
     // If the integrated terminal is Powershell running on Windows, we need to pipe the pvengine.exe through Out-Null
     // to make powershell wait for the rendering to complete and POv-Ray to close before continuing
-    if (isWindowsPowershell() && !settings.useDockerToRunPovray) {
+    if (context.isWindowsPowershell && !settings.useDockerToRunPovray) {
         renderOptions += " | Out-Null";
+    }
+
+    if (context.platform !== "win32") {
+        renderOptions = renderOptions.replace(/\\/g, "/");
     }
 
     return renderOptions;
 } 
 
 // Helper export function to get the POV-Ray related settings
-export function getPOVSettings()
-{
+export function getPOVSettings() {
     const configuration = vscode.workspace.getConfiguration('povray');
     let settings = {
         outputPath:                         (<string>configuration.get("render.outputPath")).trim(),
@@ -372,8 +369,7 @@ export function getPOVSettings()
 }
 
 // Helper export function for determining if the integrated terminal is WSL Bash
-export function isWindowsBash()
-{
+export function isWindowsBash() {
     let isWindowsBash = false;
 
     if (os.platform() === 'win32') {
@@ -393,8 +389,7 @@ export function isWindowsBash()
 }
 
 // Helper export function for determining if the integrated terminal is Powershell on Windows
-export function isWindowsPowershell()
-{
+export function isWindowsPowershell() {
     let isWindowsPowershell = false;
 
     if (os.platform() === 'win32') {
