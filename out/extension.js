@@ -209,14 +209,14 @@ function registerCommands(context) {
 function getPOVSettings() {
     const configuration = vscode.workspace.getConfiguration('povray');
     let settings = {
-        outputPath: configuration.get("outputPath").trim(),
-        defaultRenderWidth: configuration.get("defaultRenderWidth"),
-        defaultRenderHeight: configuration.get("defaultRenderHeight"),
+        outputPath: configuration.get("render.outputPath").trim(),
+        defaultRenderWidth: configuration.get("render.defaultWidth"),
+        defaultRenderHeight: configuration.get("render.defaultHeight"),
         libraryPath: configuration.get("libraryPath").trim(),
-        openImageAfterRender: configuration.get("openImageAfterRender"),
-        openImageAfterRenderInNewColumn: configuration.get("openImageAfterRenderInNewColumn"),
-        useDockerToRunPovray: configuration.get("docker.useDockerToRunPovray"),
-        useDockerImage: configuration.get("docker.useDockerImage")
+        openImageAfterRender: configuration.get("render.openImageAfterRender"),
+        openImageAfterRenderInNewColumn: configuration.get("render.openImageAfterRenderInNewColumn"),
+        useDockerToRunPovray: configuration.get("docker.enableDocker"),
+        useDockerImage: configuration.get("docker.image")
     };
     // Make sure that if the user has specified an outputPath it ends wth a slash
     // because POV-Ray on Windows wont recognize it is a folder unless it ends with a slash

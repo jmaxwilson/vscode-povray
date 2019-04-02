@@ -287,14 +287,14 @@ function getPOVSettings()
 {
     const configuration = vscode.workspace.getConfiguration('povray');
     let settings = {
-        outputPath:                         (<string>configuration.get("outputPath")).trim(),
-        defaultRenderWidth:                 <string>configuration.get("defaultRenderWidth"),
-        defaultRenderHeight:                <string>configuration.get("defaultRenderHeight"),
+        outputPath:                         (<string>configuration.get("render.outputPath")).trim(),
+        defaultRenderWidth:                 <string>configuration.get("render.defaultWidth"),
+        defaultRenderHeight:                <string>configuration.get("render.defaultHeight"),
         libraryPath:                        (<string>configuration.get("libraryPath")).trim(),
-        openImageAfterRender:               configuration.get("openImageAfterRender"),
-        openImageAfterRenderInNewColumn:    configuration.get("openImageAfterRenderInNewColumn"),
-        useDockerToRunPovray:               configuration.get("docker.useDockerToRunPovray"),
-        useDockerImage:                     configuration.get("docker.useDockerImage")
+        openImageAfterRender:               configuration.get("render.openImageAfterRender"),
+        openImageAfterRenderInNewColumn:    configuration.get("render.openImageAfterRenderInNewColumn"),
+        useDockerToRunPovray:               configuration.get("docker.enableDocker"),
+        useDockerImage:                     configuration.get("docker.image")
     };
 
     // Make sure that if the user has specified an outputPath it ends wth a slash
