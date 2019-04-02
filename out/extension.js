@@ -28,7 +28,7 @@ function registerTasks() {
             // Get the POV-Ray settings
             let settings = getPOVSettings();
             // build the output file path
-            let outFilePath = buildOutFilePath(settings, fileInfo);
+            let outFilePath = buildOutFilePath(settings, fileInfo, context);
             // Build the povray executable to run in the shell
             let povrayExe = buildShellPOVExe(settings, fileInfo, outFilePath, context);
             // Build the commandline render options to pass to the executable in the shell
@@ -138,7 +138,7 @@ function getFileInfo() {
     return fileInfo;
 }
 exports.getFileInfo = getFileInfo;
-function buildOutFilePath(settings, fileInfo) {
+function buildOutFilePath(settings, fileInfo, context) {
     // Build the output file path
     // Default to the exact same path as the source file, except with an image extension
     let outFilePath = fileInfo.fileDir + fileInfo.fileName.replace(".pov", ".png");
@@ -155,6 +155,9 @@ function buildOutFilePath(settings, fileInfo) {
     }
     // Normalize the outFileName to make sure that it works for Windows
     outFilePath = path.normalize(outFilePath);
+    if (context.platform !== "win32") {
+        outFilePath = outFilePath.replace(/\\/g, "/");
+    }
     return outFilePath;
 }
 exports.buildOutFilePath = buildOutFilePath;

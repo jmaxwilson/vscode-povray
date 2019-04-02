@@ -46,7 +46,7 @@ export function registerTasks() {
             let settings = getPOVSettings();
 
             // build the output file path
-            let outFilePath = buildOutFilePath(settings, fileInfo);
+            let outFilePath = buildOutFilePath(settings, fileInfo, context);
 
             // Build the povray executable to run in the shell
             let povrayExe = buildShellPOVExe(settings, fileInfo, outFilePath, context);
@@ -196,7 +196,7 @@ export function getFileInfo()
     return fileInfo;
 }
 
-export function buildOutFilePath(settings: any, fileInfo: any)
+export function buildOutFilePath(settings: any, fileInfo: any, context: any)
 {
     // Build the output file path
     // Default to the exact same path as the source file, except with an image extension
@@ -216,6 +216,10 @@ export function buildOutFilePath(settings: any, fileInfo: any)
     // Normalize the outFileName to make sure that it works for Windows
     outFilePath = path.normalize(outFilePath);
 
+    if (context.platform !== "win32") {
+        outFilePath = outFilePath.replace(/\\/g, "/");
+    }
+
     return outFilePath;
 }
 
@@ -232,8 +236,7 @@ export function buildShellPOVExe(settings: any, fileInfo: any, outFilePath: any,
     }
 
     // If we are running povray via Docker
-    if (settings.useDockerToRunPovray === true)
-    {
+    if (settings.useDockerToRunPovray === true) {
         exe = "docker";
 
         // Get the source and output directories to mount into the docker image
@@ -241,8 +244,7 @@ export function buildShellPOVExe(settings: any, fileInfo: any, outFilePath: any,
         let dockerOutput = path.normalize(path.dirname(outFilePath));
 
         // If the integrated terminal is WSL Bash
-        if (context.isWindowsBash)
-        {
+        if (context.isWindowsBash) {
             // Running Windows Docker from WSL Bash requires some extra setup
 
             // We have to tell the docker client to connect to Windows Docker over TCP
@@ -254,8 +256,7 @@ export function buildShellPOVExe(settings: any, fileInfo: any, outFilePath: any,
             dockerOutput = dockerOutput.replace("c:","/c").replace(/\\/g, "/");
         }
 
-        if (context.platform !== "win32")
-        {
+        if (context.platform !== "win32") {
             dockerSource = dockerSource.replace(/\\/g, "/");
             dockerOutput = dockerOutput.replace(/\\/g, "/");
         }
