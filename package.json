@@ -143,7 +143,7 @@
 				"povray.docker.image": {
 					"type":"string",
 					"default": "jmaxwilson/povray",
-					"markdownDescription": "Specify the docker image that will be used to run povray through docker. Compatible images available from https://cloud.docker.com/repository/docker/jmaxwilson/povray "
+					"markdownDescription": "Specify the docker image that will be used to run povray through docker. Compatible images available from https://hub.docker.com/r/jmaxwilson/povray "
 				},
 				"povray.libraryPath": {
 					"type":"string",
