@@ -36,7 +36,7 @@ suite("VSCode-POVRay extension Tests", function () {
             useDockerImage:                     "jmaxwilson/povray"
         };
 
-        let outFilePath = "c:\\pov\\teapot\\out\\teapot.png";
+        let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
 
         let povrayExe = povrayExtension.buildShellPOVExe(settings, fileInfo, outFilePath, context);
         assert.equal(povrayExe, "povray");
@@ -68,10 +68,10 @@ suite("VSCode-POVRay extension Tests", function () {
             useDockerImage:                     "jmaxwilson/povray"
         };
 
-        let outFilePath = "c:\\pov\\teapot\\out\\teapot.png";
+        let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
 
         let povrayExe = povrayExtension.buildShellPOVExe(settings, fileInfo, outFilePath, context);
-        assert.equal(povrayExe, "docker --host tcp://127.0.0.1:2375 run -v /c/pov/teapot/:/source -v /c/pov/teapot/out:/output jmaxwilson/povray");
+        assert.equal(povrayExe, "docker --host tcp://127.0.0.1:2375 run -v /c/pov/teapot/:/source -v /c/pov/teapot/output:/output jmaxwilson/povray");
     });
 
     test("buildOutFilePath_win32_bash", function() {
@@ -130,10 +130,10 @@ suite("VSCode-POVRay extension Tests", function () {
             useDockerImage:                     "jmaxwilson/povray"
         };
 
-        let outFilePath = "c:\\pov\\teapot\\out\\teapot.png";
+        let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
 
         let povrayExe = povrayExtension.buildRenderOptions(settings, fileInfo, outFilePath, context);
-        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=$(wslpath \'c:\\pov\\teapot\\out\\teapot.png\') Library_Path=$(wslpath 'c:\\Users\\myuser\\Documents\\POVRay\\include\\')");
+        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=$(wslpath \'c:\\pov\\teapot\\output\\teapot.png\') Library_Path=$(wslpath 'c:\\Users\\myuser\\Documents\\POVRay\\include\\')");
     });
 
     test("buildRenderOptions_win32_bash_docker", function() {
@@ -162,7 +162,7 @@ suite("VSCode-POVRay extension Tests", function () {
             useDockerImage:                     "jmaxwilson/povray"
         };
 
-        let outFilePath = "c:\\pov\\teapot\\out\\teapot.png";
+        let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
 
         let povrayExe = povrayExtension.buildRenderOptions(settings, fileInfo, outFilePath, context);
         assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=/output/");
@@ -195,7 +195,7 @@ suite("VSCode-POVRay extension Tests", function () {
             useDockerImage:                     "jmaxwilson/povray"
         };
 
-        let outFilePath = "c:\\pov\\teapot\\out\\teapot.png";
+        let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
 
         let povrayExe = povrayExtension.buildShellPOVExe(settings, fileInfo, outFilePath, context);
         assert.equal(povrayExe, "pvengine /EXIT /RENDER");
@@ -227,10 +227,10 @@ suite("VSCode-POVRay extension Tests", function () {
             useDockerImage:                     "jmaxwilson/povray"
         };
 
-        let outFilePath = "c:\\pov\\teapot\\out\\teapot.png";
+        let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
 
         let povrayExe = povrayExtension.buildShellPOVExe(settings, fileInfo, outFilePath, context);
-        assert.equal(povrayExe, "docker run -v c:\\pov\\teapot\\:/source -v c:\\pov\\teapot\\out:/output jmaxwilson/povray");
+        assert.equal(povrayExe, "docker run -v c:\\pov\\teapot\\:/source -v c:\\pov\\teapot\\output:/output jmaxwilson/povray");
     });
 
     test("buildOutFilePath_win32_powershell", function() {
@@ -289,10 +289,10 @@ suite("VSCode-POVRay extension Tests", function () {
             useDockerImage:                     "jmaxwilson/povray"
         };
 
-        let outFilePath = "c:\\pov\\teapot\\out\\teapot.png";
+        let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
 
         let povrayExe = povrayExtension.buildRenderOptions(settings, fileInfo, outFilePath, context);
-        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=c:\\pov\\teapot\\out\\teapot.png\ Library_Path=c:\\Users\\myuser\\Documents\\POVRay\\include\\ | Out-Null");
+        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=c:\\pov\\teapot\\output\\teapot.png\ Library_Path=c:\\Users\\myuser\\Documents\\POVRay\\include\\ | Out-Null");
     });
 
     test("buildRenderOptions_win32_powershell_docker", function() {
@@ -321,7 +321,7 @@ suite("VSCode-POVRay extension Tests", function () {
             useDockerImage:                     "jmaxwilson/povray"
         };
 
-        let outFilePath = "c:\\pov\\teapot\\out\\teapot.png";
+        let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
 
         let povrayExe = povrayExtension.buildRenderOptions(settings, fileInfo, outFilePath, context);
         assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=/output/");
@@ -354,7 +354,7 @@ suite("VSCode-POVRay extension Tests", function () {
             useDockerImage:                     "jmaxwilson/povray"
         };
 
-        let outFilePath = "c:\\pov\\teapot\\out\\teapot.png";
+        let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
 
         let povrayExe = povrayExtension.buildShellPOVExe(settings, fileInfo, outFilePath, context);
         assert.equal(povrayExe, "pvengine /EXIT /RENDER");
@@ -386,10 +386,10 @@ suite("VSCode-POVRay extension Tests", function () {
             useDockerImage:                     "jmaxwilson/povray"
         };
 
-        let outFilePath = "c:\\pov\\teapot\\out\\teapot.png";
+        let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
 
         let povrayExe = povrayExtension.buildShellPOVExe(settings, fileInfo, outFilePath, context);
-        assert.equal(povrayExe, "docker run -v c:\\pov\\teapot\\:/source -v c:\\pov\\teapot\\out:/output jmaxwilson/povray");
+        assert.equal(povrayExe, "docker run -v c:\\pov\\teapot\\:/source -v c:\\pov\\teapot\\output:/output jmaxwilson/povray");
     });
 
     test("buildOutFilePath_win32_cmd", function() {
@@ -448,10 +448,10 @@ suite("VSCode-POVRay extension Tests", function () {
             useDockerImage:                     "jmaxwilson/povray"
         };
 
-        let outFilePath = "c:\\pov\\teapot\\out\\teapot.png";
+        let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
 
         let povrayExe = povrayExtension.buildRenderOptions(settings, fileInfo, outFilePath, context);
-        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=c:\\pov\\teapot\\out\\teapot.png\ Library_Path=c:\\Users\\myuser\\Documents\\POVRay\\include\\");
+        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=c:\\pov\\teapot\\output\\teapot.png\ Library_Path=c:\\Users\\myuser\\Documents\\POVRay\\include\\");
     });
 
     test("buildRenderOptions_win32_cmd_docker", function() {
@@ -480,7 +480,7 @@ suite("VSCode-POVRay extension Tests", function () {
             useDockerImage:                     "jmaxwilson/povray"
         };
 
-        let outFilePath = "c:\\pov\\teapot\\out\\teapot.png";
+        let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
 
         let povrayExe = povrayExtension.buildRenderOptions(settings, fileInfo, outFilePath, context);
         assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=/output/");

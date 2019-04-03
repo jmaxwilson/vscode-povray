@@ -2,7 +2,6 @@ sudo: false
 
 os:
   - linux
-  - osx
 
 before_install:
   - if [ $TRAVIS_OS_NAME == "linux" ]; then
