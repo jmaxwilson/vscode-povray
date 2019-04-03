@@ -94,6 +94,22 @@
 			"type": "object",
 			"title": "POV-Ray Configuration",
 			"properties": {
+				"povray.outputPath": {
+					"type": "string",
+					"default": "",
+					"deprecationMessage": "**DEPRECATED** Please use Povray > Render: Output Path"
+				},
+				"povray.defaultRenderWidth": {
+					"type": ["integer","null"],
+					"default": null,
+					"deprecationMessage": "**DEPRECATED** Please use Povray > Render: Default Width"
+				},
+				"povray.defaultRenderHeight": {
+					"type": ["integer","null"],
+					"default": null,
+					"deprecationMessage": "**DEPRECATED** Please use Povray > Render: Default Height"
+				},
+
 				"povray.render.defaultWidth": {
 					"type": "integer",
 					"default": "1024",

@@ -350,8 +350,63 @@ export function getPOVSettings() {
         openImageAfterRender:               configuration.get("render.openImageAfterRender"),
         openImageAfterRenderInNewColumn:    configuration.get("render.openImageAfterRenderInNewColumn"),
         useDockerToRunPovray:               configuration.get("docker.enableDocker"),
-        useDockerImage:                     configuration.get("docker.image")
+        useDockerImage:                     configuration.get("docker.image"),
+
+        // DEPRECATED
+        deprecated_OutputPath:                      (<string>configuration.get("outputPath")).trim(),
+        deprecated_DefaultRenderWidth:              <string>configuration.get("defaultRenderWidth"),
+        deprecated_DefaultRenderHeight:             <string>configuration.get("defaultRenderHeight"),
     };
+
+    // Handle deprecated settings
+    // TODO: Remove deprecated settings completely after 2019-05-01
+    // Deprecated Output Path
+    let current = configuration.inspect("render.outputPath");
+    let deprecated = configuration.inspect("outputPath");  
+    if (current !== undefined && deprecated !== undefined) {
+        // If they have set a custom output path in the deprecated setting
+        // AND the new output path setting has not been changed from its default
+        if (settings.deprecated_OutputPath !== deprecated.defaultValue &&
+            settings.outputPath === current.defaultValue) { 
+
+            // Keep using the deprecated value
+            settings.outputPath = settings.deprecated_OutputPath;
+            // Notify the user that they are using a deprecated setting
+            vscode.window.showWarningMessage("POV-Ray: the Output Path (povray.outputPath) setting has been deprecated.\nPlease use Render > Output Path (povray.render.outputPath) instead.");
+        }
+    }
+
+    // Deprecated Default Width
+    current = configuration.inspect("render.defaultWidth");
+    deprecated = configuration.inspect("defaultRenderWidth");
+    // If they have set a custom default width in the deprecated setting
+    // AND the new default width setting has not been changed from its default
+    if (current !== undefined && deprecated !== undefined) {
+        if (settings.deprecated_DefaultRenderWidth !== deprecated.defaultValue &&
+            settings.defaultRenderWidth === current.defaultValue) {
+
+            // Keep using the deprecated value
+            settings.defaultRenderWidth = settings.deprecated_DefaultRenderWidth;
+            // Notify the user that they are using a deprecated setting
+            vscode.window.showWarningMessage("POV-Ray: the Default Render Width (povray.defaultRenderWidth) setting has been deprecated.\nPlease use Render > Default Width (povray.render.defaultWidth) instead.");
+        }
+    }
+
+    // Deprecated Default Height
+    current = configuration.inspect("render.defaultHeight");
+    deprecated = configuration.inspect("defaultRenderHeight");
+    // If they have set a custom default height in the deprecated setting
+    // AND the new default height setting has not been changed from its default
+    if (current !== undefined && deprecated !== undefined) {
+        if (settings.deprecated_DefaultRenderHeight !== deprecated.defaultValue &&
+        settings.defaultRenderHeight === current.defaultValue) {
+
+            // Keep using the deprecated value
+            settings.defaultRenderHeight = settings.deprecated_DefaultRenderHeight;
+            // Notify the user that they are using a deprecated setting
+            vscode.window.showWarningMessage("POV-Ray: the Default Render Height (povray.defaultRenderHeight) setting has been deprecated.\nPlease use Render > Default Height (povray.render.defaultHeight) instead.");
+        }
+    }
 
     // Make sure that if the user has specified an outputPath it ends wth a slash
     // because POV-Ray on Windows wont recognize it is a folder unless it ends with a slash
