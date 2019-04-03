@@ -211,7 +211,7 @@ export function buildOutFilePath(settings: any, fileInfo: any, context: any) {
         
     }
     // Normalize the outFileName to make sure that it works for Windows
-    outFilePath = path.normalize(outFilePath);
+    outFilePath = normalizePath(outFilePath, context);
 
     if (context.platform !== "win32") {
         outFilePath = outFilePath.replace(/\\/g, "/");
@@ -236,8 +236,8 @@ export function buildShellPOVExe(settings: any, fileInfo: any, outFilePath: any,
         exe = "docker";
 
         // Get the source and output directories to mount into the docker image
-        let dockerSource = path.normalize(fileInfo.fileDir);
-        let dockerOutput = path.normalize(path.dirname(outFilePath));
+        let dockerSource = normalizePath(fileInfo.fileDir, context);
+        let dockerOutput = normalizePath(path.dirname(outFilePath), context);
 
         // If the integrated terminal is WSL Bash
         if (context.isWindowsBash) {
@@ -307,7 +307,7 @@ export function buildRenderOptions(settings: any, fileInfo: any, outFilePath: st
     // We ignore the Library Path if we are using docker
     if (settings.libraryPath.length > 0 && !settings.useDockerToRunPovray) {
 
-        settings.libraryPath = path.normalize(settings.libraryPath);
+        settings.libraryPath = normalizePath(settings.libraryPath, context);
 
         if (context.isWindowsBash) {
             // If the shell is WSL Bash then we need to make sure that
@@ -406,4 +406,14 @@ export function isWindowsPowershell() {
 
     return isWindowsPowershell;
 
+}
+
+export function normalizePath(filepath: string, context: any) {
+    if (context.platform === "win32") {
+        filepath = path.win32.normalize(filepath);
+    } else {
+        filepath = path.normalize(filepath);
+    }
+
+    return filepath;
 }

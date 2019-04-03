@@ -154,7 +154,7 @@ function buildOutFilePath(settings, fileInfo, context) {
         }
     }
     // Normalize the outFileName to make sure that it works for Windows
-    outFilePath = path.normalize(outFilePath);
+    outFilePath = normalizePath(outFilePath, context);
     if (context.platform !== "win32") {
         outFilePath = outFilePath.replace(/\\/g, "/");
     }
@@ -173,8 +173,8 @@ function buildShellPOVExe(settings, fileInfo, outFilePath, context) {
     if (settings.useDockerToRunPovray === true) {
         exe = "docker";
         // Get the source and output directories to mount into the docker image
-        let dockerSource = path.normalize(fileInfo.fileDir);
-        let dockerOutput = path.normalize(path.dirname(outFilePath));
+        let dockerSource = normalizePath(fileInfo.fileDir, context);
+        let dockerOutput = normalizePath(path.dirname(outFilePath), context);
         // If the integrated terminal is WSL Bash
         if (context.isWindowsBash) {
             // Running Windows Docker from WSL Bash requires some extra setup
@@ -230,7 +230,7 @@ function buildRenderOptions(settings, fileInfo, outFilePath, context) {
     // add the library path as a commandline argument
     // We ignore the Library Path if we are using docker
     if (settings.libraryPath.length > 0 && !settings.useDockerToRunPovray) {
-        settings.libraryPath = path.normalize(settings.libraryPath);
+        settings.libraryPath = normalizePath(settings.libraryPath, context);
         if (context.isWindowsBash) {
             // If the shell is WSL Bash then we need to make sure that
             // the library path is translated into the correct WSL path
@@ -311,4 +311,14 @@ function isWindowsPowershell() {
     return isWindowsPowershell;
 }
 exports.isWindowsPowershell = isWindowsPowershell;
+function normalizePath(filepath, context) {
+    if (context.platform === "win32") {
+        filepath = path.win32.normalize(filepath);
+    }
+    else {
+        filepath = path.normalize(filepath);
+    }
+    return filepath;
+}
+exports.normalizePath = normalizePath;
 //# sourceMappingURL=extension.js.map
