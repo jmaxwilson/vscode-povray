@@ -34,7 +34,7 @@ export function registerTasks() {
             let context = getContext();
 
             // Get information about the currently open file
-            let fileInfo = getFileInfo();
+            let fileInfo = getFileInfo(context);
 
             if (fileInfo.filePath === undefined || fileInfo.filePath === "")
             {
@@ -174,7 +174,7 @@ export function getContext() {
     return context;
 }
 
-export function getFileInfo() {
+export function getFileInfo(context: any) {
     // Get inormation about currently open file path 
     let fileInfo = {
         filePath: "",
@@ -186,7 +186,7 @@ export function getFileInfo() {
     if (vscode.window.activeTextEditor !== undefined) {
 
         fileInfo.filePath = vscode.window.activeTextEditor.document.fileName;
-        fileInfo.fileDir = path.dirname(fileInfo.filePath) + "/";
+        fileInfo.fileDir = getDirName(fileInfo.filePath, context) + "/";
         fileInfo.fileName = path.basename(fileInfo.filePath);
         fileInfo.fileExt = path.extname(fileInfo.filePath);
     }
@@ -233,9 +233,7 @@ export function buildShellPOVExe(settings: any, fileInfo: any, outFilePath: any,
 
         // Get the source and output directories to mount into the docker image
         let dockerSource = normalizePath(fileInfo.fileDir, context);
-        console.log('outFilePath:'+outFilePath);
-        let dockerOutput = normalizePath(path.dirname(outFilePath), context);
-        console.log('dockerOutput:'+dockerOutput);
+        let dockerOutput = normalizePath(getDirName(outFilePath, context), context);
 
         // If the integrated terminal is WSL Bash
         if (context.isWindowsBash) {
@@ -248,7 +246,6 @@ export function buildShellPOVExe(settings: any, fileInfo: any, outFilePath: any,
             // you have to have a symlink called /c that points to /mnt/c
             dockerSource = dockerSource.replace("c:","/c").replace(/\\/g, "/");
             dockerOutput = dockerOutput.replace("c:","/c").replace(/\\/g, "/");
-            console.log('dockerOutput:'+dockerOutput);
         }
 
         // mount the source and output directories
@@ -406,4 +403,15 @@ export function normalizePath(filepath: string, context: any) {
     }
 
     return filepath;
+}
+
+export function getDirName(filepath: string, context: any) {
+    let dirname = filepath;
+    if (context.platform === "win32") {
+        dirname = path.win32.dirname(filepath);
+    } else {
+        dirname = path.posix.dirname(filepath);
+    }
+
+    return dirname;
 }

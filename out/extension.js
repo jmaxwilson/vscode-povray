@@ -20,7 +20,7 @@ function registerTasks() {
             // Get information about the environment context
             let context = getContext();
             // Get information about the currently open file
-            let fileInfo = getFileInfo();
+            let fileInfo = getFileInfo(context);
             if (fileInfo.filePath === undefined || fileInfo.filePath === "") {
                 // We don't have a file so bail with no tasks
                 return [];
@@ -121,7 +121,7 @@ function getContext() {
     return context;
 }
 exports.getContext = getContext;
-function getFileInfo() {
+function getFileInfo(context) {
     // Get inormation about currently open file path 
     let fileInfo = {
         filePath: "",
@@ -131,7 +131,7 @@ function getFileInfo() {
     };
     if (vscode.window.activeTextEditor !== undefined) {
         fileInfo.filePath = vscode.window.activeTextEditor.document.fileName;
-        fileInfo.fileDir = path.dirname(fileInfo.filePath) + "/";
+        fileInfo.fileDir = getDirName(fileInfo.filePath, context) + "/";
         fileInfo.fileName = path.basename(fileInfo.filePath);
         fileInfo.fileExt = path.extname(fileInfo.filePath);
     }
@@ -171,9 +171,7 @@ function buildShellPOVExe(settings, fileInfo, outFilePath, context) {
         exe = "docker";
         // Get the source and output directories to mount into the docker image
         let dockerSource = normalizePath(fileInfo.fileDir, context);
-        console.log('outFilePath:' + outFilePath);
-        let dockerOutput = normalizePath(path.dirname(outFilePath), context);
-        console.log('dockerOutput:' + dockerOutput);
+        let dockerOutput = normalizePath(getDirName(outFilePath, context), context);
         // If the integrated terminal is WSL Bash
         if (context.isWindowsBash) {
             // Running Windows Docker from WSL Bash requires some extra setup
@@ -183,7 +181,6 @@ function buildShellPOVExe(settings, fileInfo, outFilePath, context) {
             // you have to have a symlink called /c that points to /mnt/c
             dockerSource = dockerSource.replace("c:", "/c").replace(/\\/g, "/");
             dockerOutput = dockerOutput.replace("c:", "/c").replace(/\\/g, "/");
-            console.log('dockerOutput:' + dockerOutput);
         }
         // mount the source and output directories
         exe += " run -v " + dockerSource + ":/source -v " + dockerOutput + ":/output " + settings.useDockerImage;
@@ -314,4 +311,15 @@ function normalizePath(filepath, context) {
     return filepath;
 }
 exports.normalizePath = normalizePath;
+function getDirName(filepath, context) {
+    let dirname = filepath;
+    if (context.platform === "win32") {
+        dirname = path.win32.dirname(filepath);
+    }
+    else {
+        dirname = path.posix.dirname(filepath);
+    }
+    return dirname;
+}
+exports.getDirName = getDirName;
 //# sourceMappingURL=extension.js.map
