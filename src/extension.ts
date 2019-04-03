@@ -203,7 +203,7 @@ export function buildOutFilePath(settings: any, fileInfo: any, context: any) {
     {
         if (settings.outputPath.startsWith(".")) {
             // the outputPath defined by the user appears to be relative
-            outFilePath = fileInfo.fileDir + settings.outputPath + fileInfo.fileName.replace(".pov",".png");    
+            outFilePath = fileInfo.fileDir + normalizePath(settings.outputPath, context) + fileInfo.fileName.replace(".pov",".png");    
         } else {
             // Use the custom output path plus the file name of the source file wirg rge extention changed to the image extension
             outFilePath = settings.outputPath + fileInfo.fileName.replace(".pov",".png");
