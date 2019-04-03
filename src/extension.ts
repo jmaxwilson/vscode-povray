@@ -203,7 +203,7 @@ export function buildOutFilePath(settings: any, fileInfo: any, context: any) {
     {
         if (settings.outputPath.startsWith(".")) {
             // the outputPath defined by the user appears to be relative
-            outFilePath = fileInfo.fileDir + normalizePath(settings.outputPath, context) + fileInfo.fileName.replace(".pov",".png");    
+            outFilePath = fileInfo.fileDir + settings.outputPath + fileInfo.fileName.replace(".pov",".png");    
         } else {
             // Use the custom output path plus the file name of the source file wirg rge extention changed to the image extension
             outFilePath = settings.outputPath + fileInfo.fileName.replace(".pov",".png");
@@ -246,11 +246,6 @@ export function buildShellPOVExe(settings: any, fileInfo: any, outFilePath: any,
             // you have to have a symlink called /c that points to /mnt/c
             dockerSource = dockerSource.replace("c:","/c").replace(/\\/g, "/");
             dockerOutput = dockerOutput.replace("c:","/c").replace(/\\/g, "/");
-        }
-
-        if (context.platform !== "win32") {
-            dockerSource = dockerSource.replace(/\\/g, "/");
-            dockerOutput = dockerOutput.replace(/\\/g, "/");
         }
 
         // mount the source and output directories
@@ -320,10 +315,6 @@ export function buildRenderOptions(settings: any, fileInfo: any, outFilePath: st
     // to make powershell wait for the rendering to complete and POv-Ray to close before continuing
     if (context.isWindowsPowershell && !settings.useDockerToRunPovray) {
         renderOptions += " | Out-Null";
-    }
-
-    if (context.platform !== "win32") {
-        renderOptions = renderOptions.replace(/\\/g, "/");
     }
 
     return renderOptions;
@@ -406,9 +397,9 @@ export function isWindowsPowershell() {
 
 export function normalizePath(filepath: string, context: any) {
     if (context.platform === "win32") {
-        filepath = filepath.replace(/\//g, "\\");
+        filepath = path.win32.normalize(filepath);
     } else {
-        filepath = filepath.replace(/\\/g, "/");
+        filepath = path.posix.normalize(filepath);
     }
 
     return filepath;

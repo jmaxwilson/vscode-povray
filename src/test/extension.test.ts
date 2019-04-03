@@ -101,7 +101,7 @@ suite("VSCode-POVRay extension Tests", function () {
         };
 
         let outFilePath = povrayExtension.buildOutFilePath(settings, fileInfo, context);
-        assert.equal(outFilePath, "c:\\pov\\teapot\\.\\output\\teapot.png");
+        assert.equal(outFilePath, "c:\\pov\\teapot\\output\\teapot.png");
     });
 
     test("buildRenderOptions_win32_bash", function() {
@@ -260,7 +260,7 @@ suite("VSCode-POVRay extension Tests", function () {
         };
 
         let outFilePath = povrayExtension.buildOutFilePath(settings, fileInfo, context);
-        assert.equal(outFilePath, "c:\\pov\\teapot\\.\\output\\teapot.png");
+        assert.equal(outFilePath, "c:\\pov\\teapot\\output\\teapot.png");
     });
 
     test("buildRenderOptions_win32_powershell", function() {
@@ -419,7 +419,7 @@ suite("VSCode-POVRay extension Tests", function () {
         };
 
         let outFilePath = povrayExtension.buildOutFilePath(settings, fileInfo, context);
-        assert.equal(outFilePath, "c:\\pov\\teapot\\.\\output\\teapot.png");
+        assert.equal(outFilePath, "c:\\pov\\teapot\\output\\teapot.png");
     });
 
     test("buildRenderOptions_win32_cmd", function() {
@@ -578,7 +578,7 @@ suite("VSCode-POVRay extension Tests", function () {
         };
 
         let outFilePath = povrayExtension.buildOutFilePath(settings, fileInfo, context);
-        assert.equal(outFilePath, "/pov/teapot/./output/teapot.png");
+        assert.equal(outFilePath, "/pov/teapot/output/teapot.png");
     });
 
     test("buildRenderOptions_linux", function() {
@@ -737,7 +737,7 @@ suite("VSCode-POVRay extension Tests", function () {
         };
 
         let outFilePath = povrayExtension.buildOutFilePath(settings, fileInfo, context);
-        assert.equal(outFilePath, "/pov/teapot/./output/teapot.png");
+        assert.equal(outFilePath, "/pov/teapot/output/teapot.png");
     });
 
     test("buildRenderOptions_darwin", function() {
