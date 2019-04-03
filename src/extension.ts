@@ -374,7 +374,7 @@ export function getPOVSettings() {
     return settings;
 }
 
-// Helper export function for determining if the integrated terminal is WSL Bash
+// Helper function for determining if the integrated terminal is WSL Bash
 export function isWindowsBash() {
     let isWindowsBash = false;
 
@@ -394,7 +394,7 @@ export function isWindowsBash() {
 
 }
 
-// Helper export function for determining if the integrated terminal is Powershell on Windows
+// Helper function for determining if the integrated terminal is Powershell on Windows
 export function isWindowsPowershell() {
     let isWindowsPowershell = false;
 

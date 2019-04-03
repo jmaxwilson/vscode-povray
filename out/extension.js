@@ -283,7 +283,7 @@ function getPOVSettings() {
     return settings;
 }
 exports.getPOVSettings = getPOVSettings;
-// Helper export function for determining if the integrated terminal is WSL Bash
+// Helper function for determining if the integrated terminal is WSL Bash
 function isWindowsBash() {
     let isWindowsBash = false;
     if (os.platform() === 'win32') {
@@ -298,7 +298,7 @@ function isWindowsBash() {
     return isWindowsBash;
 }
 exports.isWindowsBash = isWindowsBash;
-// Helper export function for determining if the integrated terminal is Powershell on Windows
+// Helper function for determining if the integrated terminal is Powershell on Windows
 function isWindowsPowershell() {
     let isWindowsPowershell = false;
     if (os.platform() === 'win32') {
