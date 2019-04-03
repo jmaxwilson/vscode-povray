@@ -171,7 +171,9 @@ function buildShellPOVExe(settings, fileInfo, outFilePath, context) {
         exe = "docker";
         // Get the source and output directories to mount into the docker image
         let dockerSource = normalizePath(fileInfo.fileDir, context);
+        console.log('outFilePath:' + outFilePath);
         let dockerOutput = normalizePath(path.dirname(outFilePath), context);
+        console.log('dockerOutput:' + dockerOutput);
         // If the integrated terminal is WSL Bash
         if (context.isWindowsBash) {
             // Running Windows Docker from WSL Bash requires some extra setup
@@ -181,6 +183,7 @@ function buildShellPOVExe(settings, fileInfo, outFilePath, context) {
             // you have to have a symlink called /c that points to /mnt/c
             dockerSource = dockerSource.replace("c:", "/c").replace(/\\/g, "/");
             dockerOutput = dockerOutput.replace("c:", "/c").replace(/\\/g, "/");
+            console.log('dockerOutput:' + dockerOutput);
         }
         // mount the source and output directories
         exe += " run -v " + dockerSource + ":/source -v " + dockerOutput + ":/output " + settings.useDockerImage;

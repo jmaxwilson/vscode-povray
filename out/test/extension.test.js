@@ -523,7 +523,7 @@ suite("VSCode-POVRay extension Tests", function () {
             useDockerToRunPovray: true,
             useDockerImage: "jmaxwilson/povray"
         };
-        let outFilePath = "/pov/teapot/out/teapot.png";
+        let outFilePath = "/pov/teapot/output/teapot.png";
         let povrayExe = povrayExtension.buildRenderOptions(settings, fileInfo, outFilePath, context);
         assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=/output/");
     });
@@ -576,9 +576,9 @@ suite("VSCode-POVRay extension Tests", function () {
             useDockerToRunPovray: true,
             useDockerImage: "jmaxwilson/povray"
         };
-        let outFilePath = "/pov/teapot/out/teapot.png";
+        let outFilePath = "/pov/teapot/output/teapot.png";
         let povrayExe = povrayExtension.buildShellPOVExe(settings, fileInfo, outFilePath, context);
-        assert.equal(povrayExe, "docker run -v /pov/teapot/:/source -v /pov/teapot/out:/output jmaxwilson/povray");
+        assert.equal(povrayExe, "docker run -v /pov/teapot/:/source -v /pov/teapot/output:/output jmaxwilson/povray");
     });
     test("buildOutFilePath_darwin", function () {
         let context = {
