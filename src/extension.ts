@@ -213,10 +213,6 @@ export function buildOutFilePath(settings: any, fileInfo: any, context: any) {
     // Normalize the outFileName to make sure that it works for Windows
     outFilePath = normalizePath(outFilePath, context);
 
-    if (context.platform !== "win32") {
-        outFilePath = outFilePath.replace(/\\/g, "/");
-    }
-
     return outFilePath;
 }
 
@@ -410,9 +406,9 @@ export function isWindowsPowershell() {
 
 export function normalizePath(filepath: string, context: any) {
     if (context.platform === "win32") {
-        filepath = path.win32.normalize(filepath);
+        filepath = filepath.replace(/\//g, "\\");
     } else {
-        filepath = path.normalize(filepath);
+        filepath = filepath.replace(/\\/g, "/");
     }
 
     return filepath;

@@ -83,7 +83,7 @@ suite("VSCode-POVRay extension Tests", function () {
             useDockerImage: "jmaxwilson/povray"
         };
         let outFilePath = povrayExtension.buildOutFilePath(settings, fileInfo, context);
-        assert.equal(outFilePath, "c:\\pov\\teapot\\output\\teapot.png");
+        assert.equal(outFilePath, "c:\\pov\\teapot\\.\\output\\teapot.png");
     });
     test("buildRenderOptions_win32_bash", function () {
         let context = {
@@ -213,7 +213,7 @@ suite("VSCode-POVRay extension Tests", function () {
             useDockerImage: "jmaxwilson/povray"
         };
         let outFilePath = povrayExtension.buildOutFilePath(settings, fileInfo, context);
-        assert.equal(outFilePath, "c:\\pov\\teapot\\output\\teapot.png");
+        assert.equal(outFilePath, "c:\\pov\\teapot\\.\\output\\teapot.png");
     });
     test("buildRenderOptions_win32_powershell", function () {
         let context = {
@@ -343,7 +343,7 @@ suite("VSCode-POVRay extension Tests", function () {
             useDockerImage: "jmaxwilson/povray"
         };
         let outFilePath = povrayExtension.buildOutFilePath(settings, fileInfo, context);
-        assert.equal(outFilePath, "c:\\pov\\teapot\\output\\teapot.png");
+        assert.equal(outFilePath, "c:\\pov\\teapot\\.\\output\\teapot.png");
     });
     test("buildRenderOptions_win32_cmd", function () {
         let context = {
@@ -473,7 +473,7 @@ suite("VSCode-POVRay extension Tests", function () {
             useDockerImage: "jmaxwilson/povray"
         };
         let outFilePath = povrayExtension.buildOutFilePath(settings, fileInfo, context);
-        assert.equal(outFilePath, "/pov/teapot/output/teapot.png");
+        assert.equal(outFilePath, "/pov/teapot/./output/teapot.png");
     });
     test("buildRenderOptions_linux", function () {
         let context = {
@@ -603,7 +603,7 @@ suite("VSCode-POVRay extension Tests", function () {
             useDockerImage: "jmaxwilson/povray"
         };
         let outFilePath = povrayExtension.buildOutFilePath(settings, fileInfo, context);
-        assert.equal(outFilePath, "/pov/teapot/output/teapot.png");
+        assert.equal(outFilePath, "/pov/teapot/./output/teapot.png");
     });
     test("buildRenderOptions_darwin", function () {
         let context = {

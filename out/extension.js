@@ -155,9 +155,6 @@ function buildOutFilePath(settings, fileInfo, context) {
     }
     // Normalize the outFileName to make sure that it works for Windows
     outFilePath = normalizePath(outFilePath, context);
-    if (context.platform !== "win32") {
-        outFilePath = outFilePath.replace(/\\/g, "/");
-    }
     return outFilePath;
 }
 exports.buildOutFilePath = buildOutFilePath;
@@ -313,10 +310,10 @@ function isWindowsPowershell() {
 exports.isWindowsPowershell = isWindowsPowershell;
 function normalizePath(filepath, context) {
     if (context.platform === "win32") {
-        filepath = path.win32.normalize(filepath);
+        filepath = filepath.replace(/\//g, "\\");
     }
     else {
-        filepath = path.normalize(filepath);
+        filepath = filepath.replace(/\\/g, "/");
     }
     return filepath;
 }
