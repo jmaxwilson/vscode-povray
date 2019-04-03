@@ -9,6 +9,7 @@ function activate(context) {
     registerCommands(context);
 }
 exports.activate = activate;
+// Creates a task provider for POV-Ray files
 function registerTasks() {
     const taskType = "povray"; //This is the taskDefinitions type defined in package.json
     // create a task provider
@@ -17,8 +18,8 @@ function registerTasks() {
             /****************************************/
             /* POV-Ray Render Scene File Build Task */
             /****************************************/
-            // Get information about the environment context
-            let context = getContext();
+            // Get information about the shell environment context
+            let context = getShellContext();
             // Get information about the currently open file
             let fileInfo = getFileInfo(context);
             if (fileInfo.filePath === undefined || fileInfo.filePath === "") {
@@ -27,11 +28,11 @@ function registerTasks() {
             }
             // Get the POV-Ray settings
             let settings = getPOVSettings();
-            // build the output file path
+            // build the output file path based on the settings and appropriate to the shell context
             let outFilePath = buildOutFilePath(settings, fileInfo, context);
-            // Build the povray executable to run in the shell
+            // Build the povray executable to run in the shell based on the settings and appropriate to the shell context
             let povrayExe = buildShellPOVExe(settings, fileInfo, outFilePath, context);
-            // Build the commandline render options to pass to the executable in the shell
+            // Build the commandline render options to pass to the executable in the shell based on the settings and appropriate to the shell context
             let renderOptions = buildRenderOptions(settings, fileInfo, outFilePath, context);
             // Create the Shell Execution that runs the povray executable with the render options
             const execution = new vscode.ShellExecution(povrayExe + renderOptions);
@@ -71,7 +72,7 @@ function registerTasks() {
             let taskDefinition = e.execution.task.definition;
             // If we were rendering a .pov file rather than a .ini
             if (taskDefinition.filePath.endsWith(".pov")) {
-                // Show an infotmation notification to the user about the output file that was rendered
+                // Show an information notification to the user about the output file that was rendered
                 vscode.window.showInformationMessage("Rendered: " + taskDefinition.outFilePath);
                 const settings = getPOVSettings();
                 // If the the user has indicated that the image that ws rendered should be opened
@@ -93,6 +94,7 @@ function registerTasks() {
     vscode.tasks.registerTaskProvider(taskType, povrayTaskProvider);
 }
 exports.registerTasks = registerTasks;
+// Registers command handlers for POV-Ray files
 function registerCommands(context) {
     const renderCommand = 'povray.render';
     // Create a command handler for running the POV-Ray Render Build Task
@@ -112,15 +114,17 @@ function registerCommands(context) {
     context.subscriptions.push(vscode.commands.registerCommand(renderCommand, renderCommandHandler));
 }
 exports.registerCommands = registerCommands;
-function getContext() {
-    let context = {
+// Gets the shell context for the current OS and VS Code configuration
+function getShellContext() {
+    let shellContext = {
         platform: os.platform(),
         isWindowsBash: isWindowsBash(),
         isWindowsPowershell: isWindowsPowershell()
     };
-    return context;
+    return shellContext;
 }
-exports.getContext = getContext;
+exports.getShellContext = getShellContext;
+// Gets information about the file in the active Text Editor
 function getFileInfo(context) {
     // Get inormation about currently open file path 
     let fileInfo = {
@@ -138,6 +142,8 @@ function getFileInfo(context) {
     return fileInfo;
 }
 exports.getFileInfo = getFileInfo;
+// Builds an output file path for rendering based on the file info, settings, and shell context
+// Specifically checks for whether the user has configured an output path
 function buildOutFilePath(settings, fileInfo, context) {
     // Build the output file path
     // Default to the exact same path as the source file, except with an image extension
@@ -158,6 +164,9 @@ function buildOutFilePath(settings, fileInfo, context) {
     return outFilePath;
 }
 exports.buildOutFilePath = buildOutFilePath;
+// Builds the command to call in the shell in order to run POV-Ray
+// depending on the OS, Shell, and whether the user has selected to
+// use docker to run POV-Ray
 function buildShellPOVExe(settings, fileInfo, outFilePath, context) {
     // Default to running an executable called povray (Linux, Mac, WSL Ubuntu Bash, Git Bash)
     let exe = "povray";
@@ -188,6 +197,9 @@ function buildShellPOVExe(settings, fileInfo, outFilePath, context) {
     return exe;
 }
 exports.buildShellPOVExe = buildShellPOVExe;
+// Builds a string of commandline arguments to pass to the POV-Ray executable
+// to indicate which file to render, the output path, the width and height, etc.
+// based on the settings, file to render, output path provided, and the shell context
 function buildRenderOptions(settings, fileInfo, outFilePath, context) {
     // Start building the render command that will be run in the shell
     let renderOptions = " ${fileBasename} -D";
@@ -241,7 +253,7 @@ function buildRenderOptions(settings, fileInfo, outFilePath, context) {
     return renderOptions;
 }
 exports.buildRenderOptions = buildRenderOptions;
-// Helper export function to get the POV-Ray related settings
+// Helper function to get the POV-Ray related settings
 function getPOVSettings() {
     const configuration = vscode.workspace.getConfiguration('povray');
     let settings = {
@@ -301,6 +313,9 @@ function isWindowsPowershell() {
     return isWindowsPowershell;
 }
 exports.isWindowsPowershell = isWindowsPowershell;
+// For unit testing to work cross platform, we need to be able
+// to normalize paths for a specified shell context (os, shell)
+// regardless of the OS we are actually running on.
 function normalizePath(filepath, context) {
     if (context.platform === "win32") {
         filepath = path.win32.normalize(filepath);
@@ -311,6 +326,9 @@ function normalizePath(filepath, context) {
     return filepath;
 }
 exports.normalizePath = normalizePath;
+// For unit testing to work cross platform, we need to be able
+// to get the directory name for a specified context (os, shell)
+// regardless of the OS we are actually running on.
 function getDirName(filepath, context) {
     let dirname = filepath;
     if (context.platform === "win32") {
