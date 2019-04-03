@@ -1,5 +1,7 @@
 # POV-Ray Extension for Visual Studio Code
 
+[![Build Status](https://travis-ci.org/jmaxwilson/vscode-povray.svg?branch=master)](https://travis-ci.org/jmaxwilson/vscode-povray)
+
 The Persistence of Vision Raytracer is a high-quality, free software tool for creating three-dimensional graphics by using a Scene Description Language.
 
 This extension allows you to use Visual Studio Code to edit POV-Ray Scene Description files and render them using POV-Ray in the integrated terminal.
