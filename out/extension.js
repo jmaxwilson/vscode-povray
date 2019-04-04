@@ -38,7 +38,7 @@ function registerTasks() {
             // Build the commandline render options to pass to the executable in the shell based on the settings and appropriate to the shell context
             let renderOptions = buildRenderOptions(settings, fileInfo, outFilePath, context);
             // Create the Shell Execution that runs the povray executable with the render options
-            const execution = new vscode.ShellExecution(povrayExe + renderOptions);
+            const execution = new vscode.ShellExecution(povrayExe + renderOptions, { cwd: fileInfo.fileDir });
             // Use the $povray problem matcher defined in the package.json problemMatchers
             const problemMatchers = ["$povray"];
             // Set up task definition with file information
