@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const os = require("os");
 const path = require("path");
 const vscode = require("vscode");
+const fs = require("fs");
 // POV-Ray Extension Activation
 function activate(context) {
     registerTasks();
@@ -30,6 +31,8 @@ function registerTasks() {
             let settings = getPOVSettings();
             // build the output file path based on the settings and appropriate to the shell context
             let outFilePath = buildOutFilePath(settings, fileInfo, context);
+            // Make sure that the output file directory exists, create it if is doesn't
+            createDirIfMissing(outFilePath, context);
             // Build the povray executable to run in the shell based on the settings and appropriate to the shell context
             let povrayExe = buildShellPOVExe(settings, fileInfo, outFilePath, context);
             // Build the commandline render options to pass to the executable in the shell based on the settings and appropriate to the shell context
@@ -164,6 +167,14 @@ function buildOutFilePath(settings, fileInfo, context) {
     return outFilePath;
 }
 exports.buildOutFilePath = buildOutFilePath;
+// Creates the directory for the specified path if it doesn't already exist
+function createDirIfMissing(filePath, context) {
+    let outDir = normalizePath(getDirName(filePath, context), context);
+    if (!fs.existsSync(outDir)) {
+        fs.mkdirSync(outDir);
+    }
+}
+exports.createDirIfMissing = createDirIfMissing;
 // Builds the command to call in the shell in order to run POV-Ray
 // depending on the OS, Shell, and whether the user has selected to
 // use docker to run POV-Ray
