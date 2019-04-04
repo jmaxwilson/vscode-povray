@@ -1,6 +1,21 @@
 
 # Change Log
 All notable changes to this project will be documented in this file.
+
+## [0.0.4] - 2019-04-03
+
+### Added
+- Feature: Run POV-Ray via Docker
+  Settings to enable running POV-Ray as a docker container and configuring which docker image to use
+- Unit Test & Travis CI integration
+### Changed
+- Refactored to pull shell command generation into functions that can be unit tested
+- Refactored to pass a ShellContext to functions so they can be unit tested for various
+  platforms, terminals, and settings regarless of which platform we are actually running on
+- Renamed some settings and added code to handle transitioning users who customized renamed
+  settings to transition to new settings
+### Fixed
+- Fixed bugs related to path normalization across different platforms
   
 ## [0.0.3] - 2019-03-30
  
