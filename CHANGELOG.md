@@ -2,6 +2,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [0.0.5] - 2019-04-04
+
+### Changed
+- The output path diectory will now be created if it doesn't alreadt exist
+### Fixed
+- Fixed bug when the VS Code root directory was different than the source path
+
 ## [0.0.4] - 2019-04-03
 
 ### Added
