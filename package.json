@@ -133,7 +133,7 @@
 				"povray.render.outputPath": {
 					"type": "string",
 					"default": "",
-					"description": "A path to a folder where rendered images will be saved. This can be an absolute path (/pov/output) or a relative path (./output). (Note: you will need to create the folder before rendering)"
+					"description": "A path to a folder where rendered images will be saved. This can be an absolute path (/pov/output) or a relative path (./output). (Note: if the directory doesn't exist already it will be created at render time.)"
 				},
 				"povray.docker.enableDocker": {
 					"type":"boolean",

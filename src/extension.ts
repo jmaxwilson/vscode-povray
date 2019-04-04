@@ -57,6 +57,9 @@ export function registerTasks() {
             // build the output file path based on the settings and appropriate to the shell context
             let outFilePath = buildOutFilePath(settings, fileInfo, context);
 
+            // Make sure that the output file directory exists, create it if is doesn't
+            createDirIfMissing(outFilePath, context);
+
             // Build the povray executable to run in the shell based on the settings and appropriate to the shell context
             let povrayExe = buildShellPOVExe(settings, fileInfo, outFilePath, context);
 
@@ -229,6 +232,17 @@ export function buildOutFilePath(settings: any, fileInfo: any, context: ShellCon
 
     return outFilePath;
 }
+
+// Creates the directory for the specified path if it doesn't already exist
+export function createDirIfMissing(filePath: string, context: ShellContext) {
+
+    let outDir = normalizePath(getDirName(filePath, context), context);
+
+    if (!fs.existsSync(outDir)) {
+
+        fs.mkdirSync(outDir);
+    }
+} 
 
 // Builds the command to call in the shell in order to run POV-Ray
 // depending on the OS, Shell, and whether the user has selected to
