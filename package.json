@@ -25,7 +25,8 @@
 		"languages": [{
             "id": "povray",
             "aliases": ["povray", "pov-ray", "POVRay", "POV-Ray", "POVRAY", "POV-RAY"],
-            "extensions": [".pov",".inc", ".ini"]
+            "extensions": [".pov",".inc", ".ini"],
+            "configuration": "./language-configuration.json"
         }],
         "grammars": [{
             "language": "povray",
