@@ -1,17 +1,22 @@
 {
     "Camera": {
         "prefix": "camera",
-        "description": "Insert a camera",
+        "description": "Insert a Camera",
+        "scope": "povray",
         "body": [
             "camera {",
             "\tlocation <${1:0}, ${2:5}, ${3:-10}> // <x, y, z>",
+            "\tright     x*image_width/image_height // keep propotions regardless of aspect ratio",
             "\tlook_at  <${4:0}, ${5:0},  ${6:0}> // <x, y, z>",
             "}${0}"
         ]
     },
+
+
     "Point Light": {
         "prefix": "light_source",
-        "description": "Insert a point light source",
+        "description": "Insert a Point Light",
+        "scope": "povray",
         "body": [
             "light_source {",
             "\t<${2:10}, ${3:10}, ${4:-10}> // <x, y, z>",
@@ -22,12 +27,13 @@
     },
     "Spotlight": {
         "prefix": "light_source",
-        "description": "Insert a spotlight",
+        "description": "Insert a Spotlight",
+        "scope": "povray",
         "body":[
             "light_source {",
             "\t<${2:10}, ${3:10}, ${4:-10}> // <x, y, z>",
             "\tcolor <${5:1.0}, ${6:1.0},  ${7:1.0}> // <red, green, blue>",
-            "\tspotlight radius ${8:30} falloff ${9:45} tightness ${10:0}",
+            "\tspotlight radius ${8:5} falloff ${9:10} tightness ${10:0}",
             "\tpoint_at <${11:0}, ${12:0}, ${13:0}>",
             "\t${0}",
             "}"
@@ -35,20 +41,70 @@
     },
     "Cylinder Light": {
         "prefix": "light_source",
-        "description": "Insert a cylinder light",
+        "description": "Insert a Cylinder Light",
+        "scope": "povray",
         "body":[
             "light_source {",
             "\t<${2:10}, ${3:10}, ${4:-10}> // <x, y, z>",
             "\tcolor <${5:1.0}, ${6:1.0},  ${7:1.0}> // <red, green, blue>",
-            "\tcylinder radius ${8:30} falloff ${9:45} tightness ${10:0}",
+            "\tcylinder radius ${8:5} falloff ${9:10} tightness ${10:0}",
             "\tpoint_at <${11:0}, ${12:0}, ${13:0}>",
             "\t${0}",
             "}"
         ]
     },
+    "Area Light": {
+        "prefix": "light_source",
+        "description": "Insert an Area Light",
+        "scope": "povray",
+        "body":[
+            "light_source {",
+            "\t<${2:10}, ${3:10}, ${4:-10}> // <x, y, z>",
+            "\tcolor <${5:1.0}, ${6:1.0},  ${7:1.0}> // <red, green, blue>",
+            "\tarea_light <${8:5}, ${9:0}, ${10:0}>, <${11:0}, ${12:0}, ${13:5}>, ${14:5}, ${15:5} // <x, y, z>, <x, y, z>, size 1, size 2",
+            "\tadaptive 1",
+            "\tjitter",
+            "\t${0}",
+            "}"
+        ]
+    },
+    "Light Group": {
+        "prefix": "light_group",
+        "description": "Insert a Light Group block",
+        "scope": "povray",
+        "body": [
+            "light_group {",
+            "\t${0}",
+            "}"
+        ]
+    },
+    "Ambient Light": {
+        "prefix": "ambient_light",
+        "description": "Add ambient lighting",
+        "scope": "povray",
+        "body":[
+            "ambient_light <${1:1}, ${2:1}, ${3:1}> // <red, green, blue}"
+        ]
+    },
+
+
+    "Fog": {
+        "prefix": "fog",
+        "description": "Add fog",
+        "scope": "povray",
+        "body":[
+            "fog {",
+            "\tdistance ${1:25}",
+            "\tcolor <${2:1.0}, ${3:1.0}, ${4:1.0}> // <red, green, blue>",
+            "}"
+        ]
+    },
+
+
 	"Sphere": {
         "prefix": "sphere",
-        "description": "Insert a sphere",
+        "description": "Insert a Sphere",
+        "scope": "povray",
         "body": [
             "sphere {",
             "\t<${2:0}, ${3:0}, ${4:0}>, ${5:1} // <x, y, z>, radius",
@@ -58,7 +114,8 @@
     },
     "Sphere Object": {
         "prefix": "#declare sphere",
-        "description": "Declare a sphere object",
+        "description": "Declare a Sphere object",
+        "scope": "povray",
         "body": [
             "#declare ${1:MySphere} = sphere {",
             "\t<${2:0}, ${3:0}, ${4:0}>, ${5:1} // <x, y, z>, radius",
@@ -71,7 +128,8 @@
     },
     "Ovus": {
         "prefix": "ovus",
-        "description": "Insert an ovus",
+        "description": "Insert an Ovus",
+        "scope": "povray",
         "body": [
             "ovus {",
             "\t${2:1.0}, ${3:0.5} // base_radius, top_radius (top_radius < base_radius)",
@@ -81,7 +139,8 @@
     },
     "Ovus Object": {
         "prefix": "#declare ovus",
-        "description": "Declare an ovus object",
+        "description": "Declare an Ovus object",
+        "scope": "povray",
         "body": [
             "#declare ${1:MyOvus} = ovus {",
             "\t${2:1.0}, ${3:0.5} // base_radius, top_radius (top_radius < base_radius)",
@@ -94,7 +153,8 @@
     },
     "Box": {
         "prefix": "box",
-        "description": "Insert a box",
+        "description": "Insert a Box",
+        "scope": "povray",
         "body": [
             "box {",
             "\t<${2:-1}, ${3:-1}, ${4:-1}>, <${5:1}, ${6:1}, ${6:1}> // <x, y, z> near lower left corner, <x, y, z> far upper right corner",
@@ -104,7 +164,8 @@
     },
     "Box Object": {
         "prefix": "#declare box",
-        "description": "Declare a box object",
+        "description": "Declare a Box object",
+        "scope": "povray",
         "body": [
             "#declare ${1:MyBox} = box {",
             "\t<${2:-1}, ${3:-1}, ${4:-1}>, <${5:1}, ${6:1}, ${6:1}> // <x, y, z> near lower left corner, <x, y, z> far upper right corner",
@@ -117,7 +178,8 @@
     },
     "Cone": {
         "prefix": "cone",
-        "description": "Insert a cone",
+        "description": "Insert a Cone",
+        "scope": "povray",
         "body":[
             "cone {",
             "\t<${2:0}, ${3:-1}, ${4:0}>, ${5:1.0} // <x, y, z>, center & radius of one end",
@@ -128,7 +190,8 @@
     },
     "Cone Object": {
         "prefix": "#declare cone",
-        "description": "Declare a cone object",
+        "description": "Declare a Cone object",
+        "scope": "povray",
         "body":[
             "#declare ${1:MyCone} = cone {",
             "\t<${2:0}, ${3:-1}, ${4:0}>, ${5:1.0} // <x, y, z>, center & radius of one end",
@@ -142,7 +205,8 @@
     },
     "Cylinder": {
         "prefix": "cylinder",
-        "description": "Insert a cylinder",
+        "description": "Insert a Cylinder",
+        "scope": "povray",
         "body":[
             "cylinder {",
             "\t<${2:0}, ${3:0}, ${4:-1}>, <${5:0}, ${6:0}, ${7:1}>, ${8:1} // center of one end, center of other end, radius",
@@ -153,7 +217,8 @@
     },
     "Cylinder Object": {
         "prefix": "#declare cylinder",
-        "description": "Declare a cylinder object",
+        "description": "Declare a Cylinder object",
+        "scope": "povray",
         "body":[
             "#declare ${1:MyCylinder} = cylinder {",
             "\t<${2:0}, ${3:0}, ${4:-1}>, <${5:0}, ${6:0}, ${7:1}>, ${8:1} // center of one end, center of other end, radius",
@@ -167,7 +232,8 @@
     },
     "Plane": {
         "prefix": "plane",
-        "description": "Insert a plane",
+        "description": "Insert a Plane",
+        "scope": "povray",
         "body":[
             "plane {",
             "\t<${2:0}, ${3:1}, ${4:0}>, ${5:0} // perpendicular to axis, offset", 
@@ -177,7 +243,8 @@
     },
     "Plane Object": {
         "prefix": "#declare plane",
-        "description": "Declare a plane object",
+        "description": "Declare a Plane object",
+        "scope": "povray",
         "body":[
             "#declare ${1:MyPlane} = plane {",
             "\t<${2:0}, ${3:1}, ${4:0}>, ${5:0} // perpendicular to axis, offset", 
@@ -190,7 +257,8 @@
     },
     "Torus": {
         "prefix": "torus",
-        "description": "Insert a torus",
+        "description": "Insert a Torus",
+        "scope": "povray",
         "body":[
             "torus {",
             "\t${2:1}, ${3:.25} // major radius, minor radius",
@@ -200,7 +268,8 @@
     },
     "Torus Object": {
         "prefix": "#declare torus",
-        "description": "Declare a torus object",
+        "description": "Declare a Torus object",
+        "scope": "povray",
         "body":[
             "#declare ${1:MyTorus} = torus {",
             "\t${2:1}, ${3:.25} // major radius, minor radius",
@@ -213,7 +282,8 @@
     },
     "Blob": {
         "prefix": "blob",
-        "description": "Insert a blob",
+        "description": "Insert a Blob",
+        "scope": "povray",
         "body":[
             "blob {",
             "\tthreshold ${2:0.5}",
@@ -229,7 +299,8 @@
     },
     "Blob Object": {
         "prefix": "#declare blob",
-        "description": "Declare a blob object",
+        "description": "Declare a Blob object",
+        "scope": "povray",
         "body":[
             "#declare ${1:MyBlob} = blob {",
             "\tthreshold ${2:0.5}",
@@ -246,9 +317,10 @@
             "}"
         ]
     },
-    "SuperEllipsoid": {
+    "Super Ellipsoid": {
         "prefix": "superellipsoid",
-        "description": "Insert a superellipsoid",
+        "description": "Insert a Superellipsoid",
+        "scope": "povray",
         "body":[
             "superellipsoid {",
             "\t<${2:.25}, .${3:25}>",
@@ -256,9 +328,10 @@
             "}"
         ]
     },
-    "SuperEllipsoid Object": {
+    "Super Ellipsoid Object": {
         "prefix": "#declare superellipsoid",
-        "description": "Declare a superellipsoid object",
+        "description": "Declare a SuperEllipsoid object",
+        "scope": "povray",
         "body":[
             "#declare ${1:MySuperEllipsiod} = superellipsoid {",
             "\t<${2:.25}, .${3:25}>",
@@ -271,7 +344,8 @@
     },
     "Disc": {
         "prefix": "disc",
-        "description": "Insert a disc",
+        "description": "Insert a Disc",
+        "scope": "povray",
         "body": [
             "disc {",
             "\t<${2:0}, ${3:0}, ${4:0}>, <${5:0}, ${6:1}, ${7:0}>, ${8:1}",
@@ -281,7 +355,8 @@
     },
     "Disc Object": {
         "prefix": "#declare disc",
-        "description": "Declare a disc object",
+        "description": "Declare a Disc object",
+        "scope": "povray",
         "body": [
             "#declare ${1:MyDisc} = disc {",
             "\t<${2:0}, ${3:0}, ${4:0}>, <${5:0}, ${6:1}, ${7:0}>, ${8:1}",
@@ -294,7 +369,8 @@
     },
     "Polygon": {
         "prefix": "polygon",
-        "description": "Insert a polygon",
+        "description": "Insert a Polygon",
+        "scope": "povray",
         "body":[
             "polygon {",
             "\t${2:4} // Number of points",
@@ -305,7 +381,8 @@
     },
     "Polygon Object": {
         "prefix": "#delcare polygon",
-        "description": "Declare a polygon object",
+        "description": "Declare a Polygon object",
+        "scope": "povray",
         "body":[
             "#declare ${1:MyPolygon} = polygon {",
             "\t${2:4} // Number of points",
@@ -317,17 +394,69 @@
             "}"
         ]
     },
+    "Prism Linear Spline": {
+        "prefix": "prism",
+        "description": "Insert a Prism Linear Spline",
+        "scope": "povray",
+        "body":[
+            "prism {",
+            "\tlinear_spline",
+            "\t${1:0}, ${2:1}, ${3:10}, // Height 1, Height 2, Number of Points",
+            "\t<${4:0},${5:0}>, <${6:6},${7:0}>, <${8:6},${9:8}>, <${10:0},${11:8}>, <${12:0},${13:0}>, //points for outer rim",
+            "\t<${14:1},${15:1}>, <${16:5},${17:1}>, <${18:5},${19:7}>, <${20:1},${21:7}>, <${22:1},${23:1}>  //points inner rim",
+            "}"
+        ]
+    },
+    "Prism Linear Spline Object": {
+        "prefix": "#declare prism",
+        "description": "Declare a Prism Linear Spline",
+        "scope": "povray",
+        "body":[
+            "#declare ${1:MyPrism} = prism {",
+            "\tlinear_spline",
+            "\t${2:0}, ${3:1}, ${4:10}, // Height 1, Height 2, Number of Points",
+            "\t<${5:0},${6:0}>, <${7:6},${8:0}>, <${9:6},${10:8}>, <${11:0},${12:8}>, <${13:0},${14:0}>, //points for outer rim",
+            "\t<${15:1},${16:1}>, <${17:5},${18:1}>, <${19:5},${20:7}>, <${21:1},${22:7}>, <${23:1},${24:1}>  //points inner rim",
+            "}",
+            "object {",
+            "\t${1:MyPrism}",
+            "}"
+        ]
+    },
+
+
+    "Material": {
+        "prefix": "material",
+        "description": "Insert material block",
+        "scope": "povray",
+        "body": [
+            "bounded_by {",
+            "\t${0}",
+            "}"
+        ]
+    },
     "Texture": {
         "prefix": "texture",
-        "description": "Insert a texture block",
+        "description": "Insert a Texture block",
+        "scope": "povray",
+        "body": [
+            "texture {",
+            "\t${0}",
+            "}"
+        ]
+    },
+    "Texture Pigment Normal Finish": {
+        "prefix": "texture",
+        "description": "Insert a Texture with Pigment, Normal, and Finish",
+        "scope": "povray",
         "body": [
             "texture {",
             "\t${0}",
             "\tpigment { ",
-            "\t\tcolor rgb<${1:1.0}, ${2:1.0}, ${3:1.0}, 0.0, 0.0> // <red, green, blue, filter, transmit>",
+            "\t\tcolor <${1:1.0}, ${2:1.0}, ${3:1.0}, 0.0, 0.0> // <red, green, blue, filter, transmit>",
             "\t}",
             "\tnormal {",
-            "\t\tbumps ${4:0.0} scale ${5:0.25}",
+            "\t\t${1|dents,bumps,wrinkles,ripples,waves|} ${2:0.25} scale ${3:0.25}",
             "\t}",
             "\tfinish {",
             "\t\tphong ${6:0.25}",
@@ -340,37 +469,154 @@
     },
     "Pigment": {
         "prefix": "pigment",
-        "description": "Insert a pigment block",
+        "description": "Insert a Pigment block",
+        "scope": "povray",
         "body": [
             "pigment { ",
-            "\tcolor rgb<${1:1.0}, ${2:1.0}, ${3:1.0}, 0.0, 0.0> // <red, green, blue, filter, transmit>",
+            "\t${0}",
+            "}"
+        ]
+    },
+    "Pigment Color": {
+        "prefix": "pigment",
+        "description": "Insert a Pigment with Color",
+        "scope": "povray",
+        "body": [
+            "pigment { ",
+            "\tcolor <${1:1.0}, ${2:1.0}, ${3:1.0}, 0.0, 0.0> // <red, green, blue, filter, transmit>",
+            "}"
+        ]
+    },
+    "Brick": {
+        "prefix": "brick",
+        "description": "Insert brick pattern",
+        "scope": "povray",
+        "body": [
+            "brick",
+            "<${1:1.0}, ${2:1.0}, ${3:1.0}>, // brick color 1",
+            "<${4:0.0}, ${5:0.0}, ${6:0.0}>, // brick color 2",
+            "${0}"
+        ]
+    },
+    "Checker": {
+        "prefix": "checker",
+        "description": "Insert checker pattern",
+        "scope": "povray",
+        "body": [
+            "checker",
+            "<${1:1.0}, ${2:1.0}, ${3:1.0}>, // checker color 1",
+            "<${4:0.0}, ${5:0.0}, ${6:0.0}>, // checker color 2",
+            "${0}"
+        ]
+    },
+    "Hexagon": {
+        "prefix": "hexagon",
+        "description": "Insert hexagon pattern",
+        "scope": "povray",
+        "body": [
+            "hexagon",
+            "<${1:1.0}, ${2:0.0}, ${3:0.0}>, // hexagon color 1",
+            "<${4:0.0}, ${5:1.0}, ${6:0.0}>, // hexagon color 2",
+            "<${7:0.0}, ${7:0.0}, ${9:1.0}>, // hexagon color 3",
+            "${0}"
+        ]
+    },
+    "Color Map": {
+        "prefix": "color_map",
+        "description":"Insert a color_map",
+        "scope": "povray",
+        "body":[
+            "color_map {",
+            "\t[0.1 color <1,1,1>]",
+            "\t[0.9 color <0,0,0>]",
+            "}"
+        ]
+    },
+    "Pigment Map": {
+        "prefix": "pigment_map",
+        "description":"Insert a pigment_map",
+        "scope": "povray",
+        "body":[
+            "pigment_map {",
+            "\t[0.1 Jade]",
+            "\t[0.9 White_Marble]",
             "}"
         ]
     },
     "Normal": {
         "prefix": "normal",
-        "description": "Insert a normal block",
+        "description": "Insert a Normal block",
+        "scope": "povray",
         "body": [
             "normal {",
-            "\tbumps ${1:0.0} scale ${2:0.25}",
+            "\t${0}",
+            "}"
+        ]
+    },
+    "Normal Surface": {
+        "prefix": "normal",
+        "description": "Insert a Normal with Dents, Bumps, Wrinkles, Ripples, or Waves",
+        "scope": "povray",
+        "body": [
+            "normal {",
+            "\t${1|dents,bumps,wrinkles,ripples,waves|} ${2:0.25} scale ${3:0.25}",
             "}"
         ]
     },
     "Finish": {
         "prefix": "finish",
-        "description": "Insert a finish block",
+        "description": "Insert a Finish block",
+        "scope": "povray",
         "body": [
             "finish {",
-            "\tphong ${1:0.25}",
-            "\treflection { ",
-            "\t\t${2:0.00} metallic ${3:0.00}",
+            "\t${0}",
             "\t}",
             "}"
         ]
     },
+    "Finish Specular & Reflection": {
+        "prefix": "finish",
+        "description": "Insert a Finish with Specular and Reflection",
+        "scope": "povray",
+        "body": [
+            "finish {",
+            "\tspecular ${1:0.25}",
+            "\troughness ${2:.05}",
+            "\treflection { ",
+            "\t\t${3:0.0} metallic ${3:0.0}",
+            "\t}",
+            "}"
+        ]
+    },
+    "Finish Phong & Reflection": {
+        "prefix": "finish",
+        "description": "Insert a Finish with Phong and Reflection",
+        "scope": "povray",
+        "body": [
+            "finish {",
+            "\tphong ${1:0.25}",
+            "\treflection { ",
+            "\t\t${3:0.0} metallic ${3:0.0}",
+            "\t}",
+            "}"
+        ]
+    },
+    "Interior": {
+        "prefix": "interior",
+        "description": "Insert interior block",
+        "scope": "povray",
+        "body": [
+            "interior {",
+            "\t${0}",
+            "}"
+        ]
+    },
+
+
     "Union": {
         "prefix": "union",
-        "description": "Insert a union block",
+        "description": "Insert a Union block",
+        "scope": "povray",
         "body": [
             "union {",
             "\t${0}",
@@ -379,7 +625,8 @@
     },
     "Intersection": {
         "prefix": "intersection",
-        "description": "Insert an intersection block",
+        "description": "Insert an Intersection block",
+        "scope": "povray",
         "body": [
             "intersection {",
             "\t${0}",
@@ -388,7 +635,8 @@
     },
     "Difference": {
         "prefix": "difference",
-        "description": "Insert a difference block",
+        "description": "Insert a Difference block",
+        "scope": "povray",
         "body": [
             "difference {",
             "\t${0}",
@@ -397,20 +645,298 @@
     },
     "Merge": {
         "prefix": "merge",
-        "description": "Insert a merge block",
+        "description": "Insert a Merge block",
+        "scope": "povray",
         "body": [
             "merge {",
             "\t${0}",
             "}"
         ]
     },
-    "Light Group": {
-        "prefix": "light_group",
-        "description": "Insert a light_group block",
+    "Scale": {
+        "prefix": "scale",
+        "description": "Insert scaling",
+        "scope": "povray",
         "body": [
-            "light_group {",
+            "scale <${1:1.0}, ${2:1.0}, ${3:1.0}> // <x, y, z>"
+        ]
+    },
+    "Rotate": {
+        "prefix": "rotate",
+        "description": "Insert rotation",
+        "scope": "povray",
+        "body": [
+            "rotate <${1:0}, ${2:0}, ${3:0}> // <x°, y°, z°>"
+        ]
+    },
+    "Translate": {
+        "prefix": "translate",
+        "description": "Insert translation",
+        "scope": "povray",
+        "body": [
+            "translate <${1:0}, ${2:0}, ${3:0}> // <x, y, z>"
+        ]
+    },
+    "Clipped By": {
+        "prefix": "clipped_by",
+        "description": "Insert clipped_by block",
+        "scope": "povray",
+        "body": [
+            "clipped_by {",
             "\t${0}",
             "}"
+        ]
+    },
+    "Bounded By": {
+        "prefix": "bounded_by",
+        "description": "Insert bounded_by block",
+        "scope": "povray",
+        "body": [
+            "bounded_by {",
+            "\t${0}",
+            "}"
+        ]
+    },
+
+    
+    "Include Arrays": {
+        "prefix": "#include",
+        "description": "Include Standard Array Manipulation Macros",
+        "scope": "povray",
+        "body":[
+            "#include \"arrays.inc\""
+        ]
+    },
+    "Include Chars": {
+        "prefix": "#include",
+        "description": "Include Standard Alphanumeirc Character Objects",
+        "scope": "povray",
+        "body":[
+            "#include \"chars.inc\""
+        ]
+    },
+    "Include Colors": {
+        "prefix": "#include",
+        "description": "Include Standard Colors:\n\n127 predefined colors",
+        "scope": "povray",
+        "body":[
+            "#include \"colors.inc\""
+        ]
+    },
+    "Include Constants": {
+        "prefix": "#include",
+        "description": "Include Standard Number Constants",
+        "scope": "povray",
+        "body":[
+            "#include \"consts.inc\""
+        ]
+    },
+    "Include Debug": {
+        "prefix": "#include",
+        "description": "Include Standard Debug Macros",
+        "scope": "povray",
+        "body":[
+            "#include \"debug.inc\""
+        ]
+    },
+    "Include Finishes": {
+        "prefix": "#include",
+        "description": "Include Standard Finish Defintions:\n\nDull. Shiny, Glossy, Phong_Dull, Phong_Shiny, Phong_Glossy, Luminous, Mirror\n",
+        "scope": "povray",
+        "body":[
+            "#include \"finish.inc\""
+        ]
+    },
+    "Include Functions": {
+        "prefix": "#include",
+        "description": "Include Standard Functions",
+        "scope": "povray",
+        "body":[
+            "#include \"functions.inc\""
+        ]
+    },
+    "Include Glass": {
+        "prefix": "#include",
+        "description": "Include Standard Glass Textures",
+        "scope": "povray",
+        "body":[
+            "#include \"glass.inc\""
+        ]
+    },
+    "Include Golds": {
+        "prefix": "#include",
+        "description": "Include Standard Gold Metal Textures",
+        "scope": "povray",
+        "body":[
+            "#include \"golds.inc\""
+        ]
+    },
+    "Include IOR": {
+        "prefix": "#include",
+        "description": "Include Standard IOR Definitions",
+        "scope": "povray",
+        "body":[
+            "#include \"ior.inc\""
+        ]
+    },
+    "Include Make Grass": {
+        "prefix": "#include",
+        "description": "Include Standard Make Grass Macro",
+        "scope": "povray",
+        "body":[
+            "#include \"makegrass.inc\""
+        ]
+    },
+    "Include Math": {
+        "prefix": "#include",
+        "description": "Include Standard Math Macros and Functions",
+        "scope": "povray",
+        "body":[
+            "#include \"math.inc\""
+        ]
+    },
+    "Include Mesh Maker": {
+        "prefix": "#include",
+        "description": "Include Standard Mesh Maker Macros and Functions",
+        "scope": "povray",
+        "body":[
+            "#include \"meshmaker.inc\""
+        ]
+    },
+    "Include Metals": {
+        "prefix": "#include",
+        "description": "Include Standard Metal Textures:\n\n Copper, Silver, Chrome, and Brass",
+        "scope": "povray",
+        "body":[
+            "#include \"metals.inc\""
+        ]
+    },
+    "Include Random Number Generator": {
+        "prefix": "#include",
+        "description": "Include Standard Random Number Generaton Functions",
+        "scope": "povray",
+        "body":[
+            "#include \"rand.inc\""
+        ]
+    },
+    "Include Screen": {
+        "prefix": "#include",
+        "description": "Include Standard Screen Objects",
+        "scope": "povray",
+        "body":[
+            "#include \"screen.inc\""
+        ]
+    },
+    "Include Shapes": {
+        "prefix": "#include",
+        "description": "Include Standard Shapes Functions:\n\nIsect, Extents, Center_Object, Align_Object, Bevelled_Text, Text_Space, Text_Width, Circle_Text, Wedge, Spheroid, Supertorus, Supercone, Connect_Spheres, Wire_Box,, Round_Box, Round_Cylinder, Round_Cone, Quad, HF_Square, HF_Sphere, HF_Cylinder, HF_Torus\n",
+        "scope": "povray",
+        "body":[
+            "#include \"shapes.inc\""
+        ]
+    },
+    "Include Shapes 2": {
+        "prefix": "#include",
+        "description": "Include Standard Shapes 2:\n\nTetrahedron, HalfCone_Y, Octahedron, Pyramid, Dodecahedron, Pyramid2, Icosahedron, Rhomboid, Hexagon, Square_X, Square_Y, Square_Z\n",
+        "scope": "povray",
+        "body":[
+            "#include \"shapes2.inc\""
+        ]
+    },
+    "Include Shapes 3": {
+        "prefix": "#include",
+        "description": "Include Standard Shapes 3:\n\nSegment_of_Torus, Segment_of_CylinderRing, Segment_of_Object, Column_N, Column_N_AB, Pyramid_N, Pyramid_N_AB, Facetted_Sphere, Facetted_Egg_Shape, Facetted_Egg, Egg_Shape, Egg, Ring_Sphere, Round_Pyramid_N_out, Round_Pyramid_N_in, Round_Cylinder_Tube, Rounded_Tube, Rounded_Tube_AB, Round_Conic_Torus, Round_Conic_Prism, Half_Hollowed_Rounded_Cylinder1, Half_Hollowed_Rounded_Cylinder2, Round_N_Tube_Polygon\n",
+        "scope": "povray",
+        "body":[
+            "#include \"shapes3.inc\""
+        ]
+    },
+    "Include Shapes SQ": {
+        "prefix": "#include",
+        "description": "Include Standard Shapes SQ:\n\nBicorn, Crossed_Trough, Cubic_Cylinder, Cubic_Saddle_1, Devils_Curve, Folium, Glob_5, Twin_Glob, Helix, Hyperbolic_Torus, Lemniscate, Quartic_Loop_1, Monkey_Saddle, Parabolic_Torus_40_12, Piriform, Quartic_Paraboloid, Quartic_Cylinder, Steiner_Surface, Torus_40_12, Witch_Hat, Sinsurf\n",
+        "scope": "povray",
+        "body":[
+            "#include \"shapes3.inc\""
+        ]
+    },
+    "Include Skies": {
+        "prefix": "#include",
+        "description": "Include Standard Skies",
+        "scope": "povray",
+        "body":[
+            "#include \"skies.inc\""
+        ]
+    },
+    "Include Stars": {
+        "prefix": "#include",
+        "description": "Include Standard Starfields",
+        "scope": "povray",
+        "body":[
+            "#include \"stars.inc\""
+        ]
+    },
+    "Include Standard Cam": {
+        "prefix": "#include",
+        "description": "Include Standard Camera, Light Source, and Ground Plane",
+        "scope": "povray",
+        "body":[
+            "#include \"stdcam.inc\""
+        ]
+    },
+    "Standard Includes": {
+        "prefix": "#include",
+        "description": "Include Standard Common Includes:\n\ncolors.inc\nshapes.inc\ntransforms.inc\nconsts.inc\nfunctions.inc\nmath.inc\nrand.inc\n",
+        "scope": "povray",
+        "body":[
+            "#include \"stdinc.inc\""
+        ]
+    },
+    "Include Stones": {
+        "prefix": "#include",
+        "description": "Include Standard Stone Textures",
+        "scope": "povray",
+        "body":[
+            "#include \"stones.inc\""
+        ]
+    },
+    "Include Strings": {
+        "prefix": "#include",
+        "description": "Include Standard String Manipulation Functions",
+        "scope": "povray",
+        "body":[
+            "#include \"strings.inc\""
+        ]
+    },
+    "Include Sun Position": {
+        "prefix": "#include",
+        "description": "Include Standard Macro for getting the position of the sun for a specific date & time",
+        "scope": "povray",
+        "body":[
+            "#include \"sunpos.inc\""
+        ]
+    },
+    "Include Textures": {
+        "prefix": "#include",
+        "description": "Include All Standard Textures:\n\nGlass, Metals, Stones, Skies, Woods, Special textures",
+        "scope": "povray",
+        "body":[
+            "#include \"textures.inc\""
+        ]
+    },
+    "Include Transforms": {
+        "prefix": "#include",
+        "description": "Include Standard Transformation Macros",
+        "scope": "povray",
+        "body":[
+            "#include \"tranforms.inc\""
+        ]
+    },
+    "Include Woods": {
+        "prefix": "#include",
+        "description": "Include Standard Wood Textures",
+        "scope": "povray",
+        "body":[
+            "#include \"woods.inc\""
         ]
     }
 }
