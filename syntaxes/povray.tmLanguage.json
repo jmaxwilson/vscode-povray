@@ -25,7 +25,7 @@
     },
     {
       "name": "keyword.povray",
-      "match": "#|\\b(array|ascii|camera|charset|debug|declare|default|error|fclose|fog|fopen|function|global_settings|include|internal|irid|light_source|local|macro|object|open|pattern|photons|radiosity|render|statistics|sys|t|u|undef|utf8|v|version|warning|x|y|z)\\b"
+      "match": "#|\\b(array|ascii|charset|debug|declare|default|error|fclose|fog|fopen|function|global_settings|include|internal|irid|local|macro|object|open|pattern|photons|radiosity|render|statistics|sys|t|u|undef|utf8|v|version|warning|x|y|z)\\b"
     },
     {      
       "name": "keyword.control.povray",
@@ -37,7 +37,7 @@
     },
     {
       "name": "entity.name.class.object.povray",
-      "match": "\\b(bicubic_patch|blob|box|cone|cubic|cylinder|disc|gradient|granite|height_field|isosurface|julia_fractal|lathe|ovus|parametric|plane|poly|polygon|polynomial|prism|quadric|quartic|rainbow|sky_sphere|smooth_triangle|sor|sphere|sphere_sweep|spline|superellipsoid|text|torus|triangle)\\b"
+      "match": "\\b(camera|light_source|bicubic_patch|blob|box|cone|cubic|cylinder|disc|gradient|granite|height_field|isosurface|julia_fractal|lathe|ovus|parametric|plane|poly|polygon|polynomial|prism|quadric|quartic|rainbow|sky_sphere|smooth_triangle|sor|sphere|sphere_sweep|spline|superellipsoid|text|torus|triangle)\\b"
     },
     {
       "name": "entity.name.class.pattern.povray",

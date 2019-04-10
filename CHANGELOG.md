@@ -2,6 +2,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [0.0.6] - 2019-04-10
+
+### Added
+- Feature: POV-Ray Snippets for common scene elements
+- language-configuration.json so that comments hot keys and braces, brackets, etc  matching will work properly.
+### Changed
+- Slight tweak to syntax hilighting for camera and light_source
+### Fixed
+- ctrl + / now toggles comments off and on correctly.
+
 ## [0.0.5] - 2019-04-04
 
 ### Changed
