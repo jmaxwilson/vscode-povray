@@ -236,7 +236,7 @@
         "scope": "povray",
         "body":[
             "plane {",
-            "\t<${2:0}, ${3:1}, ${4:0}>, ${5:0} // perpendicular to axis, offset", 
+            "\t${2|x,y,z|}, ${5:0} // perpendicular to axis, offset", 
             "\t${0}",
             "}"
         ]
@@ -247,7 +247,7 @@
         "scope": "povray",
         "body":[
             "#declare ${1:MyPlane} = plane {",
-            "\t<${2:0}, ${3:1}, ${4:0}>, ${5:0} // perpendicular to axis, offset", 
+            "\t${2|x,y,z|}, ${5:0} // perpendicular to axis, offset", 
             "\t${0}",
             "}",
             "object {",
@@ -487,6 +487,74 @@
             "}"
         ]
     },
+    "Pigment Brick": {
+        "prefix": "pigment",
+        "description": "Insert a Pigment with a Brick Pattern",
+        "scope": "povray",
+        "body": [
+            "pigment { ",
+            "\tbrick",
+            "\t<${1:1.0}, ${2:1.0}, ${3:1.0}>, // brick color 1",
+            "\t<${4:0.0}, ${5:0.0}, ${6:0.0}>, // brick color 2",
+            "\t${0}",
+            "}"
+        ]
+    },
+    "Pigment Checker": {
+        "prefix": "pigment",
+        "description": "Insert a Pigment with a Checkered Pattern",
+        "scope": "povray",
+        "body": [
+            "pigment { ",
+            "\tchecker",
+            "\t<${1:1.0}, ${2:1.0}, ${3:1.0}>, // checker color 1",
+            "\t<${4:0.0}, ${5:0.0}, ${6:0.0}>, // checker color 2",
+            "\t${0}",
+            "}"
+        ]
+    },
+    "Pigment Hexagon": {
+        "prefix": "pigment",
+        "description": "Insert a Pigment with a Hexagon Pattern",
+        "scope": "povray",
+        "body": [
+            "pigment { ",
+            "\thexagon",
+            "\t<${1:1.0}, ${2:0.0}, ${3:0.0}>, // hexagon color 1",
+            "\t<${4:0.0}, ${5:1.0}, ${6:0.0}>, // hexagon color 2",
+            "\t<${7:0.0}, ${7:0.0}, ${9:1.0}>, // hexagon color 3",
+            "\t${0}",
+            "}"
+        ]
+    },
+    "Pigment Color Map": {
+        "prefix": "pigment",
+        "description": "Insert a Pigment with a Color Map",
+        "scope": "povray",
+        "body": [
+            "pigment { ",
+            "\tgradient ${1|x,y,z|}",
+            "\tcolor_map {",
+            "\t[0.1 color <1,1,1>]",
+            "\t[0.9 color <0,0,0>]",
+            "\t}",
+            "}"
+        ]
+    },
+    "Pigment Pigment Map": {
+        "prefix": "pigment",
+        "description": "Insert a Pigment with a Pigment Map",
+        "scope": "povray",
+        "body": [
+            "pigment { ",
+            "\tgradient ${1|x,y,z|}",
+            "\tpigment_map {",
+            "\t[0.1 wood]",
+            "\t[0.9 marble]",
+            "\t}",
+            "}"
+        ]
+    },
     "Brick": {
         "prefix": "brick",
         "description": "Insert brick pattern",
@@ -538,9 +606,17 @@
         "scope": "povray",
         "body":[
             "pigment_map {",
-            "\t[0.1 Jade]",
-            "\t[0.9 White_Marble]",
+            "\t[0.1 wood]",
+            "\t[0.9 marble]",
             "}"
+        ]
+    },
+    "Gradient": {
+        "prefix": "gradient",
+        "description": "Insert a Gradient",
+        "scope":"povray",
+        "body":[
+                "gradient ${1|x,y,z|}"
         ]
     },
     "Normal": {
@@ -699,7 +775,7 @@
     },
 
     
-    "Include Arrays": {
+    "Arrays": {
         "prefix": "#include",
         "description": "Include Standard Array Manipulation Macros",
         "scope": "povray",
@@ -707,7 +783,7 @@
             "#include \"arrays.inc\""
         ]
     },
-    "Include Chars": {
+    "Chars": {
         "prefix": "#include",
         "description": "Include Standard Alphanumeirc Character Objects",
         "scope": "povray",
@@ -715,7 +791,7 @@
             "#include \"chars.inc\""
         ]
     },
-    "Include Colors": {
+    "Colors": {
         "prefix": "#include",
         "description": "Include Standard Colors:\n\n127 predefined colors",
         "scope": "povray",
@@ -723,7 +799,7 @@
             "#include \"colors.inc\""
         ]
     },
-    "Include Constants": {
+    "Constants": {
         "prefix": "#include",
         "description": "Include Standard Number Constants",
         "scope": "povray",
@@ -731,7 +807,7 @@
             "#include \"consts.inc\""
         ]
     },
-    "Include Debug": {
+    "Debug": {
         "prefix": "#include",
         "description": "Include Standard Debug Macros",
         "scope": "povray",
@@ -739,7 +815,7 @@
             "#include \"debug.inc\""
         ]
     },
-    "Include Finishes": {
+    "Finishes": {
         "prefix": "#include",
         "description": "Include Standard Finish Defintions:\n\nDull. Shiny, Glossy, Phong_Dull, Phong_Shiny, Phong_Glossy, Luminous, Mirror\n",
         "scope": "povray",
@@ -747,7 +823,7 @@
             "#include \"finish.inc\""
         ]
     },
-    "Include Functions": {
+    "Functions": {
         "prefix": "#include",
         "description": "Include Standard Functions",
         "scope": "povray",
@@ -755,7 +831,7 @@
             "#include \"functions.inc\""
         ]
     },
-    "Include Glass": {
+    "Glass": {
         "prefix": "#include",
         "description": "Include Standard Glass Textures",
         "scope": "povray",
@@ -763,7 +839,7 @@
             "#include \"glass.inc\""
         ]
     },
-    "Include Golds": {
+    "Golds": {
         "prefix": "#include",
         "description": "Include Standard Gold Metal Textures",
         "scope": "povray",
@@ -771,7 +847,7 @@
             "#include \"golds.inc\""
         ]
     },
-    "Include IOR": {
+    "IOR": {
         "prefix": "#include",
         "description": "Include Standard IOR Definitions",
         "scope": "povray",
@@ -779,7 +855,7 @@
             "#include \"ior.inc\""
         ]
     },
-    "Include Make Grass": {
+    "Make Grass": {
         "prefix": "#include",
         "description": "Include Standard Make Grass Macro",
         "scope": "povray",
@@ -787,7 +863,7 @@
             "#include \"makegrass.inc\""
         ]
     },
-    "Include Math": {
+    "Math": {
         "prefix": "#include",
         "description": "Include Standard Math Macros and Functions",
         "scope": "povray",
@@ -795,15 +871,15 @@
             "#include \"math.inc\""
         ]
     },
-    "Include Mesh Maker": {
+    "Meshmaker": {
         "prefix": "#include",
-        "description": "Include Standard Mesh Maker Macros and Functions",
+        "description": "Include Standard Meshmaker Macros and Functions",
         "scope": "povray",
         "body":[
             "#include \"meshmaker.inc\""
         ]
     },
-    "Include Metals": {
+    "Metals": {
         "prefix": "#include",
         "description": "Include Standard Metal Textures:\n\n Copper, Silver, Chrome, and Brass",
         "scope": "povray",
@@ -811,7 +887,7 @@
             "#include \"metals.inc\""
         ]
     },
-    "Include Random Number Generator": {
+    "Random Number Generator": {
         "prefix": "#include",
         "description": "Include Standard Random Number Generaton Functions",
         "scope": "povray",
@@ -819,7 +895,7 @@
             "#include \"rand.inc\""
         ]
     },
-    "Include Screen": {
+    "Screen": {
         "prefix": "#include",
         "description": "Include Standard Screen Objects",
         "scope": "povray",
@@ -827,7 +903,7 @@
             "#include \"screen.inc\""
         ]
     },
-    "Include Shapes": {
+    "Shapes": {
         "prefix": "#include",
         "description": "Include Standard Shapes Functions:\n\nIsect, Extents, Center_Object, Align_Object, Bevelled_Text, Text_Space, Text_Width, Circle_Text, Wedge, Spheroid, Supertorus, Supercone, Connect_Spheres, Wire_Box,, Round_Box, Round_Cylinder, Round_Cone, Quad, HF_Square, HF_Sphere, HF_Cylinder, HF_Torus\n",
         "scope": "povray",
@@ -835,7 +911,7 @@
             "#include \"shapes.inc\""
         ]
     },
-    "Include Shapes 2": {
+    "Shapes 2": {
         "prefix": "#include",
         "description": "Include Standard Shapes 2:\n\nTetrahedron, HalfCone_Y, Octahedron, Pyramid, Dodecahedron, Pyramid2, Icosahedron, Rhomboid, Hexagon, Square_X, Square_Y, Square_Z\n",
         "scope": "povray",
@@ -843,7 +919,7 @@
             "#include \"shapes2.inc\""
         ]
     },
-    "Include Shapes 3": {
+    "Shapes 3": {
         "prefix": "#include",
         "description": "Include Standard Shapes 3:\n\nSegment_of_Torus, Segment_of_CylinderRing, Segment_of_Object, Column_N, Column_N_AB, Pyramid_N, Pyramid_N_AB, Facetted_Sphere, Facetted_Egg_Shape, Facetted_Egg, Egg_Shape, Egg, Ring_Sphere, Round_Pyramid_N_out, Round_Pyramid_N_in, Round_Cylinder_Tube, Rounded_Tube, Rounded_Tube_AB, Round_Conic_Torus, Round_Conic_Prism, Half_Hollowed_Rounded_Cylinder1, Half_Hollowed_Rounded_Cylinder2, Round_N_Tube_Polygon\n",
         "scope": "povray",
@@ -851,15 +927,15 @@
             "#include \"shapes3.inc\""
         ]
     },
-    "Include Shapes SQ": {
+    "Quartic Shapes": {
         "prefix": "#include",
         "description": "Include Standard Shapes SQ:\n\nBicorn, Crossed_Trough, Cubic_Cylinder, Cubic_Saddle_1, Devils_Curve, Folium, Glob_5, Twin_Glob, Helix, Hyperbolic_Torus, Lemniscate, Quartic_Loop_1, Monkey_Saddle, Parabolic_Torus_40_12, Piriform, Quartic_Paraboloid, Quartic_Cylinder, Steiner_Surface, Torus_40_12, Witch_Hat, Sinsurf\n",
         "scope": "povray",
         "body":[
-            "#include \"shapes3.inc\""
+            "#include \"shapesq.inc\""
         ]
     },
-    "Include Skies": {
+    "Skies": {
         "prefix": "#include",
         "description": "Include Standard Skies",
         "scope": "povray",
@@ -867,7 +943,7 @@
             "#include \"skies.inc\""
         ]
     },
-    "Include Stars": {
+    "Stars": {
         "prefix": "#include",
         "description": "Include Standard Starfields",
         "scope": "povray",
@@ -875,7 +951,7 @@
             "#include \"stars.inc\""
         ]
     },
-    "Include Standard Cam": {
+    " Standard Camera, Light, Plane": {
         "prefix": "#include",
         "description": "Include Standard Camera, Light Source, and Ground Plane",
         "scope": "povray",
@@ -883,7 +959,7 @@
             "#include \"stdcam.inc\""
         ]
     },
-    "Standard Includes": {
+    " Standard Includes": {
         "prefix": "#include",
         "description": "Include Standard Common Includes:\n\ncolors.inc\nshapes.inc\ntransforms.inc\nconsts.inc\nfunctions.inc\nmath.inc\nrand.inc\n",
         "scope": "povray",
@@ -891,7 +967,7 @@
             "#include \"stdinc.inc\""
         ]
     },
-    "Include Stones": {
+    "Stones": {
         "prefix": "#include",
         "description": "Include Standard Stone Textures",
         "scope": "povray",
@@ -899,7 +975,7 @@
             "#include \"stones.inc\""
         ]
     },
-    "Include Strings": {
+    "Strings": {
         "prefix": "#include",
         "description": "Include Standard String Manipulation Functions",
         "scope": "povray",
@@ -907,7 +983,7 @@
             "#include \"strings.inc\""
         ]
     },
-    "Include Sun Position": {
+    "Sun Position": {
         "prefix": "#include",
         "description": "Include Standard Macro for getting the position of the sun for a specific date & time",
         "scope": "povray",
@@ -915,7 +991,7 @@
             "#include \"sunpos.inc\""
         ]
     },
-    "Include Textures": {
+    "Textures": {
         "prefix": "#include",
         "description": "Include All Standard Textures:\n\nGlass, Metals, Stones, Skies, Woods, Special textures",
         "scope": "povray",
@@ -923,7 +999,7 @@
             "#include \"textures.inc\""
         ]
     },
-    "Include Transforms": {
+    "Transforms": {
         "prefix": "#include",
         "description": "Include Standard Transformation Macros",
         "scope": "povray",
@@ -931,7 +1007,7 @@
             "#include \"tranforms.inc\""
         ]
     },
-    "Include Woods": {
+    "Woods": {
         "prefix": "#include",
         "description": "Include Standard Wood Textures",
         "scope": "povray",
