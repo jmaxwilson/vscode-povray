@@ -209,21 +209,55 @@ export function getFileInfo(context: ShellContext) {
     return fileInfo;
 }
 
+export function getOutputFileExtension(settings: any) {
+    let outExt = ".png";
+    switch (settings.outputFormat) {
+        case "png - Portable Network Graphics": outExt = ".png"; break;
+        case "jpg - JPEG (lossy)": outExt = ".jpg"; break;
+        case "bmp - Bitmap": outExt = ".bmp"; break;
+        case "tga - Targa-24 (compressed)": outExt = ".tga"; break;
+        case "tga - Targa-24": outExt = ".tga"; break;
+        case "exr - OpenEXR High Dynamic-Range": outExt = ".exr"; break;
+        case "hdr - Radiance High Dynamic-Range": outExt = ".hdr"; break;
+        case "ppm - Portable Pixmap": outExt = ".ppm"; break;
+    }
+
+    return outExt;
+}
+
+export function getOutputFormatOption(settings: any) {
+    let formatOption = "";
+    switch (settings.outputFormat) {
+        case "png - Portable Network Graphics": formatOption = ""; break;
+        case "jpg - JPEG (lossy)": formatOption = " Output_File_Type=J"; break;
+        case "bmp - Bitmap": formatOption = " Output_File_Type=B"; break;
+        case "tga - Targa-24 (compressed)": formatOption = " Output_File_Type=C"; break;
+        case "tga - Targa-24": formatOption = " Output_File_Type=T"; break;
+        case "exr - OpenEXR High Dynamic-Range": formatOption = " Output_File_Type=E"; break;
+        case "hdr - Radiance High Dynamic-Range": formatOption = " Output_File_Type=H"; break;
+        case "ppm - Portable Pixmap": formatOption = " Output_File_Type=P"; break;
+    }
+
+    return formatOption;
+}
+
 // Builds an output file path for rendering based on the file info, settings, and shell context
 // Specifically checks for whether the user has configured an output path
 export function buildOutFilePath(settings: any, fileInfo: any, context: ShellContext) {
+
+    let outExt = getOutputFileExtension(settings);
     // Build the output file path
     // Default to the exact same path as the source file, except with an image extension
-    let outFilePath = fileInfo.fileDir + fileInfo.fileName.replace(".pov",".png");
+    let outFilePath = fileInfo.fileDir + fileInfo.fileName.replace(".pov", outExt);
     // If the user has deinfed an output path in the settings
     if (settings.outputPath.length > 0)
     {
         if (settings.outputPath.startsWith(".")) {
             // the outputPath defined by the user appears to be relative
-            outFilePath = fileInfo.fileDir + settings.outputPath + fileInfo.fileName.replace(".pov",".png");    
+            outFilePath = fileInfo.fileDir + settings.outputPath + fileInfo.fileName.replace(".pov", outExt);    
         } else {
             // Use the custom output path plus the file name of the source file wirg rge extention changed to the image extension
-            outFilePath = settings.outputPath + fileInfo.fileName.replace(".pov",".png");
+            outFilePath = settings.outputPath + fileInfo.fileName.replace(".pov", outExt);
         }
         
     }
@@ -345,6 +379,8 @@ export function buildRenderOptions(settings: any, fileInfo: any, outFilePath: st
         }
     }
 
+    renderOptions += getOutputFormatOption(settings);
+
     // If the integrated terminal is Powershell running on Windows, we need to pipe the pvengine.exe through Out-Null
     // to make powershell wait for the rendering to complete and POv-Ray to close before continuing
     if (context.isWindowsPowershell && !settings.useDockerToRunPovray) {
@@ -359,6 +395,7 @@ export function getPOVSettings() {
     const configuration = vscode.workspace.getConfiguration('povray');
     let settings = {
         outputPath:                         (<string>configuration.get("render.outputPath")).trim(),
+        outputFormat:                       (<string>configuration.get("render.outputImageFormat")),
         defaultRenderWidth:                 <string>configuration.get("render.defaultWidth"),
         defaultRenderHeight:                <string>configuration.get("render.defaultHeight"),
         libraryPath:                        (<string>configuration.get("libraryPath")).trim(),

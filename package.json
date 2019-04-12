@@ -121,6 +121,21 @@
 					"default": "768",
 					"description": "The default height in pixels for rendered scene images"
 				},
+				"povray.render.outputImageFormat": {
+					"type": "string",
+					"enum": [
+						"png - Portable Network Graphics", 
+						"jpg - JPEG (lossy)", 
+						"bmp - Bitmap",
+						"tga - Targa-24", 
+						"tga - Targa-24 (compressed)", 
+						"exr - OpenEXR High Dynamic-Range", 
+						"hdr - Radiance High Dynamic-Range", 
+						"ppm - Portable Pixmap"
+					],
+					"default": "png - Portable Network Graphics",
+					"description": "The default height in pixels for rendered scene images"
+				},
 				"povray.render.openImageAfterRender": {
 					"type":"boolean",
 					"default": true,
