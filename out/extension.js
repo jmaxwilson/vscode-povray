@@ -277,48 +277,9 @@ exports.buildShellPOVExe = buildShellPOVExe;
 function buildRenderOptions(settings, fileInfo, outFilePath, context) {
     // Start building the render command that will be run in the shell
     let renderOptions = " ${fileBasename} -D";
-    // if this is a .pov file, pass the default render width and height from the settings
-    // as commandline arguments, otherwise we assume that the .ini file will include 
-    // width and height instructions
-    if (fileInfo.fileExt !== undefined && fileInfo.fileExt === ".pov") {
-        renderOptions += " Width=" + settings.defaultRenderWidth + " Height=" + settings.defaultRenderHeight;
-    }
-    // If the user has set an output path for rendered files, 
-    // add the output path as a commandline argument
-    if (settings.outputPath.length > 0) {
-        // if we are running povray using Docker
-        if (settings.useDockerToRunPovray) {
-            // We have already mounted the output directory
-            // so we always output within the docker container to /output
-            renderOptions += " Output_File_Name=/output/";
-        }
-        else { // We aren't running povray using Docker
-            // If we are running povray in WSL Bash
-            if (context.isWindowsBash) {
-                // If the shell is WSL Bash then we need to make sure that
-                // the output path is translated into the correct WSL path
-                renderOptions += " Output_File_Name=$(wslpath \'" + outFilePath + "\')";
-            }
-            else {
-                // Otherwise the output directory is straight forward
-                renderOptions += " Output_File_Name=" + outFilePath;
-            }
-        }
-    }
-    // If the user has set library path, 
-    // add the library path as a commandline argument
-    // We ignore the Library Path if we are using docker
-    if (settings.libraryPath.length > 0 && !settings.useDockerToRunPovray) {
-        settings.libraryPath = normalizePath(settings.libraryPath, context);
-        if (context.isWindowsBash) {
-            // If the shell is WSL Bash then we need to make sure that
-            // the library path is translated into the correct WSL path
-            renderOptions += " Library_Path=$(wslpath '" + settings.libraryPath + "')";
-        }
-        else {
-            renderOptions += " Library_Path=" + settings.libraryPath;
-        }
-    }
+    renderOptions += getDimensionOptions(settings, fileInfo);
+    renderOptions += getOutputPathOption(settings, outFilePath, context);
+    renderOptions += getLibraryPathOption(settings, context);
     renderOptions += getOutputFormatOption(settings);
     // If the integrated terminal is Powershell running on Windows, we need to pipe the pvengine.exe through Out-Null
     // to make powershell wait for the rendering to complete and POv-Ray to close before continuing
@@ -328,6 +289,63 @@ function buildRenderOptions(settings, fileInfo, outFilePath, context) {
     return renderOptions;
 }
 exports.buildRenderOptions = buildRenderOptions;
+function getDimensionOptions(settings, fileInfo) {
+    let dimensionOptions = "";
+    // if this is a .pov file, pass the default render width and height from the settings
+    // as commandline arguments, otherwise we assume that the .ini file will include 
+    // width and height instructions
+    if (fileInfo.fileExt !== undefined && fileInfo.fileExt === ".pov") {
+        dimensionOptions = " Width=" + settings.defaultRenderWidth + " Height=" + settings.defaultRenderHeight;
+    }
+    return dimensionOptions;
+}
+exports.getDimensionOptions = getDimensionOptions;
+function getOutputPathOption(settings, outFilePath, context) {
+    let outputPathOption = "";
+    // If the user has set an output path for rendered files, 
+    // add the output path as a commandline argument
+    if (settings.outputPath.length > 0) {
+        // if we are running povray using Docker
+        if (settings.useDockerToRunPovray) {
+            // We have already mounted the output directory
+            // so we always output within the docker container to /output
+            outputPathOption = " Output_File_Name=/output/";
+        }
+        else { // We aren't running povray using Docker
+            // If we are running povray in WSL Bash
+            if (context.isWindowsBash) {
+                // If the shell is WSL Bash then we need to make sure that
+                // the output path is translated into the correct WSL path
+                outputPathOption = " Output_File_Name=$(wslpath \'" + outFilePath + "\')";
+            }
+            else {
+                // Otherwise the output directory is straight forward
+                outputPathOption = " Output_File_Name=" + outFilePath;
+            }
+        }
+    }
+    return outputPathOption;
+}
+exports.getOutputPathOption = getOutputPathOption;
+function getLibraryPathOption(settings, context) {
+    let libraryOption = "";
+    // If the user has set library path, 
+    // add the library path as a commandline argument
+    // We ignore the Library Path if we are using docker
+    if (settings.libraryPath.length > 0 && !settings.useDockerToRunPovray) {
+        settings.libraryPath = normalizePath(settings.libraryPath, context);
+        if (context.isWindowsBash) {
+            // If the shell is WSL Bash then we need to make sure that
+            // the library path is translated into the correct WSL path
+            libraryOption = " Library_Path=$(wslpath '" + settings.libraryPath + "')";
+        }
+        else {
+            libraryOption = " Library_Path=" + settings.libraryPath;
+        }
+    }
+    return libraryOption;
+}
+exports.getLibraryPathOption = getLibraryPathOption;
 // Helper function to get the POV-Ray related settings
 function getPOVSettings() {
     const configuration = vscode.workspace.getConfiguration('povray');
