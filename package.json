@@ -93,7 +93,7 @@
 		},
 		"configuration": {
 			"type": "object",
-			"title": "POV-Ray Configuration",
+			"title": "POV-Ray",
 			"properties": {
 				"povray.outputPath": {
 					"type": "string",
@@ -134,7 +134,7 @@
 						"ppm - Portable Pixmap"
 					],
 					"default": "png - Portable Network Graphics",
-					"description": "The default height in pixels for rendered scene images"
+					"description": "The image format to use for rendered scenes"
 				},
 				"povray.render.openImageAfterRender": {
 					"type":"boolean",
