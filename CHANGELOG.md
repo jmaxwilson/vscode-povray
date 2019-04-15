@@ -2,9 +2,25 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [0.0.7] - 2019-04-15
+
+### Added
+
+- Feature: Change the output image format POV-Ray will use when rendering scenes. Supports .png, .jpg, .bmp, .tga, .exr, .hdr, .ppm
+
+### Changed
+
+- Refactored to make unit testing easier. Added more unit tests.
+- Simplifed title of settings section
+
+### Fixed
+
+- Fixed a bug with the naming of output files when rendering from .ini source files
+
 ## [0.0.6] - 2019-04-10
 
 ### Added
+
 - Feature: POV-Ray Snippets for common scene elements
 - language-configuration.json so that comments hot keys and braces, brackets, etc  matching will work properly.
 
