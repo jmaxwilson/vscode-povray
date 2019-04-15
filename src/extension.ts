@@ -248,16 +248,16 @@ export function buildOutFilePath(settings: any, fileInfo: any, context: ShellCon
     let outExt = getOutputFileExtension(settings);
     // Build the output file path
     // Default to the exact same path as the source file, except with an image extension
-    let outFilePath = fileInfo.fileDir + fileInfo.fileName.replace(".pov", outExt);
+    let outFilePath = fileInfo.fileDir + fileInfo.fileName.replace(".pov", outExt).replace(".ini", outExt); 
     // If the user has deinfed an output path in the settings
     if (settings.outputPath.length > 0)
     {
         if (settings.outputPath.startsWith(".")) {
             // the outputPath defined by the user appears to be relative
-            outFilePath = fileInfo.fileDir + settings.outputPath + fileInfo.fileName.replace(".pov", outExt);    
+            outFilePath = fileInfo.fileDir + settings.outputPath + fileInfo.fileName.replace(".pov", outExt).replace(".ini", outExt);    
         } else {
             // Use the custom output path plus the file name of the source file wirg rge extention changed to the image extension
-            outFilePath = settings.outputPath + fileInfo.fileName.replace(".pov", outExt);
+            outFilePath = settings.outputPath + fileInfo.fileName.replace(".pov", outExt).replace(".ini", outExt);
         }
         
     }
