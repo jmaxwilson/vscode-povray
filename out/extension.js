@@ -276,7 +276,8 @@ exports.buildShellPOVExe = buildShellPOVExe;
 // based on the settings, file to render, output path provided, and the shell context
 function buildRenderOptions(settings, fileInfo, outFilePath, context) {
     // Start building the render command that will be run in the shell
-    let renderOptions = " ${fileBasename} -D";
+    let renderOptions = " ${fileBasename}";
+    renderOptions += getDisplayRenderOption(settings);
     renderOptions += getDimensionOptions(settings, fileInfo);
     renderOptions += getOutputPathOption(settings, outFilePath, context);
     renderOptions += getLibraryPathOption(settings, context);
@@ -289,6 +290,14 @@ function buildRenderOptions(settings, fileInfo, outFilePath, context) {
     return renderOptions;
 }
 exports.buildRenderOptions = buildRenderOptions;
+function getDisplayRenderOption(settings) {
+    let displayRenderOption = " -D";
+    if (settings.displayImageDuringRender === true) {
+        displayRenderOption = "";
+    }
+    return displayRenderOption;
+}
+exports.getDisplayRenderOption = getDisplayRenderOption;
 function getDimensionOptions(settings, fileInfo) {
     let dimensionOptions = "";
     // if this is a .pov file, pass the default render width and height from the settings
@@ -355,6 +364,7 @@ function getPOVSettings() {
         defaultRenderWidth: configuration.get("render.defaultWidth"),
         defaultRenderHeight: configuration.get("render.defaultHeight"),
         libraryPath: configuration.get("libraryPath").trim(),
+        displayImageDuringRender: configuration.get("render.displayImageDuringRender"),
         openImageAfterRender: configuration.get("render.openImageAfterRender"),
         openImageAfterRenderInNewColumn: configuration.get("render.openImageAfterRenderInNewColumn"),
         useDockerToRunPovray: configuration.get("docker.enableDocker"),

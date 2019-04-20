@@ -136,6 +136,11 @@
 					"default": "png - Portable Network Graphics",
 					"description": "The image format to use for rendered scenes"
 				},
+				"povray.render.displayImageDuringRender": {
+					"type":"boolean",
+					"default": false,
+					"description": "Display the image while it is being rendered"
+				},
 				"povray.render.openImageAfterRender": {
 					"type":"boolean",
 					"default": true,
