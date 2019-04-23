@@ -2,6 +2,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [0.0.8] - 2019-04-22
+
+### Added
+
+- Feature: There is now a setting to toggle displaying the image while it is being rendered if the OS platform and version of POV-Ray support displaying images while rendering.
+
+### Changed
+
+- Excluded README images from extension build to significantly decrease the size of the extension package (since the images in the README when it is displayed within VS Code are served from GitHub anyway).
+
 ## [0.0.7] - 2019-04-15
 
 ### Added
