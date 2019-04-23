@@ -10,7 +10,7 @@ This extension allows you to use [Visual Studio Code](https://code.visualstudio.
 
 #### Version 0.0.8
 
-* There is now an setting to toggle whether to show the image while it is being rendered if the OS platform and version of POV-Ray support showing the image while it is rendering
+* There is now a setting to toggle whether to show the image while it is being rendered if the OS platform and version of POV-Ray support showing the image while it is rendering
 
 #### Version 0.0.7
 * You can now select the output image format in the settings:  `.png`, `.jpg`, `.bmp`, `.tga`, `.exr`, `.hdr`, `.ppm`
