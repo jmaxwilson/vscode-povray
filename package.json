@@ -3,7 +3,7 @@
 	"displayName": "POV-Ray",
 	"description": "Persistence of Vision Ray Tracer (POV-Ray) Extension for Visual Studio Code",
 	"icon": "icons/povray-extension-logo.png",
-	"version": "0.0.6",
+	"version": "0.0.8",
 	"publisher": "jmaxwilson",
 	"license": "MIT",
 	"repository": {
@@ -108,7 +108,7 @@
 		},
 		"configuration": {
 			"type": "object",
-			"title": "POV-Ray Configuration",
+			"title": "POV-Ray",
 			"properties": {
 				"povray.outputPath": {
 					"type": "string",
@@ -135,6 +135,26 @@
 					"type": "integer",
 					"default": "768",
 					"description": "The default height in pixels for rendered scene images"
+				},
+				"povray.render.outputImageFormat": {
+					"type": "string",
+					"enum": [
+						"png - Portable Network Graphics", 
+						"jpg - JPEG (lossy)", 
+						"bmp - Bitmap",
+						"tga - Targa-24", 
+						"tga - Targa-24 (compressed)", 
+						"exr - OpenEXR High Dynamic-Range", 
+						"hdr - Radiance High Dynamic-Range", 
+						"ppm - Portable Pixmap"
+					],
+					"default": "png - Portable Network Graphics",
+					"description": "The image format to use for rendered scenes"
+				},
+				"povray.render.displayImageDuringRender": {
+					"type":"boolean",
+					"default": false,
+					"markdownDescription": "Display the image while it is being rendered [Note: this POV-Ray feature may not be available on all platforms]"
 				},
 				"povray.render.openImageAfterRender": {
 					"type":"boolean",

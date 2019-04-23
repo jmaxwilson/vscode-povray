@@ -145,21 +145,84 @@ function getFileInfo(context) {
     return fileInfo;
 }
 exports.getFileInfo = getFileInfo;
+function getOutputFileExtension(settings) {
+    let outExt = ".png";
+    switch (settings.outputFormat) {
+        case "png - Portable Network Graphics":
+            outExt = ".png";
+            break;
+        case "jpg - JPEG (lossy)":
+            outExt = ".jpg";
+            break;
+        case "bmp - Bitmap":
+            outExt = ".bmp";
+            break;
+        case "tga - Targa-24 (compressed)":
+            outExt = ".tga";
+            break;
+        case "tga - Targa-24":
+            outExt = ".tga";
+            break;
+        case "exr - OpenEXR High Dynamic-Range":
+            outExt = ".exr";
+            break;
+        case "hdr - Radiance High Dynamic-Range":
+            outExt = ".hdr";
+            break;
+        case "ppm - Portable Pixmap":
+            outExt = ".ppm";
+            break;
+    }
+    return outExt;
+}
+exports.getOutputFileExtension = getOutputFileExtension;
+function getOutputFormatOption(settings) {
+    let formatOption = "";
+    switch (settings.outputFormat) {
+        case "png - Portable Network Graphics":
+            formatOption = "";
+            break;
+        case "jpg - JPEG (lossy)":
+            formatOption = " Output_File_Type=J";
+            break;
+        case "bmp - Bitmap":
+            formatOption = " Output_File_Type=B";
+            break;
+        case "tga - Targa-24 (compressed)":
+            formatOption = " Output_File_Type=C";
+            break;
+        case "tga - Targa-24":
+            formatOption = " Output_File_Type=T";
+            break;
+        case "exr - OpenEXR High Dynamic-Range":
+            formatOption = " Output_File_Type=E";
+            break;
+        case "hdr - Radiance High Dynamic-Range":
+            formatOption = " Output_File_Type=H";
+            break;
+        case "ppm - Portable Pixmap":
+            formatOption = " Output_File_Type=P";
+            break;
+    }
+    return formatOption;
+}
+exports.getOutputFormatOption = getOutputFormatOption;
 // Builds an output file path for rendering based on the file info, settings, and shell context
 // Specifically checks for whether the user has configured an output path
 function buildOutFilePath(settings, fileInfo, context) {
+    let outExt = getOutputFileExtension(settings);
     // Build the output file path
     // Default to the exact same path as the source file, except with an image extension
-    let outFilePath = fileInfo.fileDir + fileInfo.fileName.replace(".pov", ".png");
+    let outFilePath = fileInfo.fileDir + fileInfo.fileName.replace(".pov", outExt).replace(".ini", outExt);
     // If the user has deinfed an output path in the settings
     if (settings.outputPath.length > 0) {
         if (settings.outputPath.startsWith(".")) {
             // the outputPath defined by the user appears to be relative
-            outFilePath = fileInfo.fileDir + settings.outputPath + fileInfo.fileName.replace(".pov", ".png");
+            outFilePath = fileInfo.fileDir + settings.outputPath + fileInfo.fileName.replace(".pov", outExt).replace(".ini", outExt);
         }
         else {
             // Use the custom output path plus the file name of the source file wirg rge extention changed to the image extension
-            outFilePath = settings.outputPath + fileInfo.fileName.replace(".pov", ".png");
+            outFilePath = settings.outputPath + fileInfo.fileName.replace(".pov", outExt).replace(".ini", outExt);
         }
     }
     // Normalize the outFileName to make sure that it works for Windows
@@ -213,49 +276,12 @@ exports.buildShellPOVExe = buildShellPOVExe;
 // based on the settings, file to render, output path provided, and the shell context
 function buildRenderOptions(settings, fileInfo, outFilePath, context) {
     // Start building the render command that will be run in the shell
-    let renderOptions = " ${fileBasename} -D";
-    // if this is a .pov file, pass the default render width and height from the settings
-    // as commandline arguments, otherwise we assume that the .ini file will include 
-    // width and height instructions
-    if (fileInfo.fileExt !== undefined && fileInfo.fileExt === ".pov") {
-        renderOptions += " Width=" + settings.defaultRenderWidth + " Height=" + settings.defaultRenderHeight;
-    }
-    // If the user has set an output path for rendered files, 
-    // add the output path as a commandline argument
-    if (settings.outputPath.length > 0) {
-        // if we are running povray using Docker
-        if (settings.useDockerToRunPovray) {
-            // We have already mounted the output directory
-            // so we always output within the docker container to /output
-            renderOptions += " Output_File_Name=/output/";
-        }
-        else { // We aren't running povray using Docker
-            // If we are running povray in WSL Bash
-            if (context.isWindowsBash) {
-                // If the shell is WSL Bash then we need to make sure that
-                // the output path is translated into the correct WSL path
-                renderOptions += " Output_File_Name=$(wslpath \'" + outFilePath + "\')";
-            }
-            else {
-                // Otherwise the output directory is straight forward
-                renderOptions += " Output_File_Name=" + outFilePath;
-            }
-        }
-    }
-    // If the user has set library path, 
-    // add the library path as a commandline argument
-    // We ignore the Library Path if we are using docker
-    if (settings.libraryPath.length > 0 && !settings.useDockerToRunPovray) {
-        settings.libraryPath = normalizePath(settings.libraryPath, context);
-        if (context.isWindowsBash) {
-            // If the shell is WSL Bash then we need to make sure that
-            // the library path is translated into the correct WSL path
-            renderOptions += " Library_Path=$(wslpath '" + settings.libraryPath + "')";
-        }
-        else {
-            renderOptions += " Library_Path=" + settings.libraryPath;
-        }
-    }
+    let renderOptions = " ${fileBasename}";
+    renderOptions += getDisplayRenderOption(settings);
+    renderOptions += getDimensionOptions(settings, fileInfo);
+    renderOptions += getOutputPathOption(settings, outFilePath, context);
+    renderOptions += getLibraryPathOption(settings, context);
+    renderOptions += getOutputFormatOption(settings);
     // If the integrated terminal is Powershell running on Windows, we need to pipe the pvengine.exe through Out-Null
     // to make powershell wait for the rendering to complete and POv-Ray to close before continuing
     if (context.isWindowsPowershell && !settings.useDockerToRunPovray) {
@@ -264,14 +290,81 @@ function buildRenderOptions(settings, fileInfo, outFilePath, context) {
     return renderOptions;
 }
 exports.buildRenderOptions = buildRenderOptions;
+function getDisplayRenderOption(settings) {
+    let displayRenderOption = " -D";
+    if (settings.displayImageDuringRender === true) {
+        displayRenderOption = "";
+    }
+    return displayRenderOption;
+}
+exports.getDisplayRenderOption = getDisplayRenderOption;
+function getDimensionOptions(settings, fileInfo) {
+    let dimensionOptions = "";
+    // if this is a .pov file, pass the default render width and height from the settings
+    // as commandline arguments, otherwise we assume that the .ini file will include 
+    // width and height instructions
+    if (fileInfo.fileExt !== undefined && fileInfo.fileExt === ".pov") {
+        dimensionOptions = " Width=" + settings.defaultRenderWidth + " Height=" + settings.defaultRenderHeight;
+    }
+    return dimensionOptions;
+}
+exports.getDimensionOptions = getDimensionOptions;
+function getOutputPathOption(settings, outFilePath, context) {
+    let outputPathOption = "";
+    // If the user has set an output path for rendered files, 
+    // add the output path as a commandline argument
+    if (settings.outputPath.length > 0) {
+        // if we are running povray using Docker
+        if (settings.useDockerToRunPovray) {
+            // We have already mounted the output directory
+            // so we always output within the docker container to /output
+            outputPathOption = " Output_File_Name=/output/";
+        }
+        else { // We aren't running povray using Docker
+            // If we are running povray in WSL Bash
+            if (context.isWindowsBash) {
+                // If the shell is WSL Bash then we need to make sure that
+                // the output path is translated into the correct WSL path
+                outputPathOption = " Output_File_Name=$(wslpath \'" + outFilePath + "\')";
+            }
+            else {
+                // Otherwise the output directory is straight forward
+                outputPathOption = " Output_File_Name=" + outFilePath;
+            }
+        }
+    }
+    return outputPathOption;
+}
+exports.getOutputPathOption = getOutputPathOption;
+function getLibraryPathOption(settings, context) {
+    let libraryOption = "";
+    // If the user has set library path, 
+    // add the library path as a commandline argument
+    // We ignore the Library Path if we are using docker
+    if (settings.libraryPath.length > 0 && !settings.useDockerToRunPovray) {
+        settings.libraryPath = normalizePath(settings.libraryPath, context);
+        if (context.isWindowsBash) {
+            // If the shell is WSL Bash then we need to make sure that
+            // the library path is translated into the correct WSL path
+            libraryOption = " Library_Path=$(wslpath '" + settings.libraryPath + "')";
+        }
+        else {
+            libraryOption = " Library_Path=" + settings.libraryPath;
+        }
+    }
+    return libraryOption;
+}
+exports.getLibraryPathOption = getLibraryPathOption;
 // Helper function to get the POV-Ray related settings
 function getPOVSettings() {
     const configuration = vscode.workspace.getConfiguration('povray');
     let settings = {
         outputPath: configuration.get("render.outputPath").trim(),
+        outputFormat: configuration.get("render.outputImageFormat"),
         defaultRenderWidth: configuration.get("render.defaultWidth"),
         defaultRenderHeight: configuration.get("render.defaultHeight"),
         libraryPath: configuration.get("libraryPath").trim(),
+        displayImageDuringRender: configuration.get("render.displayImageDuringRender"),
         openImageAfterRender: configuration.get("render.openImageAfterRender"),
         openImageAfterRenderInNewColumn: configuration.get("render.openImageAfterRenderInNewColumn"),
         useDockerToRunPovray: configuration.get("docker.enableDocker"),
