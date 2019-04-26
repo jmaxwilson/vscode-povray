@@ -2,6 +2,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [0.0.9] - 2019-04-27
+
+### Added
+
+- Feature: Created a new Custom Commandline Options setting. Not every commandline option supported by POV-Ray will have a corresponding setting in VS Code. You can use this setting to append any additional commandline options to POV-Ray when it is called to render the scene.
+
 ## [0.0.8] - 2019-04-22
 
 ### Added
