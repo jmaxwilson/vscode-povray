@@ -282,6 +282,7 @@ function buildRenderOptions(settings, fileInfo, outFilePath, context) {
     renderOptions += getOutputPathOption(settings, outFilePath, context);
     renderOptions += getLibraryPathOption(settings, context);
     renderOptions += getOutputFormatOption(settings);
+    renderOptions += getCustomCommandlineOptions(settings);
     // If the integrated terminal is Powershell running on Windows, we need to pipe the pvengine.exe through Out-Null
     // to make powershell wait for the rendering to complete and POv-Ray to close before continuing
     if (context.isWindowsPowershell && !settings.useDockerToRunPovray) {
@@ -355,6 +356,14 @@ function getLibraryPathOption(settings, context) {
     return libraryOption;
 }
 exports.getLibraryPathOption = getLibraryPathOption;
+function getCustomCommandlineOptions(settings) {
+    let CustomOptions = "";
+    if (settings.customCommandlineOptions.length > 0) {
+        CustomOptions = " " + settings.customCommandlineOptions.trim();
+    }
+    return CustomOptions;
+}
+exports.getCustomCommandlineOptions = getCustomCommandlineOptions;
 // Helper function to get the POV-Ray related settings
 function getPOVSettings() {
     const configuration = vscode.workspace.getConfiguration('povray');
@@ -364,6 +373,7 @@ function getPOVSettings() {
         defaultRenderWidth: configuration.get("render.defaultWidth"),
         defaultRenderHeight: configuration.get("render.defaultHeight"),
         libraryPath: configuration.get("libraryPath").trim(),
+        customCommandlineOptions: configuration.get("render.customCommandlineOptions"),
         displayImageDuringRender: configuration.get("render.displayImageDuringRender"),
         openImageAfterRender: configuration.get("render.openImageAfterRender"),
         openImageAfterRenderInNewColumn: configuration.get("render.openImageAfterRenderInNewColumn"),

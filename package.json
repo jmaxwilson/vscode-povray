@@ -3,7 +3,7 @@
 	"displayName": "POV-Ray",
 	"description": "Persistence of Vision Ray Tracer (POV-Ray) Extension for Visual Studio Code",
 	"icon": "icons/povray-extension-logo.png",
-	"version": "0.0.8",
+	"version": "0.0.9",
 	"publisher": "jmaxwilson",
 	"license": "MIT",
 	"repository": {
@@ -155,6 +155,11 @@
 					"type": "string",
 					"default": "",
 					"description": "A path to a folder where rendered images will be saved. This can be an absolute path (/pov/output) or a relative path (./output). (Note: if the directory doesn't exist already it will be created at render time.)"
+				},
+				"povray.render.customCommandlineOptions": {
+					"type": "string",
+					"default": "",
+					"markdownDescription": "Additional [commandline options](https://www.povray.org/documentation/3.7.0/r3_2.html) to add to POV-Ray when rendering the scene."
 				},
 				"povray.docker.enableDocker": {
 					"type":"boolean",
