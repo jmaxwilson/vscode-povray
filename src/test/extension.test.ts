@@ -7,7 +7,7 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 import * as povrayExtension from '../extension';
 
-suite("VSCode-POVRay extension Tests", function () {
+suite("VSCode-POVRay Extension Unit Tests", function () {
 
     // buildShellPOVExe() unit tests
 
@@ -31,6 +31,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -64,6 +65,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               true,
@@ -98,6 +100,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -131,6 +134,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               true,
@@ -164,6 +168,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -197,6 +202,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               true,
@@ -230,6 +236,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -263,6 +270,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               true,
@@ -296,6 +304,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -329,6 +338,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               true,
@@ -364,6 +374,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -395,6 +406,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -426,6 +438,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -457,6 +470,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -488,6 +502,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -521,6 +536,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "c:\\Users\\myuser\\Documents\\POVRay\\include\\",
+            customCommandlineOptions:           "Dither=on",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -531,7 +547,7 @@ suite("VSCode-POVRay extension Tests", function () {
         let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
 
         let povrayExe = povrayExtension.buildRenderOptions(settings, fileInfo, outFilePath, context);
-        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=$(wslpath \'c:\\pov\\teapot\\output\\teapot.png\') Library_Path=$(wslpath 'c:\\Users\\myuser\\Documents\\POVRay\\include\\')");
+        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=$(wslpath \'c:\\pov\\teapot\\output\\teapot.png\') Library_Path=$(wslpath 'c:\\Users\\myuser\\Documents\\POVRay\\include\\') Dither=on");
     });
 
     test("buildRenderOptions_win32_bash_docker", function() {
@@ -554,6 +570,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "c:\\Users\\myuser\\Documents\\POVRay\\include\\",
+            customCommandlineOptions:           "Dither=on",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               true,
@@ -564,7 +581,7 @@ suite("VSCode-POVRay extension Tests", function () {
         let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
 
         let povrayExe = povrayExtension.buildRenderOptions(settings, fileInfo, outFilePath, context);
-        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=/output/");
+        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=/output/ Dither=on");
     });
 
     test("buildRenderOptions_win32_powershell", function() {
@@ -587,6 +604,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "c:\\Users\\myuser\\Documents\\POVRay\\include\\",
+            customCommandlineOptions:           "Dither=on",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -597,7 +615,7 @@ suite("VSCode-POVRay extension Tests", function () {
         let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
 
         let povrayExe = povrayExtension.buildRenderOptions(settings, fileInfo, outFilePath, context);
-        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=c:\\pov\\teapot\\output\\teapot.png\ Library_Path=c:\\Users\\myuser\\Documents\\POVRay\\include\\ | Out-Null");
+        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=c:\\pov\\teapot\\output\\teapot.png\ Library_Path=c:\\Users\\myuser\\Documents\\POVRay\\include\\ Dither=on | Out-Null");
     });
 
     test("buildRenderOptions_win32_powershell_docker", function() {
@@ -620,6 +638,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "c:\\Users\\myuser\\Documents\\POVRay\\include\\",
+            customCommandlineOptions:           "Dither=on",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               true,
@@ -630,7 +649,7 @@ suite("VSCode-POVRay extension Tests", function () {
         let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
 
         let povrayExe = povrayExtension.buildRenderOptions(settings, fileInfo, outFilePath, context);
-        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=/output/");
+        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=/output/ Dither=on");
     });
 
     test("buildRenderOptions_win32_cmd", function() {
@@ -653,6 +672,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "c:\\Users\\myuser\\Documents\\POVRay\\include\\",
+            customCommandlineOptions:           "Dither=on",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -663,7 +683,7 @@ suite("VSCode-POVRay extension Tests", function () {
         let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
 
         let povrayExe = povrayExtension.buildRenderOptions(settings, fileInfo, outFilePath, context);
-        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=c:\\pov\\teapot\\output\\teapot.png\ Library_Path=c:\\Users\\myuser\\Documents\\POVRay\\include\\");
+        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=c:\\pov\\teapot\\output\\teapot.png\ Library_Path=c:\\Users\\myuser\\Documents\\POVRay\\include\\ Dither=on");
     });
 
     test("buildRenderOptions_win32_cmd_docker", function() {
@@ -686,6 +706,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "c:\\Users\\myuser\\Documents\\POVRay\\include\\",
+            customCommandlineOptions:           "Dither=on",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               true,
@@ -696,7 +717,7 @@ suite("VSCode-POVRay extension Tests", function () {
         let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
 
         let povrayExe = povrayExtension.buildRenderOptions(settings, fileInfo, outFilePath, context);
-        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=/output/");
+        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=/output/ Dither=on");
     });
 
     test("buildRenderOptions_linux", function() {
@@ -719,6 +740,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            customCommandlineOptions:           "Dither=on",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -729,7 +751,7 @@ suite("VSCode-POVRay extension Tests", function () {
         let outFilePath = "/pov/teapot/out/teapot.png";
 
         let povrayExe = povrayExtension.buildRenderOptions(settings, fileInfo, outFilePath, context);
-        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=/pov/teapot/out/teapot.png Library_Path=/Users/myuser/Documents/POVRay/include/");
+        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=/pov/teapot/out/teapot.png Library_Path=/Users/myuser/Documents/POVRay/include/ Dither=on");
     });
 
     test("buildRenderOptions_linux_docker", function() {
@@ -752,6 +774,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            customCommandlineOptions:           "Dither=on",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               true,
@@ -762,7 +785,7 @@ suite("VSCode-POVRay extension Tests", function () {
         let outFilePath = "/pov/teapot/output/teapot.png";
 
         let povrayExe = povrayExtension.buildRenderOptions(settings, fileInfo, outFilePath, context);
-        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=/output/");
+        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=/output/ Dither=on");
     });
 
     test("buildRenderOptions_darwin", function() {
@@ -785,6 +808,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            customCommandlineOptions:           "Dither=on",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -795,7 +819,7 @@ suite("VSCode-POVRay extension Tests", function () {
         let outFilePath = "/pov/teapot/out/teapot.png";
 
         let povrayExe = povrayExtension.buildRenderOptions(settings, fileInfo, outFilePath, context);
-        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=/pov/teapot/out/teapot.png Library_Path=/Users/myuser/Documents/POVRay/include/");
+        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=/pov/teapot/out/teapot.png Library_Path=/Users/myuser/Documents/POVRay/include/ Dither=on");
     });
 
     test("buildRenderOptions_darwin_docker", function() {
@@ -818,6 +842,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            customCommandlineOptions:           "Dither=on",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               true,
@@ -828,7 +853,7 @@ suite("VSCode-POVRay extension Tests", function () {
         let outFilePath = "/pov/teapot/out/teapot.png";
 
         let povrayExe = povrayExtension.buildRenderOptions(settings, fileInfo, outFilePath, context);
-        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=/output/");
+        assert.equal(povrayExe, " ${fileBasename} -D Width=1024 Height=768 Output_File_Name=/output/ Dither=on");
     });
 
     // getDimensionOptions() unit tests
@@ -847,6 +872,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               true,
@@ -872,6 +898,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               true,
@@ -897,6 +924,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "800",
             defaultRenderHeight:                "600",
             libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               true,
@@ -930,6 +958,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -963,6 +992,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               true,
@@ -996,6 +1026,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1029,6 +1060,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1062,6 +1094,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1097,6 +1130,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "c:\\Users\\myuser\\Documents\\POVRay\\include\\",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1128,6 +1162,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "c:\\Users\\myuser\\Documents\\POVRay\\include\\",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1159,6 +1194,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1190,6 +1226,7 @@ suite("VSCode-POVRay extension Tests", function () {
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
             libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1209,7 +1246,8 @@ suite("VSCode-POVRay extension Tests", function () {
             outputPath:                         "./output/",
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
-            libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1227,7 +1265,8 @@ suite("VSCode-POVRay extension Tests", function () {
             outputPath:                         "./output/",
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
-            libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1245,7 +1284,8 @@ suite("VSCode-POVRay extension Tests", function () {
             outputPath:                         "./output/",
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
-            libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1263,7 +1303,8 @@ suite("VSCode-POVRay extension Tests", function () {
             outputPath:                         "./output/",
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
-            libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1281,7 +1322,8 @@ suite("VSCode-POVRay extension Tests", function () {
             outputPath:                         "./output/",
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
-            libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1299,7 +1341,8 @@ suite("VSCode-POVRay extension Tests", function () {
             outputPath:                         "./output/",
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
-            libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1317,7 +1360,8 @@ suite("VSCode-POVRay extension Tests", function () {
             outputPath:                         "./output/",
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
-            libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1335,7 +1379,8 @@ suite("VSCode-POVRay extension Tests", function () {
             outputPath:                         "./output/",
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
-            libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1355,7 +1400,8 @@ suite("VSCode-POVRay extension Tests", function () {
             outputPath:                         "./output/",
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
-            libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1373,7 +1419,8 @@ suite("VSCode-POVRay extension Tests", function () {
             outputPath:                         "./output/",
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
-            libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1391,7 +1438,8 @@ suite("VSCode-POVRay extension Tests", function () {
             outputPath:                         "./output/",
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
-            libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1409,7 +1457,8 @@ suite("VSCode-POVRay extension Tests", function () {
             outputPath:                         "./output/",
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
-            libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1427,7 +1476,8 @@ suite("VSCode-POVRay extension Tests", function () {
             outputPath:                         "./output/",
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
-            libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1445,7 +1495,8 @@ suite("VSCode-POVRay extension Tests", function () {
             outputPath:                         "./output/",
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
-            libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1463,7 +1514,8 @@ suite("VSCode-POVRay extension Tests", function () {
             outputPath:                         "./output/",
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
-            libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1481,7 +1533,8 @@ suite("VSCode-POVRay extension Tests", function () {
             outputPath:                         "./output/",
             defaultRenderWidth:                 "1024",
             defaultRenderHeight:                "768",
-            libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            libraryPath:                        "",
+            customCommandlineOptions:           "",
             openImageAfterRender:               true,
             openImageAfterRenderInNewColumn:    true,
             useDockerToRunPovray:               false,
@@ -1491,6 +1544,27 @@ suite("VSCode-POVRay extension Tests", function () {
 
         let renderOption = povrayExtension.getOutputFormatOption(settings);
         assert.equal(renderOption, " Output_File_Type=P");
+    });
+
+    // getOutputFormatOption() unit tests
+
+    test("getCustomCommandlineOptions", function() {
+
+        let settings = {
+            outputPath:                         "./output/",
+            defaultRenderWidth:                 "1024",
+            defaultRenderHeight:                "768",
+            libraryPath:                        "",
+            customCommandlineOptions:           "Dither=on Quality=5",
+            openImageAfterRender:               true,
+            openImageAfterRenderInNewColumn:    true,
+            useDockerToRunPovray:               false,
+            useDockerImage:                     "jmaxwilson/povray",
+            outputFormat:                       "png - Portable Network Graphics"
+        };
+
+        let customOptions = povrayExtension.getCustomCommandlineOptions(settings);
+        assert.equal(customOptions," " + settings.customCommandlineOptions.trim());
     });
 
 });
