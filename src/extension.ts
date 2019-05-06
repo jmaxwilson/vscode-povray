@@ -314,7 +314,15 @@ export function buildShellPOVExe(settings: any, fileInfo: any, outFilePath: any,
         }
 
         // mount the source and output directories
-        exe += " run -v "+dockerSource+":/source -v "+dockerOutput+":/output "+settings.useDockerImage;
+        if (context.isWindowsPowershell) {
+
+            // If the shell is Powershell, use single quotes around paths to make sure spaces in paths work correctly
+            exe += " run -v \'"+dockerSource+":/source\' -v \'"+dockerOutput+":/output\' "+settings.useDockerImage;
+
+        } else {
+            // otherwise use double quotes around paths to make sure that spaces work correctly
+            exe += " run -v \""+dockerSource+":/source\" -v \""+dockerOutput+":/output\" "+settings.useDockerImage;
+        }
     }
 
     return exe;

@@ -62,7 +62,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         };
         let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
         let povrayExe = povrayExtension.buildShellPOVExe(settings, fileInfo, outFilePath, context);
-        assert.equal(povrayExe, "docker --host tcp://127.0.0.1:2375 run -v /c/pov/teapot/:/source -v /c/pov/teapot/output:/output jmaxwilson/povray");
+        assert.equal(povrayExe, "docker --host tcp://127.0.0.1:2375 run -v \"/c/pov/teapot/:/source\" -v \"/c/pov/teapot/output:/output\" jmaxwilson/povray");
     });
     // Windows Powershell Tests
     test("buildShellPOVExe_win32_powershell", function () {
@@ -119,7 +119,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         };
         let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
         let povrayExe = povrayExtension.buildShellPOVExe(settings, fileInfo, outFilePath, context);
-        assert.equal(povrayExe, "docker run -v c:\\pov\\teapot\\:/source -v c:\\pov\\teapot\\output:/output jmaxwilson/povray");
+        assert.equal(povrayExe, "docker run -v 'c:\\pov\\teapot\\:/source' -v 'c:\\pov\\teapot\\output:/output' jmaxwilson/povray");
     });
     test("buildShellPOVExe_win32_cmd", function () {
         let context = {
@@ -175,7 +175,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         };
         let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
         let povrayExe = povrayExtension.buildShellPOVExe(settings, fileInfo, outFilePath, context);
-        assert.equal(povrayExe, "docker run -v c:\\pov\\teapot\\:/source -v c:\\pov\\teapot\\output:/output jmaxwilson/povray");
+        assert.equal(povrayExe, "docker run -v \"c:\\pov\\teapot\\:/source\" -v \"c:\\pov\\teapot\\output:/output\" jmaxwilson/povray");
     });
     test("buildShellPOVExe_linux", function () {
         let context = {
@@ -231,7 +231,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         };
         let outFilePath = "/pov/teapot/out/teapot.png";
         let povrayExe = povrayExtension.buildShellPOVExe(settings, fileInfo, outFilePath, context);
-        assert.equal(povrayExe, "docker run -v /pov/teapot/:/source -v /pov/teapot/out:/output jmaxwilson/povray");
+        assert.equal(povrayExe, "docker run -v \"/pov/teapot/:/source\" -v \"/pov/teapot/out:/output\" jmaxwilson/povray");
     });
     test("buildShellPOVExe_darwin", function () {
         let context = {
@@ -287,7 +287,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         };
         let outFilePath = "/pov/teapot/output/teapot.png";
         let povrayExe = povrayExtension.buildShellPOVExe(settings, fileInfo, outFilePath, context);
-        assert.equal(povrayExe, "docker run -v /pov/teapot/:/source -v /pov/teapot/output:/output jmaxwilson/povray");
+        assert.equal(povrayExe, "docker run -v \"/pov/teapot/:/source\" -v \"/pov/teapot/output:/output\" jmaxwilson/povray");
     });
     // buildOutFilePath() unit tests
     test("buildOutFilePath_win32_bash", function () {
