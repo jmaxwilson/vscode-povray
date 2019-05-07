@@ -336,14 +336,38 @@ export function buildRenderOptions(settings: any, fileInfo: any, outFilePath: st
     // Start building the render command that will be run in the shell
     let renderOptions = " ${fileBasename}";
 
-    // Handle the edge cases where the input file name contains spaces
     if (fileInfo.fileName.indexOf(" ") !== -1) {
 
-        if (context.platform !== "win32" || settings.useDockerToRunPovray) {
-            // For Mac, Linux, and Docker we have to put some weird quoting around
-            // the filename if it has spaces in it 
+        // Handle the edge cases where the input file name contains spaces
+
+        if (context.platform === "linux" || context.platform === "darwin") {
+            // For Mac, Linux we have to put some weird quoting aroun the filename
+            // and escape the space
             // "'"File\ Name.pov"'""
             renderOptions = ' "\'"'+fileInfo.fileName.replace(/ /g, "\\ ")+'"\'"';
+        }
+        else {
+            //Windows
+            if (settings.useDockerToRunPovray) {
+                // Docker on Windows
+
+                if (context.isWindowsBash) {
+
+                    renderOptions = ' "\'"'+fileInfo.fileName.replace(/ /g, "\\ ")+'"\'"';
+
+                } else if (context.isWindowsPowershell) {
+
+                    renderOptions = " '''${fileBasename}'''";
+
+                } else {
+
+                    renderOptions = " '\""+fileInfo.fileName+"\"'";
+                }
+            } else {
+                // Not using Docker
+                renderOptions = ' "${fileBasename}"';
+            }
+            
         }
     }
     
@@ -410,26 +434,45 @@ export function getOutputPathOption(settings: any, outFilePath: string, context:
 
         } else { // We aren't running povray using Docker
 
-            // If the outFilepath has any spaces then we need to do some weird quoting
-            // to get POV-Ray to parse it right and add backslashes before spaces,
-            // but strip any double backslashes
-            // "'"/directory/path\ 1/file\ 1.png"'"  
-            if (outFilePath.indexOf(" ") !== -1) {
-
-                outFilePath = '"\'"'+outFilePath.replace(/ /g, "\\ ").replace(/\\\\/g, "\\")+'"\'"';
-            }
-            
-            // If we are running povray in WSL Bash
-            if (context.isWindowsBash)
+            if (context.isWindowsBash && outFilePath.indexOf(" ") === -1)
             {
                 // If the shell is WSL Bash then we need to make sure that
                 // the output path is translated into the correct WSL path
-                outputPathOption = " Output_File_Name=$(wslpath \'"+outFilePath+"\')";
-            } else {
+                outFilePath = "$(wslpath \'"+outFilePath+"\')";
 
-                // Otherwise the output directory is straight forward
-                outputPathOption = " Output_File_Name="+outFilePath;
+            } else if (outFilePath.indexOf(" ") !== -1) {
+
+                // If the outFilePath has any spaces then we need to do some weird quoting
+                // to get POV-Ray to parse it right depending on the OS & Shell
+
+                if (context.platform === "linux" || context.platform === "darwin") {
+                    // Linux, Mac 
+                    // "'"/directory/path\ 1/file\ 1.png"'"  
+                    outFilePath = '"\'"'+outFilePath.replace(/ /g, "\\ ").replace(/\\\\/g, "\\")+'"\'"'; 
+                }
+                else {
+                    if (context.isWindowsBash) {
+                        // WSL Bash
+                        // in addition to translating the path using wslpath, we pass the path 
+                        // through sed to escape the spaces and surround it with quotes
+                        // "'"$(wslpath '\directory\path 1\file 1.png' | sed 's/ /\\ /g')"'"
+                        outFilePath = "\"'\"$(wslpath \'"+outFilePath+"\' | sed \'s/ /\\\\ /g\')\"'\"";
+
+                    } else if (context.isWindowsPowershell) {
+                        // Powershell
+                        // Add triple quotes around path
+                        outFilePath = "'\"'"+outFilePath+"'\"'"; // Powershell 
+
+                    } else if (!context.isWindowsBash) {
+                        // cmd.exe:
+                        // Add quotes around path 
+                        // "\directory\path 1/file 1.png"
+                        outFilePath = '"'+outFilePath+'"'; 
+                    }
+                }
             }
+
+            outputPathOption = " Output_File_Name="+outFilePath;
         }
     }
 
