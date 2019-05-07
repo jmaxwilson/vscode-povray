@@ -284,6 +284,15 @@ exports.buildShellPOVExe = buildShellPOVExe;
 function buildRenderOptions(settings, fileInfo, outFilePath, context) {
     // Start building the render command that will be run in the shell
     let renderOptions = " ${fileBasename}";
+    // Handle the edge cases where the input file name contains spaces
+    if (fileInfo.fileName.indexOf(" ") !== -1) {
+        if (context.platform !== "win32" || settings.useDockerToRunPovray) {
+            // For Mac, Linux, and Docker we have to put some weird quoting around
+            // the filename if it has spaces in it 
+            // "'"File\ Name.pov"'""
+            renderOptions = ' "\'"' + fileInfo.fileName.replace(/ /g, "\\ ") + '"\'"';
+        }
+    }
     renderOptions += getDisplayRenderOption(settings);
     renderOptions += getDimensionOptions(settings, fileInfo);
     renderOptions += getOutputPathOption(settings, outFilePath, context);
@@ -329,6 +338,13 @@ function getOutputPathOption(settings, outFilePath, context) {
             outputPathOption = " Output_File_Name=/output/";
         }
         else { // We aren't running povray using Docker
+            // If the outFilepath has any spaces then we need to do some weird quoting
+            // to get POV-Ray to parse it right and add backslashes before spaces,
+            // but strip any double backslashes
+            // "'"/directory/path\ 1/file\ 1.png"'"  
+            if (outFilePath.indexOf(" ") !== -1) {
+                outFilePath = '"\'"' + outFilePath.replace(/ /g, "\\ ").replace(/\\\\/g, "\\") + '"\'"';
+            }
             // If we are running povray in WSL Bash
             if (context.isWindowsBash) {
                 // If the shell is WSL Bash then we need to make sure that
