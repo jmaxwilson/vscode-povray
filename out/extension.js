@@ -283,35 +283,7 @@ exports.buildShellPOVExe = buildShellPOVExe;
 // based on the settings, file to render, output path provided, and the shell context
 function buildRenderOptions(settings, fileInfo, outFilePath, context) {
     // Start building the render command that will be run in the shell
-    let renderOptions = " ${fileBasename}";
-    if (fileInfo.fileName.indexOf(" ") !== -1) {
-        // Handle the edge cases where the input file name contains spaces
-        if (context.platform === "linux" || context.platform === "darwin") {
-            // For Mac, Linux we have to put some weird quoting aroun the filename
-            // and escape the space
-            // "'"File\ Name.pov"'""
-            renderOptions = ' "\'"' + fileInfo.fileName.replace(/ /g, "\\ ") + '"\'"';
-        }
-        else {
-            //Windows
-            if (settings.useDockerToRunPovray) {
-                // Docker on Windows
-                if (context.isWindowsBash) {
-                    renderOptions = ' "\'"' + fileInfo.fileName.replace(/ /g, "\\ ") + '"\'"';
-                }
-                else if (context.isWindowsPowershell) {
-                    renderOptions = " '''${fileBasename}'''";
-                }
-                else {
-                    renderOptions = " '\"" + fileInfo.fileName + "\"'";
-                }
-            }
-            else {
-                // Not using Docker
-                renderOptions = ' "${fileBasename}"';
-            }
-        }
-    }
+    let renderOptions = getInputFileOption(settings, fileInfo, context);
     renderOptions += getDisplayRenderOption(settings);
     renderOptions += getDimensionOptions(settings, fileInfo);
     renderOptions += getOutputPathOption(settings, outFilePath, context);
@@ -326,6 +298,45 @@ function buildRenderOptions(settings, fileInfo, outFilePath, context) {
     return renderOptions;
 }
 exports.buildRenderOptions = buildRenderOptions;
+function getInputFileOption(settings, fileInfo, context) {
+    let fileInputOption = "${fileBasename}";
+    // Handle the cases where the input file name contains spaces
+    if (fileInfo.fileName.indexOf(" ") !== -1) {
+        if (context.platform === "linux" || context.platform === "darwin" || context.isWindowsBash) {
+            // For Mac, Linux, and WSL Bash we have to put some weird quoting aroun the filename
+            // and escape the space
+            // "'"File\ Name.pov"'""
+            fileInputOption = '"\'"' + fileInfo.fileName.replace(/ /g, "\\ ") + '"\'"';
+        }
+        else {
+            //Windows but NOT WSL Bash
+            if (settings.useDockerToRunPovray) {
+                // Docker on Windows
+                if (context.isWindowsPowershell) {
+                    fileInputOption = "'''${fileBasename}'''";
+                }
+                else {
+                    // Docker on CMD.exe
+                    // '"File\ Name.pov"'
+                    fileInputOption = "'\"" + fileInfo.fileName + "\"'";
+                }
+            }
+            else {
+                // Not using Docker
+                if (context.isWindowsPowershell) {
+                    fileInputOption = "'" + fileInfo.fileName + "'";
+                }
+                else {
+                    // CMD.exe
+                    // "File Name.pov"
+                    fileInputOption = '"${fileBasename}"';
+                }
+            }
+        }
+    }
+    return " " + fileInputOption;
+}
+exports.getInputFileOption = getInputFileOption;
 function getDisplayRenderOption(settings) {
     let displayRenderOption = " -D";
     if (settings.displayImageDuringRender === true) {
@@ -381,7 +392,7 @@ function getOutputPathOption(settings, outFilePath, context) {
                     else if (context.isWindowsPowershell) {
                         // Powershell
                         // Add triple quotes around path
-                        outFilePath = "'\"'" + outFilePath + "'\"'"; // Powershell 
+                        outFilePath = '"\'"' + outFilePath + '"\'"'; // Powershell 
                     }
                     else if (!context.isWindowsBash) {
                         // cmd.exe:
