@@ -61,17 +61,10 @@ typings/
 .next
 
 # Test Scene output
-test-scene/*.png
-test-scene/*.jpg
-test-scene/*.bmp
-test-scene/*.hdr
-test-scene/*.exr
-test-scene/*.tga
-test-scene/*.ppm
-test-scene/*/*.png
-test-scene/*/*.jpg
-test-scene/*/*.bmp
-test-scene/*/*.hdr
-test-scene/*/*.exr
-test-scene/*/*.tga
-test-scene/*/*.ppm
+test-scene/**/*.png
+test-scene/**/*.jpg
+test-scene/**/*.bmp
+test-scene/**/*.hdr
+test-scene/**/*.exr
+test-scene/**/*.tga
+test-scene/**/*.ppm
