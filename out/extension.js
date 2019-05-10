@@ -36,7 +36,7 @@ function registerTasks() {
             // Build the povray executable to run in the shell based on the settings and appropriate to the shell context
             let povrayExe = buildShellPOVExe(settings, fileInfo, outFilePath, context);
             // Build the commandline render options to pass to the executable in the shell based on the settings and appropriate to the shell context
-            let renderOptions = buildRenderOptions(settings, fileInfo, outFilePath, context);
+            let renderOptions = buildRenderOptions(settings, fileInfo, context);
             // Create the Shell Execution that runs the povray executable with the render options
             const execution = new vscode.ShellExecution(povrayExe + renderOptions, { cwd: fileInfo.fileDir });
             // Use the $povray problem matcher defined in the package.json problemMatchers
@@ -281,12 +281,12 @@ exports.buildShellPOVExe = buildShellPOVExe;
 // Builds a string of commandline arguments to pass to the POV-Ray executable
 // to indicate which file to render, the output path, the width and height, etc.
 // based on the settings, file to render, output path provided, and the shell context
-function buildRenderOptions(settings, fileInfo, outFilePath, context) {
+function buildRenderOptions(settings, fileInfo, context) {
     // Start building the render command that will be run in the shell
     let renderOptions = getInputFileOption(settings, fileInfo, context);
     renderOptions += getDisplayRenderOption(settings);
     renderOptions += getDimensionOptions(settings, fileInfo);
-    renderOptions += getOutputPathOption(settings, outFilePath, context);
+    renderOptions += getOutputPathOption(settings, context);
     renderOptions += getLibraryPathOption(settings, context);
     renderOptions += getOutputFormatOption(settings);
     renderOptions += getCustomCommandlineOptions(settings);
@@ -356,7 +356,7 @@ function getDimensionOptions(settings, fileInfo) {
     return dimensionOptions;
 }
 exports.getDimensionOptions = getDimensionOptions;
-function getOutputPathOption(settings, outFilePath, context) {
+function getOutputPathOption(settings, context) {
     let outputPathOption = "";
     // If the user has set an output path for rendered files, 
     // add the output path as a commandline argument
@@ -368,10 +368,19 @@ function getOutputPathOption(settings, outFilePath, context) {
             outputPathOption = " Output_File_Name=/output/";
         }
         else { // We aren't running povray using Docker
+            // Use the actual path specified in the settings rather than the 
+            // calculated full path so that we avoid unnecessary problems with
+            // output filenames that include spaces. 
+            // (Output file names with spaces fail when the shell is Powershell. 
+            // See: https://github.com/jmaxwilson/vscode-povray/issues/10 )
+            let outFilePath = settings.outputPath;
             if (context.isWindowsBash && outFilePath.indexOf(" ") === -1) {
                 // If the shell is WSL Bash then we need to make sure that
                 // the output path is translated into the correct WSL path
-                outFilePath = "$(wslpath \'" + outFilePath + "\')";
+                // wslpath strips the final slash, but POV-Ray needs
+                // a slash at the end to know that it is a path and not a filename
+                // so we include a slash after the call to wslpath
+                outFilePath = "$(wslpath \'" + outFilePath + "\')/";
             }
             else if (outFilePath.indexOf(" ") !== -1) {
                 // If the outFilePath has any spaces then we need to do some weird quoting
@@ -385,14 +394,16 @@ function getOutputPathOption(settings, outFilePath, context) {
                     if (context.isWindowsBash) {
                         // WSL Bash
                         // in addition to translating the path using wslpath, we pass the path 
-                        // through sed to escape the spaces and surround it with quotes
+                        // through sed to escape the spaces and surround it with quotes.
+                        // Because wslpath strips the trailing slash, we add a slash at the end
+                        // so that POV-Ray will recognize it as a path and not a file
                         // "'"$(wslpath '\directory\path 1\file 1.png' | sed 's/ /\\ /g')"'"
-                        outFilePath = "\"'\"$(wslpath \'" + outFilePath + "\' | sed \'s/ /\\\\ /g\')\"'\"";
+                        outFilePath = "\"'\"$(wslpath \'" + outFilePath + "\' | sed \'s/ /\\\\ /g\')/\"'\"";
                     }
                     else if (context.isWindowsPowershell) {
                         // Powershell
                         // Add triple quotes around path
-                        outFilePath = '"\'"' + outFilePath + '"\'"'; // Powershell 
+                        outFilePath = "'" + outFilePath + "'"; // Powershell 
                     }
                     else if (!context.isWindowsBash) {
                         // cmd.exe:
@@ -539,7 +550,7 @@ function isWindowsPowershell() {
         const terminalSettings = vscode.workspace.getConfiguration("terminal");
         const shell = terminalSettings.get("integrated.shell.windows");
         // If the windows shell is set to use powershell
-        if (shell !== undefined && shell.indexOf("powershell") !== -1) {
+        if (shell !== undefined && (shell.indexOf("powershell") !== -1 || shell.indexOf("pwsh") !== -1)) {
             isWindowsPowershell = true;
         }
     }

@@ -2,6 +2,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [0.1.0] - 2019-05-11
+
+### Fixed
+
+- The extension now properly handles spaces in paths and filenames in most cases. 
+
+    KNown Issue: On Windows using Powershell as the integrated terminal, if the output path setting has a path with a space in one of the path names, POV-Ray fails to honor the output path or fails to render. Spaces in path names work properly on all other supported platforms and terminals.
+
 ## [0.0.9] - 2019-04-27
 
 ### Added

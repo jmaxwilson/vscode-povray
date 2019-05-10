@@ -48,6 +48,10 @@ This extension allows you to use [Visual Studio Code](https://code.visualstudio.
 
 *This extension does not install POV-Ray*. You can either install it yourself or run it using Docker.
 
+## Known Issues
+
+- On Windows using Powershell as the integrated terminal, if the output path setting has a path with a space in one of the path names, POV-Ray fails to honor the output path or fails to render. Spaces in path names work properly on all other supported platforms and terminals.
+
 ### **Running POV-Ray using Docker**
 
 If you have [Docker](https://www.docker.com/products/docker-desktop) installed, you can easily run POV-Ray on any platform by selecting the **Docker** > **Enable Docker** option in the VS Code POV-Ray settings.
