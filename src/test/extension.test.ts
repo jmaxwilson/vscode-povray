@@ -16,6 +16,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "win32",
             isWindowsBash: true,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -50,6 +51,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "win32",
             isWindowsBash: true,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -85,6 +87,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "win32",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: true
         };
 
@@ -119,6 +122,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "win32",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: true
         };
 
@@ -153,6 +157,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "win32",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -187,6 +192,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "win32",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -221,6 +227,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "linux",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -255,6 +262,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "linux",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -289,6 +297,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "darwin",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -323,6 +332,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "darwin",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -359,6 +369,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "win32",
             isWindowsBash: true,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -391,6 +402,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "win32",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: true
         };
 
@@ -423,6 +435,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "win32",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -455,6 +468,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "linux",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -487,6 +501,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "darwin",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -521,6 +536,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "win32",
             isWindowsBash: true,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -555,6 +571,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "win32",
             isWindowsBash: true,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -589,6 +606,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "win32",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: true
         };
 
@@ -623,6 +641,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "win32",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: true
         };
 
@@ -657,6 +676,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "win32",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -691,6 +711,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "win32",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -725,6 +746,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "linux",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -759,6 +781,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "linux",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -793,6 +816,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "darwin",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -827,6 +851,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "darwin",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -943,6 +968,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "win32",
             isWindowsBash: true,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -977,6 +1003,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "win32",
             isWindowsBash: true,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -1011,6 +1038,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "win32",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: true
         };
 
@@ -1045,6 +1073,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "linux",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -1079,6 +1108,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "darwin",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -1115,6 +1145,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "win32",
             isWindowsBash: true,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -1147,6 +1178,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "win32",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: true
         };
 
@@ -1179,6 +1211,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "darwin",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
@@ -1211,6 +1244,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         let context = {
             platform: "linux",
             isWindowsBash: false,
+            isGitBash: false,
             isWindowsPowershell: false
         };
 
