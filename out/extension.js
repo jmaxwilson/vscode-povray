@@ -122,6 +122,7 @@ function getShellContext() {
     let shellContext = {
         platform: os.platform(),
         isWindowsBash: isWindowsBash(),
+        isGitBash: isGitBash(),
         isWindowsPowershell: isWindowsPowershell()
     };
     return shellContext;
@@ -248,6 +249,12 @@ function buildShellPOVExe(settings, fileInfo, outFilePath, context) {
     if (context.platform === 'win32' && !context.isWindowsBash) {
         // Change the povray executable to the windows pvengine instead
         exe = "pvengine /EXIT /RENDER";
+        if (context.isGitBash) {
+            // If the terminal is Git Bash then it works exactly 
+            // like CMD.exe except that it will interpret the /EXIT /RENDER as paths
+            // So we add double slashes so that Git Bash will do it right
+            exe = "pvengine //EXIT //RENDER";
+        }
     }
     // If we are running povray via Docker
     if (settings.useDockerToRunPovray === true) {
@@ -452,14 +459,29 @@ function isWindowsBash() {
         // Find out which shell VS Code is using for Windows
         const terminalSettings = vscode.workspace.getConfiguration("terminal");
         const shell = terminalSettings.get("integrated.shell.windows");
-        // If the windows shell is set to use WSL Bash or Git Bash
-        if (shell !== undefined && shell.indexOf("bash") !== -1) {
+        // If the windows shell is set to use WSL Bash but NOT Git bash
+        if (shell !== undefined && shell.indexOf("bash") !== -1 && shell.indexOf("Git") === -1) {
             isWindowsBash = true;
         }
     }
     return isWindowsBash;
 }
 exports.isWindowsBash = isWindowsBash;
+// Helper function for determining if the integrated terminal is Git Bash
+function isGitBash() {
+    let isGitBash = false;
+    if (os.platform() === 'win32') {
+        // Find out which shell VS Code is using for Windows
+        const terminalSettings = vscode.workspace.getConfiguration("terminal");
+        const shell = terminalSettings.get("integrated.shell.windows");
+        // If the windows shell is set to use Git bash
+        if (shell !== undefined && shell.indexOf("bash") !== -1 && shell.indexOf("Git") !== -1) {
+            isGitBash = true;
+        }
+    }
+    return isGitBash;
+}
+exports.isGitBash = isGitBash;
 // Helper function for determining if the integrated terminal is Powershell on Windows
 function isWindowsPowershell() {
     let isWindowsPowershell = false;
