@@ -10,7 +10,7 @@ This extension allows you to use [Visual Studio Code](https://code.visualstudio.
 
 #### Version 0.0.10
 
-* The extension now properly handles spaces in paths and filenames for most cases. (Some [known issues](#Known%20Issues) with Powershell). Thanks to Galbi3000 for identifying this bug and helping to fix it.
+* The extension now properly handles spaces in paths and filenames for most cases. (Some [known issues](#known-issues) with Powershell). Thanks to Galbi3000 for identifying this bug and helping to fix it.
 
 #### Version 0.0.9
 
