@@ -59,3 +59,13 @@ typings/
 
 # next.js build output
 .next
+
+# Test Scene output
+test-scenes/**/*.png
+test-scenes/**/*.jpg
+test-scenes/**/*.bmp
+test-scenes/**/*.hdr
+test-scenes/**/*.exr
+test-scenes/**/*.tga
+test-scenes/**/*.ppm
+test-scenes/**/*.pov-state
