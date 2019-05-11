@@ -64,7 +64,7 @@ export function registerTasks() {
             let povrayExe = buildShellPOVExe(settings, fileInfo, outFilePath, context);
 
             // Build the commandline render options to pass to the executable in the shell based on the settings and appropriate to the shell context
-            let renderOptions = buildRenderOptions(settings, fileInfo, outFilePath, context);
+            let renderOptions = buildRenderOptions(settings, fileInfo, context);
             
             // Create the Shell Execution that runs the povray executable with the render options
             const execution = new vscode.ShellExecution(povrayExe + renderOptions, {cwd: fileInfo.fileDir});
@@ -314,7 +314,15 @@ export function buildShellPOVExe(settings: any, fileInfo: any, outFilePath: any,
         }
 
         // mount the source and output directories
-        exe += " run -v "+dockerSource+":/source -v "+dockerOutput+":/output "+settings.useDockerImage;
+        if (context.isWindowsPowershell) {
+
+            // If the shell is Powershell, use single quotes around paths to make sure spaces in paths work correctly
+            exe += " run -v \'"+dockerSource+":/source\' -v \'"+dockerOutput+":/output\' "+settings.useDockerImage;
+
+        } else {
+            // otherwise use double quotes around paths to make sure that spaces work correctly
+            exe += " run -v \""+dockerSource+":/source\" -v \""+dockerOutput+":/output\" "+settings.useDockerImage;
+        }
     }
 
     return exe;
@@ -323,15 +331,16 @@ export function buildShellPOVExe(settings: any, fileInfo: any, outFilePath: any,
 // Builds a string of commandline arguments to pass to the POV-Ray executable
 // to indicate which file to render, the output path, the width and height, etc.
 // based on the settings, file to render, output path provided, and the shell context
-export function buildRenderOptions(settings: any, fileInfo: any, outFilePath: string, context: ShellContext) {
+export function buildRenderOptions(settings: any, fileInfo: any, context: ShellContext) {
+
     // Start building the render command that will be run in the shell
-    let renderOptions = " ${fileBasename}";
+    let renderOptions = getInputFileOption(settings, fileInfo, context) ;
     
     renderOptions += getDisplayRenderOption(settings);
 
     renderOptions += getDimensionOptions(settings, fileInfo);
 
-    renderOptions += getOutputPathOption(settings, outFilePath, context);
+    renderOptions += getOutputPathOption(settings, context);
 
     renderOptions += getLibraryPathOption(settings, context);
 
@@ -346,6 +355,51 @@ export function buildRenderOptions(settings: any, fileInfo: any, outFilePath: st
     }
 
     return renderOptions;
+}
+
+export function getInputFileOption(settings: any, fileInfo: any, context: ShellContext) {
+
+    let fileInputOption = "${fileBasename}";
+
+    // Handle the cases where the input file name contains spaces
+    if (fileInfo.fileName.indexOf(" ") !== -1) {
+
+        if (context.platform === "linux" || context.platform === "darwin" || context.isWindowsBash) {
+            // For Mac, Linux, and WSL Bash we have to put some weird quoting aroun the filename
+            // and escape the space
+            // "'"File\ Name.pov"'""
+            fileInputOption = '"\'"'+fileInfo.fileName.replace(/ /g, "\\ ")+'"\'"';
+        }
+        else {
+            //Windows but NOT WSL Bash
+            if (settings.useDockerToRunPovray) {
+                // Docker on Windows
+
+                if (context.isWindowsPowershell) {
+
+                    fileInputOption = "'''${fileBasename}'''";
+
+                } else {
+                    // Docker on CMD.exe
+                    // '"File\ Name.pov"'
+                    fileInputOption = "'\""+fileInfo.fileName+"\"'";
+                }
+            } else {
+                // Not using Docker
+                if (context.isWindowsPowershell) {
+                    
+                    fileInputOption = "'"+fileInfo.fileName+"'";
+
+                } else {
+                    // CMD.exe
+                    // "File Name.pov"
+                    fileInputOption = '"${fileBasename}"';
+                }
+            }
+        }
+    }
+
+    return " "+fileInputOption;
 }
 
 export function getDisplayRenderOption(settings: any) {
@@ -373,7 +427,7 @@ export function getDimensionOptions(settings: any, fileInfo: any) {
     return dimensionOptions;
 }
 
-export function getOutputPathOption(settings: any, outFilePath: string, context: ShellContext) {
+export function getOutputPathOption(settings: any, context: ShellContext) {
 
     let outputPathOption = "";
 
@@ -389,18 +443,58 @@ export function getOutputPathOption(settings: any, outFilePath: string, context:
             outputPathOption = " Output_File_Name=/output/";
 
         } else { // We aren't running povray using Docker
-            
-            // If we are running povray in WSL Bash
-            if (context.isWindowsBash)
+
+            // Use the actual path specified in the settings rather than the 
+            // calculated full path so that we avoid unnecessary problems with
+            // output filenames that include spaces. 
+            // (Output file names with spaces fail when the shell is Powershell. 
+            // See: https://github.com/jmaxwilson/vscode-povray/issues/10 )
+            let outFilePath = settings.outputPath; 
+
+            if (context.isWindowsBash && outFilePath.indexOf(" ") === -1)
             {
                 // If the shell is WSL Bash then we need to make sure that
                 // the output path is translated into the correct WSL path
-                outputPathOption = " Output_File_Name=$(wslpath \'"+outFilePath+"\')";
-            } else {
+                // wslpath strips the final slash, but POV-Ray needs
+                // a slash at the end to know that it is a path and not a filename
+                // so we include a slash after the call to wslpath
+                outFilePath = "$(wslpath \'"+outFilePath+"\')/";
 
-                // Otherwise the output directory is straight forward
-                outputPathOption = " Output_File_Name="+outFilePath;
+            } else if (outFilePath.indexOf(" ") !== -1) {
+
+                // If the outFilePath has any spaces then we need to do some weird quoting
+                // to get POV-Ray to parse it right depending on the OS & Shell
+
+                if (context.platform === "linux" || context.platform === "darwin") {
+                    // Linux, Mac 
+                    // "'"/directory/path\ 1/file\ 1.png"'"  
+                    outFilePath = '"\'"'+outFilePath.replace(/ /g, "\\ ").replace(/\\\\/g, "\\")+'"\'"'; 
+                }
+                else {
+                    if (context.isWindowsBash) {
+                        // WSL Bash
+                        // in addition to translating the path using wslpath, we pass the path 
+                        // through sed to escape the spaces and surround it with quotes.
+                        // Because wslpath strips the trailing slash, we add a slash at the end
+                        // so that POV-Ray will recognize it as a path and not a file
+                        // "'"$(wslpath '\directory\path 1\file 1.png' | sed 's/ /\\ /g')"'"
+                        outFilePath = "\"'\"$(wslpath \'"+outFilePath+"\' | sed \'s/ /\\\\ /g\')/\"'\"";
+
+                    } else if (context.isWindowsPowershell) {
+                        // Powershell
+                        // Add triple quotes around path
+                        outFilePath = "'"+outFilePath+"'"; // Powershell 
+
+                    } else if (!context.isWindowsBash) {
+                        // cmd.exe:
+                        // Add quotes around path 
+                        // "\directory\path 1/file 1.png"
+                        outFilePath = '"'+outFilePath+'"'; 
+                    }
+                }
             }
+
+            outputPathOption = " Output_File_Name="+outFilePath;
         }
     }
 
@@ -547,7 +641,7 @@ export function isWindowsBash() {
         const shell = <string>terminalSettings.get("integrated.shell.windows");
 
         // If the windows shell is set to use WSL Bash or Git Bash
-        if (shell !== undefined && shell.indexOf("bash") !== -1) {
+        if (shell !== undefined && shell.indexOf("bash") !== -1 || shell.indexOf("wsl") !== -1) {
             isWindowsBash = true;
         }
     }
@@ -567,7 +661,7 @@ export function isWindowsPowershell() {
         const shell = <string>terminalSettings.get("integrated.shell.windows");
 
         // If the windows shell is set to use powershell
-        if (shell !== undefined && shell.indexOf("powershell") !== -1) {
+        if (shell !== undefined && (shell.indexOf("powershell") !== -1 || shell.indexOf("pwsh") !== -1)) {
             isWindowsPowershell = true;
         }
     }
