@@ -535,7 +535,7 @@ function isWindowsBash() {
         const terminalSettings = vscode.workspace.getConfiguration("terminal");
         const shell = terminalSettings.get("integrated.shell.windows");
         // If the windows shell is set to use WSL Bash or Git Bash
-        if (shell !== undefined && shell.indexOf("bash") !== -1) {
+        if (shell !== undefined && shell.indexOf("bash") !== -1 || shell.indexOf("wsl") !== -1) {
             isWindowsBash = true;
         }
     }
