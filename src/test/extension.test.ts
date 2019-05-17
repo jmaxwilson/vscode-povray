@@ -327,6 +327,111 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         assert.equal(povrayExe, "docker run -v \"c:\\pov\\tea pot\\:/source\" -v \"c:\\pov\\tea pot\\output:/output\" jmaxwilson/povray");
     });
 
+    test("buildShellPOVExe_win32_gitbash", function() {
+
+        let context = {
+            platform: "win32",
+            isWindowsBash: false,
+            isGitBash: true,
+            isWindowsPowershell: false
+        };
+
+        let fileInfo = {
+            filePath: "c:\\pov\\teapot\\teapot.pov",
+            fileName: "teapot.pov",
+            fileExt: ".pov",
+            fileDir: "c:\\pov\\teapot\\"
+        };
+
+        let settings = {
+            outputPath:                         "./output/",
+            defaultRenderWidth:                 "1024",
+            defaultRenderHeight:                "768",
+            libraryPath:                        "",
+            customCommandlineOptions:           "",
+            openImageAfterRender:               true,
+            openImageAfterRenderInNewColumn:    true,
+            useDockerToRunPovray:               false,
+            useDockerImage:                     "jmaxwilson/povray",
+            outputFormat:                       "png - Portable Network Graphics"
+        };
+
+        let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
+
+        let povrayExe = povrayExtension.buildShellPOVExe(settings, fileInfo, outFilePath, context);
+        assert.equal(povrayExe, "pvengine //EXIT //RENDER");
+    });
+
+    test("buildShellPOVExe_win32_gitbash_docker", function() {
+
+        let context = {
+            platform: "win32",
+            isWindowsBash: false,
+            isGitBash: true,
+            isWindowsPowershell: false
+        };
+
+        let fileInfo = {
+            filePath: "c:\\pov\\teapot\\teapot.pov",
+            fileName: "teapot.pov",
+            fileExt: ".pov",
+            fileDir: "c:\\pov\\teapot\\"
+        };
+
+        let settings = {
+            outputPath:                         "./output/",
+            defaultRenderWidth:                 "1024",
+            defaultRenderHeight:                "768",
+            libraryPath:                        "",
+            customCommandlineOptions:           "",
+            openImageAfterRender:               true,
+            openImageAfterRenderInNewColumn:    true,
+            useDockerToRunPovray:               true,
+            useDockerImage:                     "jmaxwilson/povray",
+            outputFormat:                       "png - Portable Network Graphics"
+        };
+
+        let outFilePath = "c:\\pov\\teapot\\output\\teapot.png";
+
+        let povrayExe = povrayExtension.buildShellPOVExe(settings, fileInfo, outFilePath, context);
+        assert.equal(povrayExe, "docker run -v \"c:\\pov\\teapot\\:/source\" -v \"c:\\pov\\teapot\\output:/output\" jmaxwilson/povray");
+    });
+
+    test("buildShellPOVExe_win32_gitbash_docker_path_space", function() {
+
+        let context = {
+            platform: "win32",
+            isWindowsBash: false,
+            isGitBash: true,
+            isWindowsPowershell: false
+        };
+
+        let fileInfo = {
+            filePath: "c:\\pov\\tea pot\\teapot.pov",
+            fileName: "teapot.pov",
+            fileExt: ".pov",
+            fileDir: "c:\\pov\\tea pot\\"
+        };
+
+        let settings = {
+            outputPath:                         "./output/",
+            defaultRenderWidth:                 "1024",
+            defaultRenderHeight:                "768",
+            libraryPath:                        "",
+            customCommandlineOptions:           "",
+            openImageAfterRender:               true,
+            openImageAfterRenderInNewColumn:    true,
+            useDockerToRunPovray:               true,
+            useDockerImage:                     "jmaxwilson/povray",
+            outputFormat:                       "png - Portable Network Graphics"
+        };
+
+        let outFilePath = "c:\\pov\\tea pot\\output\\teapot.png";
+
+        let povrayExe = povrayExtension.buildShellPOVExe(settings, fileInfo, outFilePath, context);
+        assert.equal(povrayExe, "docker run -v \"c:\\pov\\tea pot\\:/source\" -v \"c:\\pov\\tea pot\\output:/output\" jmaxwilson/povray");
+    });
+
     test("buildShellPOVExe_linux", function() {
 
         let context = {
@@ -1316,6 +1421,72 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
 
         let povrayExe = povrayExtension.getOutputPathOption(settings, context);
         assert.equal(povrayExe, " Output_File_Name=/output/");
+    });
+
+    test("getOutputPathOption_win32_gitbash", function() {
+
+        let context = {
+            platform: "win32",
+            isWindowsBash: false,
+            isGitBash: true,
+            isWindowsPowershell: false
+        };
+
+        let fileInfo = {
+            filePath: "C:\\pov\\teapot\\teapot.pov",
+            fileName: "teapot.pov",
+            fileExt: ".pov",
+            fileDir: "C:\\pov\\teapot\\"
+        };
+
+        let settings = {
+            outputPath:                         "C:\\out put\\path",
+            defaultRenderWidth:                 "1024",
+            defaultRenderHeight:                "768",
+            libraryPath:                        "/Users/myuser/Documents/POVRay/include/",
+            customCommandlineOptions:           "",
+            openImageAfterRender:               true,
+            openImageAfterRenderInNewColumn:    true,
+            useDockerToRunPovray:               false,
+            useDockerImage:                     "jmaxwilson/povray",
+            outputFormat:                       "png - Portable Network Graphics"
+        };
+
+        let povrayExe = povrayExtension.getOutputPathOption(settings, context);
+        assert.equal(povrayExe, ' Output_File_Name="\'"C:/out put/path"\'"');
+    });
+
+    test("getOutputPathOption_win32_gitbash_docker", function() {
+
+        let context = {
+            platform: "win32",
+            isWindowsBash: false,
+            isGitBash: true,
+            isWindowsPowershell: false
+        };
+
+        let fileInfo = {
+            filePath: "C:\\pov\\teapot\\teapot.pov",
+            fileName: "teapot.pov",
+            fileExt: ".pov",
+            fileDir: "C:\\pov\\teapot\\"
+        };
+
+        let settings = {
+            outputPath:                         ".\\output\\",
+            defaultRenderWidth:                 "1024",
+            defaultRenderHeight:                "768",
+            libraryPath:                        "",
+            customCommandlineOptions:           "",
+            openImageAfterRender:               true,
+            openImageAfterRenderInNewColumn:    true,
+            useDockerToRunPovray:               true,
+            useDockerImage:                     "jmaxwilson/povray",
+            outputFormat:                       "png - Portable Network Graphics"
+        };
+
+        let povrayExe = povrayExtension.getOutputPathOption(settings, context);
+        assert.equal(povrayExe, ' Output_File_Name="\'"/output/"\'"');
     });
 
     test("getOutputPathOption_win32_powershell", function() {

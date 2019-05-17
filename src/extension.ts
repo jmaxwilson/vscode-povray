@@ -451,6 +451,12 @@ export function getOutputPathOption(settings: any, context: ShellContext) {
             // so we always output within the docker container to /output
             outputPathOption = " Output_File_Name=/output/";
 
+            if (context.isGitBash) {
+                // Docker from GitBash needs some extra quotes because it
+                // It thinks it is linux, but it isn't
+                outputPathOption = ' Output_File_Name="\'"/output/"\'"';
+            }
+
         } else { // We aren't running povray using Docker
 
             // Use the actual path specified in the settings rather than the 
@@ -478,7 +484,7 @@ export function getOutputPathOption(settings: any, context: ShellContext) {
                     // Linux, Mac 
                     // "'"/directory/path\ 1/file\ 1.png"'"  
                     outFilePath = '"\'"'+outFilePath.replace(/ /g, "\\ ").replace(/\\\\/g, "\\")+'"\'"'; 
-            }
+                }
                 else {
                     if (context.isWindowsBash) {
                         // WSL Bash
@@ -494,7 +500,10 @@ export function getOutputPathOption(settings: any, context: ShellContext) {
                         // Add triple quotes around path
                         outFilePath = "'"+outFilePath+"'"; // Powershell 
 
-                    } else if (!context.isWindowsBash) {
+                    } else if (context.isGitBash) {
+                        // GitBash
+                        outFilePath = '"\'"'+outFilePath.replace(/\\/g, "/")+'"\'"'; 
+                    } else {
                         // cmd.exe:
                         // Add quotes around path 
                         // "\directory\path 1/file 1.png"

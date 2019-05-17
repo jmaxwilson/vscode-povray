@@ -122,6 +122,7 @@ function getShellContext() {
     let shellContext = {
         platform: os.platform(),
         isWindowsBash: isWindowsBash(),
+        isGitBash: isGitBash(),
         isWindowsPowershell: isWindowsPowershell()
     };
     return shellContext;
@@ -248,6 +249,12 @@ function buildShellPOVExe(settings, fileInfo, outFilePath, context) {
     if (context.platform === 'win32' && !context.isWindowsBash) {
         // Change the povray executable to the windows pvengine instead
         exe = "pvengine /EXIT /RENDER";
+        if (context.isGitBash) {
+            // If the terminal is Git Bash then it works exactly 
+            // like CMD.exe except that it will interpret the /EXIT /RENDER as paths
+            // So we add double slashes so that Git Bash will do it right
+            exe = "pvengine //EXIT //RENDER";
+        }
     }
     // If we are running povray via Docker
     if (settings.useDockerToRunPovray === true) {
@@ -366,6 +373,11 @@ function getOutputPathOption(settings, context) {
             // We have already mounted the output directory
             // so we always output within the docker container to /output
             outputPathOption = " Output_File_Name=/output/";
+            if (context.isGitBash) {
+                // Docker from GitBash needs some extra quotes because it
+                // It thinks it is linux, but it isn't
+                outputPathOption = ' Output_File_Name="\'"/output/"\'"';
+            }
         }
         else { // We aren't running povray using Docker
             // Use the actual path specified in the settings rather than the 
@@ -405,7 +417,11 @@ function getOutputPathOption(settings, context) {
                         // Add triple quotes around path
                         outFilePath = "'" + outFilePath + "'"; // Powershell 
                     }
-                    else if (!context.isWindowsBash) {
+                    else if (context.isGitBash) {
+                        // GitBash
+                        outFilePath = '"\'"' + outFilePath.replace(/\\/g, "/") + '"\'"';
+                    }
+                    else {
                         // cmd.exe:
                         // Add quotes around path 
                         // "\directory\path 1/file 1.png"
@@ -535,13 +551,28 @@ function isWindowsBash() {
         const terminalSettings = vscode.workspace.getConfiguration("terminal");
         const shell = terminalSettings.get("integrated.shell.windows");
         // If the windows shell is set to use WSL Bash or Git Bash
-        if (shell !== undefined && shell.indexOf("bash") !== -1 || shell.indexOf("wsl") !== -1) {
+        if (shell !== undefined && (shell.indexOf("bash") !== -1 || shell.indexOf("wsl") !== -1) && shell.indexOf("Git") === -1) {
             isWindowsBash = true;
         }
     }
     return isWindowsBash;
 }
 exports.isWindowsBash = isWindowsBash;
+// Helper function for determining if the integrated terminal is Git Bash
+function isGitBash() {
+    let isGitBash = false;
+    if (os.platform() === 'win32') {
+        // Find out which shell VS Code is using for Windows
+        const terminalSettings = vscode.workspace.getConfiguration("terminal");
+        const shell = terminalSettings.get("integrated.shell.windows");
+        // If the windows shell is set to use Git bash
+        if (shell !== undefined && shell.indexOf("bash") !== -1 && shell.indexOf("Git") !== -1) {
+            isGitBash = true;
+        }
+    }
+    return isGitBash;
+}
+exports.isGitBash = isGitBash;
 // Helper function for determining if the integrated terminal is Powershell on Windows
 function isWindowsPowershell() {
     let isWindowsPowershell = false;
