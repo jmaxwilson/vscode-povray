@@ -2,6 +2,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [0.0.11] = 2019-06-13
+
+## Changed
+
+- Updated the js-yaml package to address potential security vulnerabilities. See: https://github.com/nodeca/js-yaml/pull/480
+- Updated the vscode package to keep code up to date
+- Reformatting package.json for more standard json format
+
 ## [0.0.10] - 2019-05-11
 
 ### Fixed

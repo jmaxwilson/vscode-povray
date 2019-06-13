@@ -3,13 +3,13 @@
 	"displayName": "POV-Ray",
 	"description": "Persistence of Vision Ray Tracer (POV-Ray) Extension for Visual Studio Code",
 	"icon": "icons/povray-extension-logo.png",
-	"version": "0.0.10",
+	"version": "0.0.11",
 	"publisher": "jmaxwilson",
 	"license": "MIT",
 	"repository": {
-        "type": "git",
-        "url": "https://github.com/jmaxwilson/vscode-povray"
-    },
+		"type": "git",
+		"url": "https://github.com/jmaxwilson/vscode-povray"
+	},
 	"engines": {
 		"vscode": "^1.32.0"
 	},
@@ -22,19 +22,34 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
-		"languages": [{
-            "id": "povray",
-            "aliases": ["povray", "pov-ray", "POVRay", "POV-Ray", "POVRAY", "POV-RAY"],
-            "extensions": [".pov",".inc", ".ini"],
-            "configuration": "./language-configuration.json"
-        }],
-        "grammars": [{
-            "language": "povray",
-            "scopeName": "source.povray",
-            "path": "./syntaxes/povray.tmLanguage.json"
-		}],
-        "taskDefinitions": [
-            {
+		"languages": [
+			{
+				"id": "povray",
+				"aliases": [
+					"povray",
+					"pov-ray",
+					"POVRay",
+					"POV-Ray",
+					"POVRAY",
+					"POV-RAY"
+				],
+				"extensions": [
+					".pov",
+					".inc",
+					".ini"
+				],
+				"configuration": "./language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "povray",
+				"scopeName": "source.povray",
+				"path": "./syntaxes/povray.tmLanguage.json"
+			}
+		],
+		"taskDefinitions": [
+			{
 				"type": "povray",
 				"properties": {
 					"task": {
@@ -50,46 +65,53 @@
 						"description": "The full path to the output file"
 					}
 				}
-            }
-        ],
-        "problemMatchers": [
-            {
+			}
+		],
+		"problemMatchers": [
+			{
 				"name": "povray",
-                "owner": "povray",
-                "fileLocation": ["relative", "${workspaceFolder}"],
-                "pattern": [
-                    {
-                        "regexp": "^.*\\s\\'(.*\\.pov|inc).*line\\s+(\\d+):.*(.*[Ee]rror.*):\\s(.*$)",
-                        "file": 1,
-                        "line": 2,
-                        "severity": 3,
-                        "message": 4
-                    },
-                    {
-                        "regexp": "^([\\s]\\w.*)",
-                        "message": 1
+				"owner": "povray",
+				"fileLocation": [
+					"relative",
+					"${workspaceFolder}"
+				],
+				"pattern": [
+					{
+						"regexp": "^.*\\s\\'(.*\\.pov|inc).*line\\s+(\\d+):.*(.*[Ee]rror.*):\\s(.*$)",
+						"file": 1,
+						"line": 2,
+						"severity": 3,
+						"message": 4
+					},
+					{
+						"regexp": "^([\\s]\\w.*)",
+						"message": 1
 					}
-                ]
-            }
+				]
+			}
 		],
 		"commands": [
 			{
-			  "command": "povray.render",
-			  "title": "POV-Ray: Render Scene",
-			  "icon": "icons/povray-render-icon.png"
+				"command": "povray.render",
+				"title": "POV-Ray: Render Scene",
+				"icon": "icons/povray-render-icon.png"
 			}
 		],
 		"menus": {
-			"commandPalette": [{
-				"when": "resourceLangId == povray && resourceExtname != .inc",
-				"command": "povray.render",
-				"group": "navigation"
-			}],
-			"editor/title": [{
-				"when": "resourceLangId == povray && resourceExtname != .inc",
-				"command": "povray.render",
-				"group": "navigation"
-			}]
+			"commandPalette": [
+				{
+					"when": "resourceLangId == povray && resourceExtname != .inc",
+					"command": "povray.render",
+					"group": "navigation"
+				}
+			],
+			"editor/title": [
+				{
+					"when": "resourceLangId == povray && resourceExtname != .inc",
+					"command": "povray.render",
+					"group": "navigation"
+				}
+			]
 		},
 		"configuration": {
 			"type": "object",
@@ -101,16 +123,21 @@
 					"deprecationMessage": "**DEPRECATED** Please use Povray > Render: Output Path"
 				},
 				"povray.defaultRenderWidth": {
-					"type": ["integer","null"],
+					"type": [
+						"integer",
+						"null"
+					],
 					"default": null,
 					"deprecationMessage": "**DEPRECATED** Please use Povray > Render: Default Width"
 				},
 				"povray.defaultRenderHeight": {
-					"type": ["integer","null"],
+					"type": [
+						"integer",
+						"null"
+					],
 					"default": null,
 					"deprecationMessage": "**DEPRECATED** Please use Povray > Render: Default Height"
 				},
-
 				"povray.render.defaultWidth": {
 					"type": "integer",
 					"default": "1024",
@@ -124,30 +151,30 @@
 				"povray.render.outputImageFormat": {
 					"type": "string",
 					"enum": [
-						"png - Portable Network Graphics", 
-						"jpg - JPEG (lossy)", 
+						"png - Portable Network Graphics",
+						"jpg - JPEG (lossy)",
 						"bmp - Bitmap",
-						"tga - Targa-24", 
-						"tga - Targa-24 (compressed)", 
-						"exr - OpenEXR High Dynamic-Range", 
-						"hdr - Radiance High Dynamic-Range", 
+						"tga - Targa-24",
+						"tga - Targa-24 (compressed)",
+						"exr - OpenEXR High Dynamic-Range",
+						"hdr - Radiance High Dynamic-Range",
 						"ppm - Portable Pixmap"
 					],
 					"default": "png - Portable Network Graphics",
 					"description": "The image format to use for rendered scenes"
 				},
 				"povray.render.displayImageDuringRender": {
-					"type":"boolean",
+					"type": "boolean",
 					"default": false,
 					"markdownDescription": "Display the image while it is being rendered [Note: this POV-Ray feature may not be available on all platforms]"
 				},
 				"povray.render.openImageAfterRender": {
-					"type":"boolean",
+					"type": "boolean",
 					"default": true,
 					"description": "Automatically open the rendered image when rendering finishes?"
 				},
 				"povray.render.openImageAfterRenderInNewColumn": {
-					"type":"boolean",
+					"type": "boolean",
 					"default": true,
 					"description": "When the rendered image is automatically opened, open it in a new column beside the current editor"
 				},
@@ -162,17 +189,17 @@
 					"markdownDescription": "Additional [commandline options](https://www.povray.org/documentation/3.7.0/r3_2.html) to add to POV-Ray when rendering the scene."
 				},
 				"povray.docker.enableDocker": {
-					"type":"boolean",
+					"type": "boolean",
 					"default": false,
 					"markdownDescription": "Use [Docker](https://www.docker.com/products/docker-desktop) to run POV-Ray."
 				},
 				"povray.docker.image": {
-					"type":"string",
+					"type": "string",
 					"default": "jmaxwilson/povray",
 					"markdownDescription": "Specify the docker image that will be used to run povray through docker. Compatible images available from https://hub.docker.com/r/jmaxwilson/povray "
 				},
 				"povray.libraryPath": {
-					"type":"string",
+					"type": "string",
 					"default": "",
 					"description": "The Library Path where POV-Ray can find all of the standard include files. (Note: You should only really need to use this on Mac.)"
 				}
@@ -193,10 +220,10 @@
 		"test": "yarn run compile && node ./node_modules/vscode/bin/test"
 	},
 	"devDependencies": {
-		"typescript": "^3.3.1",
-		"vscode": "^1.1.28",
-		"tslint": "^5.12.1",
+		"@types/mocha": "^2.2.42",
 		"@types/node": "^10.12.21",
-		"@types/mocha": "^2.2.42"
+		"tslint": "^5.12.1",
+		"typescript": "^3.3.1",
+		"vscode": "^1.1.34"
 	}
 }
