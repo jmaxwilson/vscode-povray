@@ -8,13 +8,13 @@ This extension allows you to use [Visual Studio Code](https://code.visualstudio.
 
 ### What's New
 
+#### Version 0.0.11
+
+* Library Updates to address security vulnerabilities in 3rd party package.
+
 #### Version 0.0.10
 
 * The extension now properly handles spaces in paths and filenames for most cases. (Some [known issues](#known-issues) with Powershell). Thanks to Galbi3000 for identifying this bug and helping to fix it.
-
-#### Version 0.0.9
-
-* You can use the new Custom Commandline Options setting to append additional [commandline options](https://www.povray.org/documentation/3.7.0/r3_2.html) to POV-Ray when it is called to render the scene. 
 
 [View the Change Log](./CHANGELOG.md)
 
