@@ -340,7 +340,7 @@ export function buildRenderOptions(settings: any, fileInfo: any, context: ShellC
 
     renderOptions += getDimensionOptions(settings, fileInfo);
 
-    renderOptions += getOutputPathOption(settings, context);
+    renderOptions += getOutputPathOption(settings, context).replace("Output_File_Name=./", "Output_File_Name='" + fileInfo.fileDir) + "'";
 
     renderOptions += getLibraryPathOption(settings, context);
 
@@ -359,10 +359,11 @@ export function buildRenderOptions(settings: any, fileInfo: any, context: ShellC
 
 export function getInputFileOption(settings: any, fileInfo: any, context: ShellContext) {
 
-    let fileInputOption = "${fileBasename}";
+    //let fileInputOption = "${fileBasename}";
+    let fileInputOption = fileInfo.filePath;
 
     // Handle the cases where the input file name contains spaces
-    if (fileInfo.fileName.indexOf(" ") !== -1) {
+    if (fileInputOption.indexOf(" ") !== -1) {
 
         if (context.platform === "linux" || context.platform === "darwin" || context.isWindowsBash) {
             // For Mac, Linux, and WSL Bash we have to put some weird quoting aroun the filename
@@ -388,7 +389,7 @@ export function getInputFileOption(settings: any, fileInfo: any, context: ShellC
                 // Not using Docker
                 if (context.isWindowsPowershell) {
                     
-                    fileInputOption = "'"+fileInfo.fileName+"'";
+                    fileInputOption = "'"+fileInputOption+"'";
 
                 } else {
                     // CMD.exe
@@ -641,7 +642,7 @@ export function isWindowsBash() {
         const shell = <string>terminalSettings.get("integrated.shell.windows");
 
         // If the windows shell is set to use WSL Bash or Git Bash
-        if (shell !== undefined && shell.indexOf("bash") !== -1 || shell.indexOf("wsl") !== -1) {
+        if (shell !== null && shell !== undefined && (shell.indexOf("bash") !== -1 || shell.indexOf("wsl") !== -1)) {
             isWindowsBash = true;
         }
     }
@@ -652,7 +653,7 @@ export function isWindowsBash() {
 
 // Helper function for determining if the integrated terminal is Powershell on Windows
 export function isWindowsPowershell() {
-    let isWindowsPowershell = false;
+    let isWindowsPowershell = true;
 
     if (os.platform() === 'win32') {
 
@@ -661,7 +662,7 @@ export function isWindowsPowershell() {
         const shell = <string>terminalSettings.get("integrated.shell.windows");
 
         // If the windows shell is set to use powershell
-        if (shell !== undefined && (shell.indexOf("powershell") !== -1 || shell.indexOf("pwsh") !== -1)) {
+        if (shell !== null && shell !== undefined && (shell.indexOf("powershell") !== -1 || shell.indexOf("pwsh") !== -1)) {
             isWindowsPowershell = true;
         }
     }

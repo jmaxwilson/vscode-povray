@@ -1247,7 +1247,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         };
 
         let povrayExe = povrayExtension.getOutputPathOption(settings, context);
-        assert.equal(povrayExe, " Output_File_Name=$(wslpath \'"+settings.outputPath+"\')/");
+        assert.strictEqual(povrayExe, " Output_File_Name=$(wslpath \'"+settings.outputPath+"\')/");
     });
 
     test("getOutputPathOption_docker", function() {
@@ -1279,7 +1279,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         };
 
         let povrayExe = povrayExtension.getOutputPathOption(settings, context);
-        assert.equal(povrayExe, " Output_File_Name=/output/");
+        assert.strictEqual(povrayExe, " Output_File_Name=/output/");
     });
 
     test("getOutputPathOption_win32_powershell", function() {
@@ -1311,7 +1311,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         };
 
         let povrayExe = povrayExtension.getOutputPathOption(settings, context);
-        assert.equal(povrayExe, " Output_File_Name="+settings.outputPath);
+        assert.strictEqual(povrayExe, " Output_File_Name="+settings.outputPath);
     });
 
     test("getOutputPathOption_linux", function() {
@@ -1343,7 +1343,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         };
 
         let povrayExe = povrayExtension.getOutputPathOption(settings, context);
-        assert.equal(povrayExe, " Output_File_Name="+settings.outputPath);
+        assert.strictEqual(povrayExe, " Output_File_Name="+settings.outputPath);
     });
 
     test("getOutputPathOption_darwin", function() {
@@ -1375,7 +1375,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
         };
 
         let povrayExe = povrayExtension.getOutputPathOption(settings, context);
-        assert.equal(povrayExe, " Output_File_Name="+settings.outputPath);
+        assert.strictEqual(povrayExe, " Output_File_Name="+settings.outputPath);
     });
 
     // getLibraryPathOption() unit tests
