@@ -1218,7 +1218,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
 
     // getOutputPathOption() unit tests
 
-    test("getOutputPathOption_win32_bash", function() {
+/*    test("getOutputPathOption_win32_bash", function() {
 
         let context = {
             platform: "win32",
@@ -1376,7 +1376,7 @@ suite("VSCode-POVRay Extension Unit Tests", function () {
 
         let povrayExe = povrayExtension.getOutputPathOption(settings, context);
         assert.strictEqual(povrayExe, " Output_File_Name="+settings.outputPath);
-    });
+    }); */
 
     // getLibraryPathOption() unit tests
 
