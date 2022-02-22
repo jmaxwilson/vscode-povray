@@ -1,5 +1,5 @@
 {
-	"name": "vscode-povray",
+	"name": "vscode-povray2",
 	"displayName": "POV-Ray",
 	"description": "Persistence of Vision Ray Tracer (POV-Ray) Extension v2 for Visual Studio Code, forked from jmaxwilson/vscode-povray",
 	"icon": "icons/povray-extension-logo.png",
