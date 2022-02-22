@@ -39,8 +39,11 @@ export function registerTasks() {
             /* POV-Ray Render Scene File Build Task */
             /****************************************/
 
+            // Get the POV-Ray settings
+            let settings = getPOVSettings();
+
             // Get information about the shell environment context
-            let context = getShellContext();
+            let context = getShellContext(settings);
 
             // Get information about the currently open file
             let fileInfo = getFileInfo(context);
@@ -50,9 +53,6 @@ export function registerTasks() {
                 // We don't have a file so bail with no tasks
                 return [];
             }
-
-            // Get the POV-Ray settings
-            let settings = getPOVSettings();
 
             // build the output file path based on the settings and appropriate to the shell context
             let outFilePath = buildOutFilePath(settings, fileInfo, context);
@@ -67,6 +67,7 @@ export function registerTasks() {
             let renderOptions = buildRenderOptions(settings, fileInfo, context);
             
             // Create the Shell Execution that runs the povray executable with the render options
+            vscode.window.showInformationMessage(povrayExe + renderOptions);
             const execution = new vscode.ShellExecution(povrayExe + renderOptions, {cwd: fileInfo.fileDir});
 
             // Use the $povray problem matcher defined in the package.json problemMatchers
@@ -178,11 +179,11 @@ export function registerCommands(context: vscode.ExtensionContext) {
 }
 
 // Gets the shell context for the current OS and VS Code configuration
-export function getShellContext() : ShellContext {
+export function getShellContext(settings: any) : ShellContext {
     let shellContext: ShellContext = {
         platform: os.platform(),
-        isWindowsBash: isWindowsBash(),
-        isWindowsPowershell: isWindowsPowershell()
+        isWindowsBash: settings.win32Terminal == "Bash",
+        isWindowsPowershell: settings.win32Terminal == "Powershell (vscode default)"
     };
 
     return shellContext;
@@ -279,50 +280,16 @@ export function createDirIfMissing(filePath: string, context: ShellContext) {
 } 
 
 // Builds the command to call in the shell in order to run POV-Ray
-// depending on the OS, Shell, and whether the user has selected to
-// use docker to run POV-Ray
+// depending on the OS, Shell
 export function buildShellPOVExe(settings: any, fileInfo: any, outFilePath: any, context: ShellContext) {
     // Default to running an executable called povray (Linux, Mac, WSL Ubuntu Bash, Git Bash)
-    let exe = "povray";
+    //let exe = "povray";
+    let exe = wrapPathSpaces(settings.pvenginePath, settings);
 
     // If we are running on Windows but not Bash
     if (context.platform === 'win32' && !context.isWindowsBash) {
-
-        // Change the povray executable to the windows pvengine instead
-        exe = "pvengine /EXIT /RENDER";
-    }
-
-    // If we are running povray via Docker
-    if (settings.useDockerToRunPovray === true) {
-        exe = "docker";
-
-        // Get the source and output directories to mount into the docker image
-        let dockerSource = normalizePath(fileInfo.fileDir, context);
-        let dockerOutput = normalizePath(getDirName(outFilePath, context), context);
-
-        // If the integrated terminal is WSL Bash
-        if (context.isWindowsBash) {
-            // Running Windows Docker from WSL Bash requires some extra setup
-
-            // We have to tell the docker client to connect to Windows Docker over TCP
-            exe += " --host tcp://127.0.0.1:2375";
-
-            // For the paths to be understod by both WSL Bash AND Docker for Windows,
-            // you have to have a symlink called /c that points to /mnt/c
-            dockerSource = dockerSource.replace("c:","/c").replace(/\\/g, "/");
-            dockerOutput = dockerOutput.replace("c:","/c").replace(/\\/g, "/");
-        }
-
-        // mount the source and output directories
-        if (context.isWindowsPowershell) {
-
-            // If the shell is Powershell, use single quotes around paths to make sure spaces in paths work correctly
-            exe += " run -v \'"+dockerSource+":/source\' -v \'"+dockerOutput+":/output\' "+settings.useDockerImage;
-
-        } else {
-            // otherwise use double quotes around paths to make sure that spaces work correctly
-            exe += " run -v \""+dockerSource+":/source\" -v \""+dockerOutput+":/output\" "+settings.useDockerImage;
-        }
+        if (context.isWindowsPowershell) { exe = "& " + exe; }
+        exe = exe + " /EXIT /RENDER";
     }
 
     return exe;
@@ -340,7 +307,7 @@ export function buildRenderOptions(settings: any, fileInfo: any, context: ShellC
 
     renderOptions += getDimensionOptions(settings, fileInfo);
 
-    renderOptions += getOutputPathOption(settings, context);
+    renderOptions += " " + wrapPathSpaces("Output_File_Name=" + normalizePath(fileInfo.fileDir + settings.outputPath, context), settings);
 
     renderOptions += getLibraryPathOption(settings, context);
 
@@ -349,8 +316,8 @@ export function buildRenderOptions(settings: any, fileInfo: any, context: ShellC
     renderOptions += getCustomCommandlineOptions(settings);
 
     // If the integrated terminal is Powershell running on Windows, we need to pipe the pvengine.exe through Out-Null
-    // to make powershell wait for the rendering to complete and POv-Ray to close before continuing
-    if (context.isWindowsPowershell && !settings.useDockerToRunPovray) {
+    // to make powershell wait for the rendering to complete and POV-Ray to close before continuing
+    if (context.isWindowsPowershell) {
         renderOptions += " | Out-Null";
     }
 
@@ -359,10 +326,10 @@ export function buildRenderOptions(settings: any, fileInfo: any, context: ShellC
 
 export function getInputFileOption(settings: any, fileInfo: any, context: ShellContext) {
 
-    let fileInputOption = "${fileBasename}";
+    let fileInputOption = fileInfo.filePath;
 
     // Handle the cases where the input file name contains spaces
-    if (fileInfo.fileName.indexOf(" ") !== -1) {
+    if (fileInputOption.indexOf(" ") !== -1) {
 
         if (context.platform === "linux" || context.platform === "darwin" || context.isWindowsBash) {
             // For Mac, Linux, and WSL Bash we have to put some weird quoting aroun the filename
@@ -371,30 +338,12 @@ export function getInputFileOption(settings: any, fileInfo: any, context: ShellC
             fileInputOption = '"\'"'+fileInfo.fileName.replace(/ /g, "\\ ")+'"\'"';
         }
         else {
-            //Windows but NOT WSL Bash
-            if (settings.useDockerToRunPovray) {
-                // Docker on Windows
-
-                if (context.isWindowsPowershell) {
-
-                    fileInputOption = "'''${fileBasename}'''";
-
-                } else {
-                    // Docker on CMD.exe
-                    // '"File\ Name.pov"'
-                    fileInputOption = "'\""+fileInfo.fileName+"\"'";
-                }
+            if (context.isWindowsPowershell) {
+                fileInputOption = wrapPathSpaces(fileInputOption, settings);
             } else {
-                // Not using Docker
-                if (context.isWindowsPowershell) {
-                    
-                    fileInputOption = "'"+fileInfo.fileName+"'";
-
-                } else {
-                    // CMD.exe
-                    // "File Name.pov"
-                    fileInputOption = '"${fileBasename}"';
-                }
+                // CMD.exe
+                // "File Name.pov"
+                fileInputOption = '"${fileBasename}"';
             }
         }
     }
@@ -421,13 +370,13 @@ export function getDimensionOptions(settings: any, fileInfo: any) {
     // as commandline arguments, otherwise we assume that the .ini file will include 
     // width and height instructions
     if (fileInfo.fileExt !== undefined && fileInfo.fileExt === ".pov") {
-        dimensionOptions = " Width="+settings.defaultRenderWidth+" Height="+settings.defaultRenderHeight;
+        dimensionOptions = " Width=" + settings.defaultRenderWidth + " Height=" + settings.defaultRenderHeight;
     }
 
     return dimensionOptions;
 }
 
-export function getOutputPathOption(settings: any, context: ShellContext) {
+/* export function getOutputPathOption(settings: any, context: ShellContext) {
 
     let outputPathOption = "";
 
@@ -435,32 +384,24 @@ export function getOutputPathOption(settings: any, context: ShellContext) {
     // add the output path as a commandline argument
     if (settings.outputPath.length > 0) {
 
-        // if we are running povray using Docker
-        if (settings.useDockerToRunPovray) {
+        // Use the actual path specified in the settings rather than the 
+        // calculated full path so that we avoid unnecessary problems with
+        // output filenames that include spaces. 
+        // (Output file names with spaces fail when the shell is Powershell. 
+        // See: https://github.com/jmaxwilson/vscode-povray/issues/10 )
+        let outFilePath = settings.outputPath; 
 
-            // We have already mounted the output directory
-            // so we always output within the docker container to /output
-            outputPathOption = " Output_File_Name=/output/";
+        if (outFilePath.indexOf(" ") === -1)
+        {
+            if (context.isWindowsBash) {
+            // If the shell is WSL Bash then we need to make sure that
+            // the output path is translated into the correct WSL path
+            // wslpath strips the final slash, but POV-Ray needs
+            // a slash at the end to know that it is a path and not a filename
+            // so we include a slash after the call to wslpath
+            outFilePath = "$(wslpath \'"+outFilePath+"\')/";
 
-        } else { // We aren't running povray using Docker
-
-            // Use the actual path specified in the settings rather than the 
-            // calculated full path so that we avoid unnecessary problems with
-            // output filenames that include spaces. 
-            // (Output file names with spaces fail when the shell is Powershell. 
-            // See: https://github.com/jmaxwilson/vscode-povray/issues/10 )
-            let outFilePath = settings.outputPath; 
-
-            if (context.isWindowsBash && outFilePath.indexOf(" ") === -1)
-            {
-                // If the shell is WSL Bash then we need to make sure that
-                // the output path is translated into the correct WSL path
-                // wslpath strips the final slash, but POV-Ray needs
-                // a slash at the end to know that it is a path and not a filename
-                // so we include a slash after the call to wslpath
-                outFilePath = "$(wslpath \'"+outFilePath+"\')/";
-
-            } else if (outFilePath.indexOf(" ") !== -1) {
+            } else {
 
                 // If the outFilePath has any spaces then we need to do some weird quoting
                 // to get POV-Ray to parse it right depending on the OS & Shell
@@ -471,35 +412,16 @@ export function getOutputPathOption(settings: any, context: ShellContext) {
                     outFilePath = '"\'"'+outFilePath.replace(/ /g, "\\ ").replace(/\\\\/g, "\\")+'"\'"'; 
                 }
                 else {
-                    if (context.isWindowsBash) {
-                        // WSL Bash
-                        // in addition to translating the path using wslpath, we pass the path 
-                        // through sed to escape the spaces and surround it with quotes.
-                        // Because wslpath strips the trailing slash, we add a slash at the end
-                        // so that POV-Ray will recognize it as a path and not a file
-                        // "'"$(wslpath '\directory\path 1\file 1.png' | sed 's/ /\\ /g')"'"
-                        outFilePath = "\"'\"$(wslpath \'"+outFilePath+"\' | sed \'s/ /\\\\ /g\')/\"'\"";
-
-                    } else if (context.isWindowsPowershell) {
-                        // Powershell
-                        // Add triple quotes around path
-                        outFilePath = "'"+outFilePath+"'"; // Powershell 
-
-                    } else if (!context.isWindowsBash) {
-                        // cmd.exe:
-                        // Add quotes around path 
-                        // "\directory\path 1/file 1.png"
-                        outFilePath = '"'+outFilePath+'"'; 
+                        outFilePath = wrapPathSpaces(outFilePath, settings);
                     }
                 }
-            }
-
-            outputPathOption = " Output_File_Name="+outFilePath;
         }
+
+        outputPathOption = " Output_File_Name="+outFilePath;
     }
 
     return outputPathOption;
-}
+} */
 
 export function getLibraryPathOption(settings: any, context: ShellContext) {
 
@@ -507,8 +429,7 @@ export function getLibraryPathOption(settings: any, context: ShellContext) {
 
     // If the user has set library path, 
     // add the library path as a commandline argument
-    // We ignore the Library Path if we are using docker
-    if (settings.libraryPath.length > 0 && !settings.useDockerToRunPovray) {
+    if (settings.libraryPath.length > 0) {
 
         settings.libraryPath = normalizePath(settings.libraryPath, context);
 
@@ -518,8 +439,7 @@ export function getLibraryPathOption(settings: any, context: ShellContext) {
             libraryOption = " Library_Path=$(wslpath '"+settings.libraryPath+"')";
 
         } else {
-
-            libraryOption = " Library_Path="+settings.libraryPath;
+           libraryOption = " " + wrapPathSpaces("Library_Path=" + settings.libraryPath, settings);
         }
     }
 
@@ -543,71 +463,20 @@ export function getPOVSettings() {
     let settings = {
         outputPath:                         (<string>configuration.get("render.outputPath")).trim(),
         outputFormat:                       (<string>configuration.get("render.outputImageFormat")),
+        pvenginePath:                       (<string>configuration.get("render.pvenginePath")).trim(),
+        win32Terminal:                      <string>configuration.get("render.win32Terminal"),
         defaultRenderWidth:                 <string>configuration.get("render.defaultWidth"),
         defaultRenderHeight:                <string>configuration.get("render.defaultHeight"),
-        libraryPath:                        (<string>configuration.get("libraryPath")).trim(),
+        libraryPath:                        (<string>configuration.get("render.libraryPath")).trim(),
         customCommandlineOptions:           configuration.get("render.customCommandlineOptions"),
         displayImageDuringRender:           configuration.get("render.displayImageDuringRender"),
         openImageAfterRender:               configuration.get("render.openImageAfterRender"),
         openImageAfterRenderInNewColumn:    configuration.get("render.openImageAfterRenderInNewColumn"),
-        useDockerToRunPovray:               configuration.get("docker.enableDocker"),
-        useDockerImage:                     configuration.get("docker.image"),
-
-        // DEPRECATED
-        deprecated_OutputPath:                      (<string>configuration.get("outputPath")).trim(),
-        deprecated_DefaultRenderWidth:              <string>configuration.get("defaultRenderWidth"),
-        deprecated_DefaultRenderHeight:             <string>configuration.get("defaultRenderHeight"),
+        quotingChar:                        "\"",
     };
 
-    // Handle deprecated settings
-    // TODO: Remove deprecated settings completely after 2019-05-01
-    // Deprecated Output Path
-    let current = configuration.inspect("render.outputPath");
-    let deprecated = configuration.inspect("outputPath");  
-    if (current !== undefined && deprecated !== undefined) {
-        // If they have set a custom output path in the deprecated setting
-        // AND the new output path setting has not been changed from its default
-        if (settings.deprecated_OutputPath !== deprecated.defaultValue &&
-            settings.outputPath === current.defaultValue) { 
-
-            // Keep using the deprecated value
-            settings.outputPath = settings.deprecated_OutputPath;
-            // Notify the user that they are using a deprecated setting
-            vscode.window.showWarningMessage("POV-Ray: the Output Path (povray.outputPath) setting has been deprecated.\nPlease use Render > Output Path (povray.render.outputPath) instead.");
-        }
-    }
-
-    // Deprecated Default Width
-    current = configuration.inspect("render.defaultWidth");
-    deprecated = configuration.inspect("defaultRenderWidth");
-    // If they have set a custom default width in the deprecated setting
-    // AND the new default width setting has not been changed from its default
-    if (current !== undefined && deprecated !== undefined) {
-        if (settings.deprecated_DefaultRenderWidth !== deprecated.defaultValue &&
-            settings.defaultRenderWidth === current.defaultValue) {
-
-            // Keep using the deprecated value
-            settings.defaultRenderWidth = settings.deprecated_DefaultRenderWidth;
-            // Notify the user that they are using a deprecated setting
-            vscode.window.showWarningMessage("POV-Ray: the Default Render Width (povray.defaultRenderWidth) setting has been deprecated.\nPlease use Render > Default Width (povray.render.defaultWidth) instead.");
-        }
-    }
-
-    // Deprecated Default Height
-    current = configuration.inspect("render.defaultHeight");
-    deprecated = configuration.inspect("defaultRenderHeight");
-    // If they have set a custom default height in the deprecated setting
-    // AND the new default height setting has not been changed from its default
-    if (current !== undefined && deprecated !== undefined) {
-        if (settings.deprecated_DefaultRenderHeight !== deprecated.defaultValue &&
-        settings.defaultRenderHeight === current.defaultValue) {
-
-            // Keep using the deprecated value
-            settings.defaultRenderHeight = settings.deprecated_DefaultRenderHeight;
-            // Notify the user that they are using a deprecated setting
-            vscode.window.showWarningMessage("POV-Ray: the Default Render Height (povray.defaultRenderHeight) setting has been deprecated.\nPlease use Render > Default Height (povray.render.defaultHeight) instead.");
-        }
-    }
+    if (settings.win32Terminal == "Powershell (vscode default)") { settings.quotingChar = "'"; }
+    //vscode.window.showWarningMessage("POV-Ray: the Output Path (povray.outputPath) setting has been deprecated.\nPlease use Render > Output Path (povray.render.outputPath) instead.");
 
     // Make sure that if the user has specified an outputPath it ends wth a slash
     // because POV-Ray on Windows wont recognize it is a folder unless it ends with a slash
@@ -630,46 +499,6 @@ export function getPOVSettings() {
     return settings;
 }
 
-// Helper function for determining if the integrated terminal is WSL Bash
-export function isWindowsBash() {
-    let isWindowsBash = false;
-
-    if (os.platform() === 'win32') {
-
-        // Find out which shell VS Code is using for Windows
-        const terminalSettings = vscode.workspace.getConfiguration("terminal");
-        const shell = <string>terminalSettings.get("integrated.shell.windows");
-
-        // If the windows shell is set to use WSL Bash or Git Bash
-        if (shell !== undefined && shell.indexOf("bash") !== -1 || shell.indexOf("wsl") !== -1) {
-            isWindowsBash = true;
-        }
-    }
-
-    return isWindowsBash;
-
-}
-
-// Helper function for determining if the integrated terminal is Powershell on Windows
-export function isWindowsPowershell() {
-    let isWindowsPowershell = false;
-
-    if (os.platform() === 'win32') {
-
-        // Find out which shell VS Code is using for Windows
-        const terminalSettings = vscode.workspace.getConfiguration("terminal");
-        const shell = <string>terminalSettings.get("integrated.shell.windows");
-
-        // If the windows shell is set to use powershell
-        if (shell !== undefined && (shell.indexOf("powershell") !== -1 || shell.indexOf("pwsh") !== -1)) {
-            isWindowsPowershell = true;
-        }
-    }
-
-    return isWindowsPowershell;
-
-}
-
 // For unit testing to work cross platform, we need to be able
 // to normalize paths for a specified shell context (os, shell)
 // regardless of the OS we are actually running on.
@@ -680,6 +509,14 @@ export function normalizePath(filepath: string, context: ShellContext) {
         filepath = path.posix.normalize(filepath);
     }
 
+    return filepath;
+}
+
+export function wrapPathSpaces(filepath: string, settings: any)
+{
+    if (filepath.indexOf(" ") !== -1) {
+        filepath = settings.quotingChar + filepath + settings.quotingChar;
+    }
     return filepath;
 }
 
@@ -696,3 +533,19 @@ export function getDirName(filepath: string, context: ShellContext) {
 
     return dirname;
 }
+
+// Removed from package.json
+/*
+				"povray.docker.image": {
+					"type": "string",
+					"default": "jmaxwilson/povray",
+					"markdownDescription": "Specify the docker image that will be used to run povray through docker. Compatible images available from https://hub.docker.com/r/jmaxwilson/povray "
+				},
+
+				"povray.docker.enableDocker": {
+					"type": "boolean",
+					"default": false,
+					"markdownDescription": "Use [Docker](https://www.docker.com/products/docker-desktop) to run POV-Ray."
+				},
+
+*/

@@ -1,17 +1,17 @@
 {
-	"name": "vscode-povray",
+	"name": "vscode-povray2",
 	"displayName": "POV-Ray",
-	"description": "Persistence of Vision Ray Tracer (POV-Ray) Extension for Visual Studio Code",
+	"description": "Persistence of Vision Ray Tracer (POV-Ray) Extension v2 for Visual Studio Code, forked from jmaxwilson/vscode-povray",
 	"icon": "icons/povray-extension-logo.png",
-	"version": "0.0.11",
-	"publisher": "jmaxwilson",
+	"version": "2.0.0",
+	"publisher": "virtual-whirlwind",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/jmaxwilson/vscode-povray"
+		"url": "https://github.com/VirtualWhirlwind/vscode-povray2"
 	},
 	"engines": {
-		"vscode": "^1.32.0"
+		"vscode": "^1.64.0"
 	},
 	"categories": [
 		"Programming Languages"
@@ -117,26 +117,19 @@
 			"type": "object",
 			"title": "POV-Ray",
 			"properties": {
-				"povray.outputPath": {
+				"povray.render.pvenginePath": {
 					"type": "string",
 					"default": "",
-					"deprecationMessage": "**DEPRECATED** Please use Povray > Render: Output Path"
+					"description": "Path to the POV-Ray povray/pvengine executable."
 				},
-				"povray.defaultRenderWidth": {
-					"type": [
-						"integer",
-						"null"
+				"povray.render.win32Terminal": {
+					"type": "string",
+					"enum": [
+						"Powershell (vscode default)",
+						"Bash"
 					],
-					"default": null,
-					"deprecationMessage": "**DEPRECATED** Please use Povray > Render: Default Width"
-				},
-				"povray.defaultRenderHeight": {
-					"type": [
-						"integer",
-						"null"
-					],
-					"default": null,
-					"deprecationMessage": "**DEPRECATED** Please use Povray > Render: Default Height"
+					"default": "",
+					"description": "Windows Only: Which terminal should be used?"
 				},
 				"povray.render.defaultWidth": {
 					"type": "integer",
@@ -180,25 +173,15 @@
 				},
 				"povray.render.outputPath": {
 					"type": "string",
-					"default": "",
-					"description": "A path to a folder where rendered images will be saved. This can be an absolute path (/pov/output) or a relative path (./output). (Note: if the directory doesn't exist already it will be created at render time.)"
+					"default": "./",
+					"description": "A path to a folder where rendered images will be saved. This can be an absolute path (/pov/output) or a relative path (./output). (Note: if the directory doesn't exist already it will be created at render time.) Defaults to ./ (same folder as .pov file), refer to POV-Ray for allowed output directories (https://github.com/POV-Ray/povray/issues/324)."
 				},
 				"povray.render.customCommandlineOptions": {
 					"type": "string",
 					"default": "",
 					"markdownDescription": "Additional [commandline options](https://www.povray.org/documentation/3.7.0/r3_2.html) to add to POV-Ray when rendering the scene."
 				},
-				"povray.docker.enableDocker": {
-					"type": "boolean",
-					"default": false,
-					"markdownDescription": "Use [Docker](https://www.docker.com/products/docker-desktop) to run POV-Ray."
-				},
-				"povray.docker.image": {
-					"type": "string",
-					"default": "jmaxwilson/povray",
-					"markdownDescription": "Specify the docker image that will be used to run povray through docker. Compatible images available from https://hub.docker.com/r/jmaxwilson/povray "
-				},
-				"povray.libraryPath": {
+				"povray.render.libraryPath": {
 					"type": "string",
 					"default": "",
 					"description": "The Library Path where POV-Ray can find all of the standard include files. (Note: You should only really need to use this on Mac.)"
@@ -222,8 +205,11 @@
 	"devDependencies": {
 		"@types/mocha": "^2.2.42",
 		"@types/node": "^10.12.21",
-		"tslint": "^5.12.1",
+		"tslint": "^6.1.3",
 		"typescript": "^3.3.1",
-		"vscode": "^1.1.34"
+		"vscode": "^1.1.37"
+	},
+	"dependencies": {
+		"os": "^0.1.2"
 	}
 }

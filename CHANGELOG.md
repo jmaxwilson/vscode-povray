@@ -2,7 +2,30 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [0.0.11] = 2019-06-13
+## [2.0.0] = 2022-02-21
+
+### Major
+
+- Forked from: https://github.com/jmaxwilson/vscode-povray 
+
+### Fixed
+
+- Updated extension to handle the backend changes that VSCode made which broke the ability to trigger a render.
+- Updated default output path to handle the changes POV-Ray made where it will only write out to certain folders unless you make allowances in a POV-Ray INI file.
+- Updated paths-with-spaces handling so that the render can run more predicatably.
+
+### Added
+
+- Extra settings:
+  POV-Ray Engine path - Specifiy the path to the POV-Ray executable instead of using environment path info.
+  Win32 Only, Win32 Terminal - Specify which terminal is being used, since the autodetection was broken with a VSCode update.
+
+### Removed
+
+- Docker support removed pending further testing.
+- Legacy settings values that were scheduled to be retired.
+
+## [0.0.11] - 2019-06-13
 
 ## Changed
 
