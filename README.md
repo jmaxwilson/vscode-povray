@@ -1,12 +1,21 @@
-# POV-Ray Extension for Visual Studio Code
+# POV-Ray Extension v2 for Visual Studio Code
 
-[![Build Status](https://travis-ci.org/jmaxwilson/vscode-povray.svg?branch=master)](https://travis-ci.org/jmaxwilson/vscode-povray)
+(https://github.com/VirtualWhirlwind/vscode-povray2)
 
 The [Persistence of Vision Raytracer](http://povray.org) is a high-quality, free software tool for creating three-dimensional graphics by using a Scene Description Language.
 
 This extension allows you to use [Visual Studio Code](https://code.visualstudio.com) to edit POV-Ray Scene Description files and render them using POV-Ray in the integrated terminal.
 
 ### What's New
+
+[View the Change Log](./CHANGELOG.md)
+
+#### Version 2.0.0
+
+* Forked from J. Max Wilson's code (as that repo has been quiet for a while).
+* Fixed issues that appeared when VSCode made backend changes.
+* Made a tweak to support a security change ion POV-Ray.
+* Prep work for possible future updates.
 
 #### Version 0.0.11
 
@@ -16,47 +25,37 @@ This extension allows you to use [Visual Studio Code](https://code.visualstudio.
 
 * The extension now properly handles spaces in paths and filenames for most cases. (Some [known issues](#known-issues) with Powershell). Thanks to Galbi3000 for identifying this bug and helping to fix it.
 
-[View the Change Log](./CHANGELOG.md)
-
 ## Features
 
 * Render the current .pov or .ini scene file by clicking the **POV-Ray render icon** in the editor menu or by using the VS Code build task key combination **`ctrl-shift-b`**.
 
-    ![Animated GIF of POV-Ray in Visual Studio Code](https://raw.githubusercontent.com/jmaxwilson/vscode-povray/master/images/vscode-povray-demo.gif)
+    ![Animated GIF of POV-Ray in Visual Studio Code](https://raw.githubusercontent.com/VirtualWhirlwind/vscode-povray2/master/images/vscode-povray-demo.gif)
 
 * Includes **Syntax Highlighting** and **Snippets** for common POV-Ray scene elements
 
-    ![Animated GIF of POV-Ray Snippets](https://raw.githubusercontent.com/jmaxwilson/vscode-povray/master/images/vscode-povray-snippets-demo.gif)
+    ![Animated GIF of POV-Ray Snippets](https://raw.githubusercontent.com/VirtualWhirlwind/vscode-povray2/master/images/vscode-povray-snippets-demo.gif)
 
 * Control **output image format** and **output path** through User and Workspace settings
 
-    ![Animated GIF of POV-Ray Output Options](https://raw.githubusercontent.com/jmaxwilson/vscode-povray/master/images/vscode-povray-output-image-format.gif)
+    ![Animated GIF of POV-Ray Output Options](https://raw.githubusercontent.com/VirtualWhirlwind/vscode-povray2/master/images/vscode-povray-output-image-format.gif)
 
 * Set **default image dimensions** for rendered images
 
-    ![Screenshot of POV-Ray Default Dimensions Options](https://raw.githubusercontent.com/jmaxwilson/vscode-povray/master/images/vscode-povray-settings-render-dimensions.png)
+    ![Screenshot of POV-Ray Default Dimensions Options](https://raw.githubusercontent.com/VirtualWhirlwind/vscode-povray2/master/images/vscode-povray-settings-render-dimensions.png)
 
 * Option to open the rendered image when rendering completes.
 
-    ![Screenshot of POV-Ray Post-Render Options](https://raw.githubusercontent.com/jmaxwilson/vscode-povray/master/images/vscode-povray-settings-open-after-render.png)
+    ![Screenshot of POV-Ray Post-Render Options](https://raw.githubusercontent.com/VirtualWhirlwind/vscode-povray2/master/images/vscode-povray-settings-open-after-render.png)
 
 * Enjoy built in VS Code features like *bracket matching*, *code folding*, and *comment toggling*
 
-    ![Screenshot of VS Code features with POV-Ray scene language](https://raw.githubusercontent.com/jmaxwilson/vscode-povray/master/images/vscode-features.gif)
+    ![Screenshot of VS Code features with POV-Ray scene language](https://raw.githubusercontent.com/VirtualWhirlwind/vscode-povray2/master/images/vscode-features.gif)
 
 ## Requirements
 
-*This extension does not install POV-Ray*. You can either install it yourself or run it using Docker.
+*This extension does not install POV-Ray*. You need to install it yourself. (Docker support suspended pending further testing)
 
-### **Running POV-Ray using Docker**
-
-If you have [Docker](https://www.docker.com/products/docker-desktop) installed, you can easily run POV-Ray on any platform by selecting the **Docker** > **Enable Docker** option in the VS Code POV-Ray settings.
-
-![Screenshot of POV-Ray Docker Options](https://raw.githubusercontent.com/jmaxwilson/vscode-povray/master/images/vscode-povray-settings-docker.png)
-
-By default, the **jmaxwilson/povray:latest** docker image will be used. Additional [povray docker images](https://hub.docker.com/r/jmaxwilson/povray) are available and you can set the image you want to use in the settings.
-
-Note: if you are using WSL Bash as your integrated terminal on Windows, you will need some [addtional setup](https://github.com/jmaxwilson/wsl-docker-git-setup) to make Docker for Windows work with WSL Bash.
+* Please check the extension settings to configure the POV-Ray engine path.
 
 ### **Installing POV-Ray**
 
@@ -95,11 +94,8 @@ Create a `povray` symlink in `/usr/local/bin` to run `Povray37UnofficialMacCmd` 
 
 Modify the POV-Ray Extension Settings in VS Code to set the Library Path to `~/povray/include`
 
-![Screenshot of POV-Ray Library Path Option](https://raw.githubusercontent.com/jmaxwilson/vscode-povray/master/images/vscode-povray-settings-library-path.png)
+![Screenshot of POV-Ray Library Path Option](https://raw.githubusercontent.com/VirtualWhirlwind/vscode-povray2/master/images/vscode-povray-settings-library-path.png)
 
-## Known Issues
-
-- On Windows using **Powershell** as the integrated terminal, if the `outputPath` setting has a path with a space in one of the path names ("`./out put`", "`C:\pov\my scenes\output`"), POV-Ray fails to honor the output path or fails to render. Spaces in path names work properly on all other supported platforms and terminals.
 
 ## Links
 
@@ -107,9 +103,9 @@ Modify the POV-Ray Extension Settings in VS Code to set the Library Path to `~/p
 
 [POV-Ray on GitHub](https://github.com/POV-Ray/povray)
 
-[POV-Ray for VS Code Extension on GitHub](https://github.com/jmaxwilson/vscode-povray)
+[POV-Ray for VS Code Extension on GitHub](https://github.com/VirtualWhirlwind/vscode-povray2)
 
-[POV-Ray for VS Code Extension in the VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=jmaxwilson.vscode-povray)
+[POV-Ray for VS Code Extension in the VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=virtual-whirlwind.vscode-povray2)
 
 ## Attributions
 
