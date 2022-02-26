@@ -445,6 +445,18 @@
             "}"
         ]
     },
+    "Texture Pigment SimpleColor": {
+        "prefix": "texture",
+        "description": "Insert a Texture with Pigment, Normal, and Finish",
+        "scope": "povray",
+        "body": [
+            "texture {",
+            "\tpigment { ",
+            "\t\tcolor ${0} // Simple color name (from colors.inc)",
+            "\t}",
+            "}"
+        ]
+    },
     "Texture Pigment Normal Finish": {
         "prefix": "texture",
         "description": "Insert a Texture with Pigment, Normal, and Finish",

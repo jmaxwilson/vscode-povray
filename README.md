@@ -109,6 +109,8 @@ Modify the POV-Ray Extension Settings in VS Code to set the Library Path to `~/p
 
 ## Attributions
 
+Forked from: https://github.com/jmaxwilson/vscode-povray
+
 POV-Ray Scene Description Language syntax highlighting adapted from the [atom-language-povray](https://github.com/h-a-n-n-e-s/atom-language-povray) project by 羽洲.
 
 [POV-Ray Logo](https://commons.wikimedia.org/wiki/File:Povray_logo_sphere.png) by SharkD.
