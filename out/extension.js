@@ -4,10 +4,13 @@ const os = require("os");
 const path = require("path");
 const vscode = require("vscode");
 const fs = require("fs");
+const completionItemProvider_1 = require("./features/completionItemProvider");
 // POV-Ray Extension Activation
 function activate(context) {
     registerTasks();
     registerCommands(context);
+    // Code Completion
+    context.subscriptions.push(vscode.languages.registerCompletionItemProvider('povray', new completionItemProvider_1.default(), ' '));
 }
 exports.activate = activate;
 // Creates a task provider for POV-Ray files

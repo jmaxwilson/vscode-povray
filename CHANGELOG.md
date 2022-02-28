@@ -2,7 +2,20 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.0.0] = 2022-02-21
+## [2.1.0] = 2022-02-??
+
+### Added
+
+- The start of Code Completion (i.e., Intellisense) capabilities to enhance creating scene files. Begin with declared colors from colors.inc if library path is provided.
+
+## [2.0.1] - 2022-02-27
+
+## Changed
+
+- Minor cosmetic change to the Marketplace Extension title to reduce confusion between the two extensions.
+- Added a snippet for simple texture/pigment (in addition to the larger texture snippet).
+
+## [2.0.0] - 2022-02-21
 
 ### Major
 

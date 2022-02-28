@@ -2,16 +2,16 @@ import * as os from 'os';
 import * as path from "path";
 import * as vscode from 'vscode';
 import * as fs from 'fs';
-//import CompletionItemProvider from './features/completionItemProvider'
+import CompletionItemProvider from './features/completionItemProvider'
 
 // POV-Ray Extension Activation
 export function activate(context: vscode.ExtensionContext) {
 
     registerTasks();
     registerCommands(context);
-    //context.subscriptions.push(vscode.languages.registerCompletionItemProvider(['cpp', 'c'], new CompletionItemProvider(global), '.', '>'));
-    //context.subscriptions.push(vscode.languages.registerCompletionItemProvider(['cpp', 'c'], new CompletionItemProvider(), '.', '>'));
 
+    // Code Completion
+    context.subscriptions.push(vscode.languages.registerCompletionItemProvider('povray', new CompletionItemProvider(), ' '));
 }
 
 // Create a Render Taks Definiton that we can use to pass around info about the render task

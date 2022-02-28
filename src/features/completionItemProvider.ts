@@ -1,52 +1,40 @@
-// Using code/ideas from: https://github.com/austin-----/code-gnu-global
-
 import * as vscode from 'vscode';
-import AbstractProvider from './abstractProvider';
+import * as fs from 'fs';
+import { getPOVSettings } from '../extension';
+import { EOL } from 'os';
 
-/*function toCompletionItemKind(kind: vscode.SymbolKind): vscode.CompletionItemKind {
-    if (kind == vscode.SymbolKind.Variable) {
-        return vscode.CompletionItemKind.Variable;
-    } else if (kind == vscode.SymbolKind.Function) {
-        return vscode.CompletionItemKind.Function;
-    } else if (kind == vscode.SymbolKind.Class) {
-        return vscode.CompletionItemKind.Class;
-    } else if (kind == vscode.SymbolKind.Enum) {
-        return vscode.CompletionItemKind.Enum;
-    } else {
-        return vscode.CompletionItemKind.Variable;
+export default class GlobalCompletionItemProvider implements vscode.CompletionItemProvider {
+    protected _colors: vscode.CompletionItem[];
+
+    constructor() {
+        this._colors = [];
+        this.loadDefaultColors();
     }
-}*/
 
-//export default class GlobalCompletionItemProvider extends AbstractProvider implements vscode.CompletionItemProvider {
-//	provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken) : Thenable<vscode.CompletionItem[]> {
-		//console.log(position);
-		//var word = document.getText(document.getWordRangeAtPosition(position)).split(/\r?\n/)[0];
-        //var self = this;
-		/*return this._global.run(['-x', '"^' + word + '.*"'])
-		.then(function(output){
-			console.log(output);
-			var bucket = new Array<vscode.CompletionItem>();
-            if (output != null) {
-                output.toString().split(/\r?\n/)
-			    .forEach(function(value, index, array){
-                    var result = self._global.parseLine(value);
-                    if (result == null)return;
-                    var item = new vscode.CompletionItem(result.tag);
-                    item.detail = result.info;
-                    item.kind = toCompletionItemKind(result.kind);
-                    bucket.push(item);
-			    });
-            }
-			return bucket;
-		});*/
-//        return this.run()
-//        .then(function(){
-//            var bucket = new Array<vscode.CompletionItem>();
-//            return bucket;
-//        });
-//	}
+    provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
 
-//    run(): Promise<string> {
-//        return "Green";
-//    }
-//}
+        const linePrefix = document.lineAt(position).text.substring(0, position.character);
+        if (!linePrefix.endsWith('color ') || this._colors.length == 0) {
+            return undefined;
+        }
+
+        return this._colors;
+    }
+
+    loadDefaultColors() {
+        let settings = getPOVSettings();
+
+        if (settings.libraryPath.length > 0 && fs.existsSync(settings.libraryPath+'/colors.inc')) {
+            const content = fs.readFileSync(settings.libraryPath+'/colors.inc', 'utf8');
+            let lines = content.split(EOL);
+            lines.forEach((value) => {
+                let pieces = value.split(' ');
+                for (let i = 0; i<pieces.length; i++) {
+                    if (pieces[i] == '#declare' && (i+1) < pieces.length) {
+                        this._colors.push(new vscode.CompletionItem(pieces[i+1], vscode.CompletionItemKind.Constant));
+                    }
+                }
+            });
+        }
+    }
+}
