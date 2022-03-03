@@ -4,10 +4,13 @@ const os = require("os");
 const path = require("path");
 const vscode = require("vscode");
 const fs = require("fs");
+const completionItemProvider_1 = require("./features/completionItemProvider");
 // POV-Ray Extension Activation
 function activate(context) {
     registerTasks();
     registerCommands(context);
+    // Code Completion
+    context.subscriptions.push(vscode.languages.registerCompletionItemProvider('povray', new completionItemProvider_1.default(), ' '));
 }
 exports.activate = activate;
 // Creates a task provider for POV-Ray files
@@ -462,19 +465,4 @@ function getDirName(filepath, context) {
     return dirname;
 }
 exports.getDirName = getDirName;
-// Removed from package.json
-/*
-                "povray.docker.image": {
-                    "type": "string",
-                    "default": "jmaxwilson/povray",
-                    "markdownDescription": "Specify the docker image that will be used to run povray through docker. Compatible images available from https://hub.docker.com/r/jmaxwilson/povray "
-                },
-
-                "povray.docker.enableDocker": {
-                    "type": "boolean",
-                    "default": false,
-                    "markdownDescription": "Use [Docker](https://www.docker.com/products/docker-desktop) to run POV-Ray."
-                },
-
-*/ 
 //# sourceMappingURL=extension.js.map

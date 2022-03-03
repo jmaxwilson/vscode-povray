@@ -6,9 +6,21 @@ The [Persistence of Vision Raytracer](http://povray.org) is a high-quality, free
 
 This extension allows you to use [Visual Studio Code](https://code.visualstudio.com) to edit POV-Ray Scene Description files and render them using POV-Ray in the integrated terminal.
 
+### Getting Started
+
+* After installing POV-Ray and this extension, open the Extension Settings and be sure to fill in:
+    * Library Path
+    * Pvengine Path
+* Start creating .pov files and use the "P" button in the upper right to trigger rendering
+* Rendering errors are not shown in VSCode yet, you need to open the pov file in the POV-Ray editor to see scene problems
+
 ### What's New
 
 [View the Change Log](./CHANGELOG.md)
+
+#### Version 2.1.0
+
+* Added code completion (similar to IntelliSense) for several default library files when the LibraryPath is provided.
 
 #### Version 2.0.0
 
@@ -21,10 +33,6 @@ This extension allows you to use [Visual Studio Code](https://code.visualstudio.
 
 * Library Updates to address security vulnerabilities in 3rd party package.
 
-#### Version 0.0.10
-
-* The extension now properly handles spaces in paths and filenames for most cases. (Some [known issues](#known-issues) with Powershell). Thanks to Galbi3000 for identifying this bug and helping to fix it.
-
 ## Features
 
 * Render the current .pov or .ini scene file by clicking the **POV-Ray render icon** in the editor menu or by using the VS Code build task key combination **`ctrl-shift-b`**.
@@ -34,6 +42,10 @@ This extension allows you to use [Visual Studio Code](https://code.visualstudio.
 * Includes **Syntax Highlighting** and **Snippets** for common POV-Ray scene elements
 
     ![Animated GIF of POV-Ray Snippets](https://raw.githubusercontent.com/VirtualWhirlwind/vscode-povray2/master/images/vscode-povray-snippets-demo.gif)
+
+* Includes **Basic Code Completion from the standard INC files** for several POV-Ray scene elements
+
+    ![Animated GIF of POV-Ray Code Completion](https://raw.githubusercontent.com/VirtualWhirlwind/vscode-povray2/master/images/vscode-povray2-code-completion.gif)
 
 * Control **output image format** and **output path** through User and Workspace settings
 
@@ -59,7 +71,7 @@ This extension allows you to use [Visual Studio Code](https://code.visualstudio.
 
 ### **Installing POV-Ray**
 
-If you are not using Docker, you will need to install POV-Ray for your specific OS and you will need to make sure that it can be run via the commandline from your terminal.
+You will need to install POV-Ray for your specific OS and you will need to make sure that it can be run via the commandline from your terminal.
 
 #### Ubuntu Linux
 

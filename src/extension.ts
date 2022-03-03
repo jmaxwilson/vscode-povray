@@ -2,6 +2,7 @@ import * as os from 'os';
 import * as path from "path";
 import * as vscode from 'vscode';
 import * as fs from 'fs';
+import CompletionItemProvider from './features/completionItemProvider'
 
 // POV-Ray Extension Activation
 export function activate(context: vscode.ExtensionContext) {
@@ -9,6 +10,8 @@ export function activate(context: vscode.ExtensionContext) {
     registerTasks();
     registerCommands(context);
 
+    // Code Completion
+    context.subscriptions.push(vscode.languages.registerCompletionItemProvider('povray', new CompletionItemProvider(), ' '));
 }
 
 // Create a Render Taks Definiton that we can use to pass around info about the render task
@@ -533,19 +536,3 @@ export function getDirName(filepath: string, context: ShellContext) {
 
     return dirname;
 }
-
-// Removed from package.json
-/*
-				"povray.docker.image": {
-					"type": "string",
-					"default": "jmaxwilson/povray",
-					"markdownDescription": "Specify the docker image that will be used to run povray through docker. Compatible images available from https://hub.docker.com/r/jmaxwilson/povray "
-				},
-
-				"povray.docker.enableDocker": {
-					"type": "boolean",
-					"default": false,
-					"markdownDescription": "Use [Docker](https://www.docker.com/products/docker-desktop) to run POV-Ray."
-				},
-
-*/
