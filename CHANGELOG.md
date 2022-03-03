@@ -2,11 +2,31 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.1.0] = 2022-02-??
+## [2.1.0] = 2022-03-02
 
 ### Added
 
-- The start of Code Completion (i.e., Intellisense) capabilities to enhance creating scene files. Begin with declared colors from colors.inc if library path is provided.
+- Initial **Code Completion** (i.e., Intellisense) capabilities to enhance creating scene files.
+- Code completion is activated for:
+  - color
+  - finish
+  - texture
+  - interior
+  - color_map
+  - pigment
+- If the library path is provided, the code will read in several of the default .inc library files:
+  - colors.inc
+  - finish.inc
+  - glass.inc
+  - golds.inc
+  - metals.inc
+  - stones1.inc
+  - stones2.inc
+  - stars.inc
+  - textures.inc
+  - woods.inc
+  - woodmaps.inc
+
 
 ## [2.0.1] - 2022-02-27
 

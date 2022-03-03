@@ -22,19 +22,19 @@ class GlobalCompletionItemProvider {
         if (linePrefix.endsWith('color ')) {
             return this._colors;
         }
-        else if (linePrefix.endsWith('finish ')) {
+        else if (linePrefix.endsWith('finish { ')) {
             return this._finishes;
         }
-        else if (linePrefix.endsWith('texture ')) {
+        else if (linePrefix.endsWith('texture { ')) {
             return this._textures;
         }
-        else if (linePrefix.endsWith('interior ')) {
+        else if (linePrefix.endsWith('interior { ')) {
             return this._interiors;
         }
-        else if (linePrefix.endsWith('color_map ')) {
+        else if (linePrefix.endsWith('color_map { ')) {
             return this._color_maps;
         }
-        else if (linePrefix.endsWith('pigment ')) {
+        else if (linePrefix.endsWith('pigment { ')) {
             return this._pigments;
         }
         return undefined;
@@ -49,14 +49,14 @@ class GlobalCompletionItemProvider {
             if (fs.existsSync(settings.libraryPath + '/finish.inc')) {
                 this.loadFile(settings.libraryPath + '/finish.inc');
             }
-            if (fs.existsSync(settings.libraryPath + '/metals.inc')) {
-                this.loadFile(settings.libraryPath + '/metals.inc');
-            }
             if (fs.existsSync(settings.libraryPath + '/glass.inc')) {
                 this.loadFile(settings.libraryPath + '/glass.inc');
             }
             if (fs.existsSync(settings.libraryPath + '/golds.inc')) {
                 this.loadFile(settings.libraryPath + '/golds.inc');
+            }
+            if (fs.existsSync(settings.libraryPath + '/metals.inc')) {
+                this.loadFile(settings.libraryPath + '/metals.inc');
             }
             if (fs.existsSync(settings.libraryPath + '/stones1.inc')) {
                 this.loadFile(settings.libraryPath + '/stones1.inc');
@@ -80,32 +80,36 @@ class GlobalCompletionItemProvider {
     }
     loadFile(fileName) {
         const content = fs.readFileSync(fileName, 'utf8');
-        let pieces = content.replace(/\r?\n|\r/g, " ").split(/\s+/);
+        let filePieces = fileName.split('/');
+        let incName = filePieces[filePieces.length - 1];
+        let pieces = content.replace(/\r?\n|\r/g, ' ').replace(/=/g, ' ').split(/\s+/);
         for (let i = 0; i < pieces.length; i++) {
-            if (pieces[i] == '#declare' && (i + 3) < pieces.length) {
-                switch (pieces[i + 3]) {
+            if (pieces[i] == '#declare' && (i + 2) < pieces.length) {
+                let newItem = new vscode.CompletionItem(pieces[i + 1], vscode.CompletionItemKind.Constant);
+                newItem.detail = incName;
+                switch (pieces[i + 2]) {
                     case 'color':
                     case 'rgb':
                     case 'rgbf':
-                        this._colors.push(new vscode.CompletionItem(pieces[i + 1], vscode.CompletionItemKind.Constant));
+                        this._colors.push(newItem);
                         break;
                     case 'finish':
-                        this._finishes.push(new vscode.CompletionItem(pieces[i + 1], vscode.CompletionItemKind.Constant));
+                        this._finishes.push(newItem);
                         break;
                     case 'texture':
-                        this._textures.push(new vscode.CompletionItem(pieces[i + 1], vscode.CompletionItemKind.Constant));
+                        this._textures.push(newItem);
                         break;
                     case 'interior':
-                        this._interiors.push(new vscode.CompletionItem(pieces[i + 1], vscode.CompletionItemKind.Constant));
+                        this._interiors.push(newItem);
                         break;
                     case 'color_map':
-                        this._color_maps.push(new vscode.CompletionItem(pieces[i + 1], vscode.CompletionItemKind.Constant));
+                        this._color_maps.push(newItem);
                         break;
                     case 'pigment':
-                        this._pigments.push(new vscode.CompletionItem(pieces[i + 1], vscode.CompletionItemKind.Constant));
+                        this._pigments.push(newItem);
                         break;
                 }
-                i += 3;
+                i += 2;
             }
         }
     }
