@@ -6,7 +6,7 @@ The [Persistence of Vision Raytracer](http://povray.org) is a high-quality, free
 
 This extension allows you to use [Visual Studio Code](https://code.visualstudio.com) to edit POV-Ray Scene Description files and render them using POV-Ray in the integrated terminal.
 
-### Getting Started
+## Getting Started
 
 * After installing POV-Ray and this extension, open the Extension Settings and be sure to fill in:
     * Library Path
@@ -14,22 +14,34 @@ This extension allows you to use [Visual Studio Code](https://code.visualstudio.
 * Start creating .pov files and use the "P" button in the upper right to trigger rendering
 * Rendering errors are not shown in VSCode yet, you need to open the pov file in the POV-Ray editor to see scene problems
 
-### What's New
+## Links
+
+[POV-Ray Official Website](http://povray.org)
+
+[POV-Ray on GitHub](https://github.com/POV-Ray/povray)
+
+[POV-Ray for VS Code Extension on GitHub](https://github.com/VirtualWhirlwind/vscode-povray2)
+
+[POV-Ray for VS Code Extension in the VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=virtual-whirlwind.vscode-povray2)
+
+[Reddit](https://www.reddit.com/r/povray/)
+
+## What's New
 
 [View the Change Log](./CHANGELOG.md)
 
-#### Version 2.1.0
+### Version 2.1.0
 
 * Added code completion (similar to IntelliSense) for several default library files when the LibraryPath is provided.
 
-#### Version 2.0.0
+### Version 2.0.0
 
 * Forked from J. Max Wilson's code (as that repo has been quiet for a while).
 * Fixed issues that appeared when VSCode made backend changes.
 * Made a tweak to support a security change ion POV-Ray.
 * Prep work for possible future updates.
 
-#### Version 0.0.11
+### Version 0.0.11
 
 * Library Updates to address security vulnerabilities in 3rd party package.
 
@@ -108,16 +120,6 @@ Modify the POV-Ray Extension Settings in VS Code to set the Library Path to `~/p
 
 ![Screenshot of POV-Ray Library Path Option](https://raw.githubusercontent.com/VirtualWhirlwind/vscode-povray2/master/images/vscode-povray-settings-library-path.png)
 
-
-## Links
-
-[POV-Ray Official Website](http://povray.org)
-
-[POV-Ray on GitHub](https://github.com/POV-Ray/povray)
-
-[POV-Ray for VS Code Extension on GitHub](https://github.com/VirtualWhirlwind/vscode-povray2)
-
-[POV-Ray for VS Code Extension in the VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=virtual-whirlwind.vscode-povray2)
 
 ## Attributions
 
