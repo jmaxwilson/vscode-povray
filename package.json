@@ -3,7 +3,7 @@
 	"displayName": "POV-Ray 2",
 	"description": "Persistence of Vision Ray Tracer (POV-Ray) Extension v2 for Visual Studio Code, forked from jmaxwilson/vscode-povray",
 	"icon": "icons/povray-extension-logo.png",
-	"version": "2.1.0",
+	"version": "2.1.1",
 	"publisher": "virtual-whirlwind",
 	"license": "MIT",
 	"repository": {

@@ -2,7 +2,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.1.0] = 2022-03-02
+## [2.1.1] = 2022-??-??
+
+### Fixed
+
+- Fixed a couple of the "box" snippets that had duplicate last values.
+
+## [2.1.0] - 2022-03-02
 
 ### Added
 
@@ -30,7 +36,7 @@ All notable changes to this project will be documented in this file.
 
 ## [2.0.1] - 2022-02-27
 
-## Changed
+### Changed
 
 - Minor cosmetic change to the Marketplace Extension title to reduce confusion between the two extensions.
 - Added a snippet for simple texture/pigment (in addition to the larger texture snippet).
