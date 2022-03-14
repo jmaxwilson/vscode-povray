@@ -1,3 +1,6 @@
+# Typescript compiler output
+out
+
 # Logs
 logs
 *.log
@@ -69,3 +72,6 @@ test-scenes/**/*.exr
 test-scenes/**/*.tga
 test-scenes/**/*.ppm
 test-scenes/**/*.pov-state
+
+# macOS turds
+.DS_Store
