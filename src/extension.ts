@@ -3,6 +3,7 @@ import * as path from "path";
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import CompletionItemProvider from './features/completionItemProvider'
+import Support from './support/support'
 
 // POV-Ray Extension Activation
 export function activate(context: vscode.ExtensionContext) {
@@ -22,7 +23,7 @@ interface RenderTaskDefinition extends vscode.TaskDefinition {
 }
 
 // The Shell Context will help us determine what shell command to build
-interface ShellContext {
+export interface ShellContext {
     platform: string;               // win32,linux,darwin
     isWindowsBash: boolean;
     isWindowsPowershell: boolean;
@@ -43,7 +44,13 @@ export function registerTasks() {
             /****************************************/
 
             // Get the POV-Ray settings
-            let settings = getPOVSettings();
+            let settings = Support.getPOVSettings();
+
+            if (settings.pvenginePath === undefined || settings.pvenginePath == null || settings.pvenginePath === "") {
+                // Missing the critical path item
+                vscode.window.showErrorMessage("Missing povray/pvengine configuration setting.");
+                return [];
+            }
 
             // Get information about the shell environment context
             let context = getShellContext(settings);
@@ -61,7 +68,7 @@ export function registerTasks() {
             let outFilePath = buildOutFilePath(settings, fileInfo, context);
 
             // Make sure that the output file directory exists, create it if is doesn't
-            createDirIfMissing(outFilePath, context);
+            Support.createDirIfMissing(outFilePath, context);
 
             // Build the povray executable to run in the shell based on the settings and appropriate to the shell context
             let povrayExe = buildShellPOVExe(settings, fileInfo, outFilePath, context);
@@ -128,7 +135,7 @@ export function registerTasks() {
                 // Show an information notification to the user about the output file that was rendered
                 vscode.window.showInformationMessage("Rendered: " + taskDefinition.outFilePath);
 
-                const settings = getPOVSettings();
+                const settings = Support.getPOVSettings();
                 // If the the user has indicated that the image that ws rendered should be opened
                 if (settings.openImageAfterRender === true)
                 {
@@ -205,7 +212,7 @@ export function getFileInfo(context: ShellContext) {
     if (vscode.window.activeTextEditor !== undefined) {
 
         fileInfo.filePath = vscode.window.activeTextEditor.document.fileName;
-        fileInfo.fileDir = getDirName(fileInfo.filePath, context) + "/";
+        fileInfo.fileDir = Support.getDirName(fileInfo.filePath, context) + "/";
         fileInfo.fileName = path.basename(fileInfo.filePath);
         fileInfo.fileExt = path.extname(fileInfo.filePath);
     }
@@ -266,28 +273,17 @@ export function buildOutFilePath(settings: any, fileInfo: any, context: ShellCon
         
     }
     // Normalize the outFileName to make sure that it works for Windows
-    outFilePath = normalizePath(outFilePath, context);
+    outFilePath = Support.normalizePath(outFilePath, context);
 
     return outFilePath;
 }
-
-// Creates the directory for the specified path if it doesn't already exist
-export function createDirIfMissing(filePath: string, context: ShellContext) {
-
-    let outDir = normalizePath(getDirName(filePath, context), context);
-
-    if (!fs.existsSync(outDir)) {
-
-        fs.mkdirSync(outDir);
-    }
-} 
 
 // Builds the command to call in the shell in order to run POV-Ray
 // depending on the OS, Shell
 export function buildShellPOVExe(settings: any, fileInfo: any, outFilePath: any, context: ShellContext) {
     // Default to running an executable called povray (Linux, Mac, WSL Ubuntu Bash, Git Bash)
     //let exe = "povray";
-    let exe = wrapPathSpaces(settings.pvenginePath, settings);
+    let exe = Support.wrapPathSpaces(settings.pvenginePath, settings);
 
     // If we are running on Windows but not Bash
     if (context.platform === 'win32' && !context.isWindowsBash) {
@@ -310,7 +306,7 @@ export function buildRenderOptions(settings: any, fileInfo: any, context: ShellC
 
     renderOptions += getDimensionOptions(settings, fileInfo);
 
-    renderOptions += " " + wrapPathSpaces("Output_File_Name=" + normalizePath(fileInfo.fileDir + settings.outputPath, context), settings);
+    renderOptions += " " + Support.wrapPathSpaces("Output_File_Name=" + Support.normalizePath(fileInfo.fileDir + settings.outputPath, context), settings);
 
     renderOptions += getLibraryPathOption(settings, context);
 
@@ -342,7 +338,7 @@ export function getInputFileOption(settings: any, fileInfo: any, context: ShellC
         }
         else {
             if (context.isWindowsPowershell) {
-                fileInputOption = wrapPathSpaces(fileInputOption, settings);
+                fileInputOption = Support.wrapPathSpaces(fileInputOption, settings);
             } else {
                 // CMD.exe
                 // "File Name.pov"
@@ -434,7 +430,7 @@ export function getLibraryPathOption(settings: any, context: ShellContext) {
     // add the library path as a commandline argument
     if (settings.libraryPath.length > 0) {
 
-        settings.libraryPath = normalizePath(settings.libraryPath, context);
+        settings.libraryPath = Support.normalizePath(settings.libraryPath, context);
 
         if (context.isWindowsBash) {
             // If the shell is WSL Bash then we need to make sure that
@@ -442,7 +438,7 @@ export function getLibraryPathOption(settings: any, context: ShellContext) {
             libraryOption = " Library_Path=$(wslpath '"+settings.libraryPath+"')";
 
         } else {
-           libraryOption = " " + wrapPathSpaces("Library_Path=" + settings.libraryPath, settings);
+           libraryOption = " " + Support.wrapPathSpaces("Library_Path=" + settings.libraryPath, settings);
         }
     }
 
@@ -460,79 +456,3 @@ export function getCustomCommandlineOptions(settings: any) {
     return CustomOptions;
 }
 
-// Helper function to get the POV-Ray related settings
-export function getPOVSettings() {
-    const configuration = vscode.workspace.getConfiguration('povray');
-    let settings = {
-        outputPath:                         (<string>configuration.get("render.outputPath")).trim(),
-        outputFormat:                       (<string>configuration.get("render.outputImageFormat")),
-        pvenginePath:                       (<string>configuration.get("render.pvenginePath")).trim(),
-        win32Terminal:                      <string>configuration.get("render.win32Terminal"),
-        defaultRenderWidth:                 <string>configuration.get("render.defaultWidth"),
-        defaultRenderHeight:                <string>configuration.get("render.defaultHeight"),
-        libraryPath:                        (<string>configuration.get("render.libraryPath")).trim(),
-        customCommandlineOptions:           configuration.get("render.customCommandlineOptions"),
-        displayImageDuringRender:           configuration.get("render.displayImageDuringRender"),
-        openImageAfterRender:               configuration.get("render.openImageAfterRender"),
-        openImageAfterRenderInNewColumn:    configuration.get("render.openImageAfterRenderInNewColumn"),
-        quotingChar:                        "\"",
-    };
-
-    if (settings.win32Terminal == "Powershell (vscode default)") { settings.quotingChar = "'"; }
-    //vscode.window.showWarningMessage("POV-Ray: the Output Path (povray.outputPath) setting has been deprecated.\nPlease use Render > Output Path (povray.render.outputPath) instead.");
-
-    // Make sure that if the user has specified an outputPath it ends wth a slash
-    // because POV-Ray on Windows wont recognize it is a folder unless it ends with a slash
-    if (settings.outputPath.length > 0 
-        && !settings.outputPath.endsWith('/') 
-        && !settings.outputPath.endsWith('\\')) {
-
-        settings.outputPath += "/";
-    }
-
-    // Make sure that if the user has specified a library path it ends wth a slash
-    // because POV-Ray on Windows wont recognize it is a folder unless it ends with a slash
-    if (settings.libraryPath.length > 0 
-        && !settings.libraryPath.endsWith('/') 
-        && !settings.libraryPath.endsWith('\\')) {
-
-        settings.libraryPath += "/";
-    }
-
-    return settings;
-}
-
-// For unit testing to work cross platform, we need to be able
-// to normalize paths for a specified shell context (os, shell)
-// regardless of the OS we are actually running on.
-export function normalizePath(filepath: string, context: ShellContext) {
-    if (context.platform === "win32") {
-        filepath = path.win32.normalize(filepath);
-    } else {
-        filepath = path.posix.normalize(filepath);
-    }
-
-    return filepath;
-}
-
-export function wrapPathSpaces(filepath: string, settings: any)
-{
-    if (filepath.indexOf(" ") !== -1) {
-        filepath = settings.quotingChar + filepath + settings.quotingChar;
-    }
-    return filepath;
-}
-
-// For unit testing to work cross platform, we need to be able
-// to get the directory name for a specified context (os, shell)
-// regardless of the OS we are actually running on.
-export function getDirName(filepath: string, context: ShellContext) {
-    let dirname = filepath;
-    if (context.platform === "win32") {
-        dirname = path.win32.dirname(filepath);
-    } else {
-        dirname = path.posix.dirname(filepath);
-    }
-
-    return dirname;
-}

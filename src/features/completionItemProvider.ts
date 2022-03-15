@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
-import { getPOVSettings } from '../extension';
-import { EOL } from 'os';
+import Support from '../support/support'
+//import { getPOVSettings } from '../extension';
+//import { EOL } from 'os';
 
 export default class GlobalCompletionItemProvider implements vscode.CompletionItemProvider {
     protected _colors: vscode.CompletionItem[];
@@ -42,7 +43,7 @@ export default class GlobalCompletionItemProvider implements vscode.CompletionIt
     }
 
     loadLibrary() {
-        let settings = getPOVSettings();
+        let settings = Support.getPOVSettings();
         if (settings.libraryPath.length > 0) {
             // JAC: Not ready to load all INC files yet, start with targeted ones
             if (fs.existsSync(settings.libraryPath+'/colors.inc')) { this.loadFile(settings.libraryPath+'/colors.inc'); }

@@ -30,6 +30,10 @@ This extension allows you to use [Visual Studio Code](https://code.visualstudio.
 
 [View the Change Log](./CHANGELOG.md)
 
+### Version 2.1.1
+
+* Miscellaneous QOL improvements
+
 ### Version 2.1.0
 
 * Added code completion (similar to IntelliSense) for several default library files when the LibraryPath is provided.
