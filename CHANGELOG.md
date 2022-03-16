@@ -2,7 +2,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.1.1] = 2022-??-??
+## [2.1.1] = 2022-03-15
 
 ### Fixed
 
