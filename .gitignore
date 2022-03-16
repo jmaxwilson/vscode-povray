@@ -75,3 +75,6 @@ test-scenes/**/*.pov-state
 
 # macOS turds
 .DS_Store
+
+# Ignore builds
+vscode-povray2-*.vsix
