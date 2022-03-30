@@ -35,6 +35,7 @@ This extension allows you to use [Visual Studio Code](https://code.visualstudio.
 ### Version 2.1.2
 
 * Additional QOL improvements
+    * Removed INI syntax highlighting
 
 ### Version 2.1.1
 
