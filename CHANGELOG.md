@@ -2,7 +2,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [2.1.1] = 2022-03-15
+## [2.1.2] = 2022-03-29
+
+### Removed
+
+- Removed INI syntax handling, allow other extensions to highlight
+
+## [2.1.1] - 2022-03-15
 
 ### Fixed
 
