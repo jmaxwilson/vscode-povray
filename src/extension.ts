@@ -289,7 +289,7 @@ export function buildShellPOVExe(settings: any, fileInfo: any, outFilePath: any,
     if (context.platform === 'win32' && !context.isWindowsBash) {
 
         // Change the povray executable to the windows pvengine instead
-        exe = "pvengine /EXIT /RENDER";
+        exe = "pvengine /EXIT /RENDER /nr";
     }
 
     // If we are running povray via Docker
